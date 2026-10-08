@@ -1,0 +1,182 @@
+<!-- БЛОКИ 9 и 11 из ТЗ — в HEAD.
+     ⚠️ НАПИСАНО ВСЛЕПУЮ, НА ЖИВОМ САЙТЕ НЕ ПРОВЕРЕНО.
+     Вставлять по одному и смотреть результат, а не оба сразу.
+
+     ── БЛОК 9. Переключатель альтернативных цветов ──
+     На карточке показывает кружки других цветов той же модели. Клик —
+     переход на карточку в этом цвете.
+
+     Почему не штатными средствами: у нас каждый цвет это ОТДЕЛЬНЫЙ товар
+     в каталоге (отдельный артикул, своя карточка), а варианты Tilda работают
+     внутри одного товара. Связь между цветами приходится задавать вручную.
+
+     ── БЛОК 11. «Дополните образ» ──
+     Лента из 2–4 товаров под карточкой: к олимпийке — брюки и футболка.
+
+     ОБА БЛОКА НАСТРАИВАЮТСЯ ОДНОЙ ТАБЛИЦЕЙ в начале скрипта. Строка на товар:
+     какие у него есть цвета и что к нему предложить. -->
+<style>
+/* ───────── Блок 9: альтернативные цвета ───────── */
+.t2y-colors { margin: 20px 0 0; }
+.t2y-colors__title {
+  font-family: "Tenor Sans", sans-serif; font-size: 16px; line-height: 1.3;
+  color: #111; margin: 0 0 12px;
+}
+.t2y-colors__row { display: flex; flex-wrap: wrap; gap: 10px; }
+.t2y-colors__item {
+  width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e5e5e5;
+  display: block; box-sizing: border-box; cursor: pointer; position: relative;
+  transition: border-color .2s ease, transform .2s ease;
+  background-size: cover; background-position: center;
+}
+.t2y-colors__item:hover { border-color: #111; transform: scale(1.06); }
+.t2y-colors__item.is-current { border: 2px solid #111; cursor: default; }
+.t2y-colors__item.is-current:hover { transform: none; }
+
+/* ───────── Блок 11: дополните образ ───────── */
+.t2y-look { margin: 48px 0 0; }
+.t2y-look__title {
+  font-family: "Tenor Sans", sans-serif; font-size: 20px; font-weight: 400;
+  line-height: 1.3; color: #111; margin: 0 0 18px;
+}
+.t2y-look__row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.t2y-look__card { text-decoration: none; color: inherit; display: block; }
+.t2y-look__img {
+  width: 100%; aspect-ratio: 3 / 4; background: #f6f6f6;
+  background-size: cover; background-position: center; margin-bottom: 10px;
+}
+.t2y-look__name {
+  font-family: "Tenor Sans", sans-serif; font-size: 14px; line-height: 1.35;
+  color: #111; margin: 0 0 4px;
+}
+.t2y-look__price {
+  font-family: "Tenor Sans", sans-serif; font-size: 14px; color: #666; margin: 0;
+}
+
+@media screen and (max-width: 640px) {
+  /* на телефоне лента горизонтальной прокруткой — четыре карточки в ряд не влезут */
+  .t2y-look__row {
+    display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch; margin: 0 -20px; padding: 0 20px;
+  }
+  .t2y-look__row::-webkit-scrollbar { display: none; }
+  .t2y-look__card { flex: 0 0 46%; scroll-snap-align: start; }
+  .t2y-look__title { font-size: 18px; }
+  .t2y-colors__item { width: 40px; height: 40px; }
+}
+</style>
+
+<script>
+(function () {
+
+  /* ═══════════ ЕДИНСТВЕННОЕ, ЧТО НУЖНО РЕДАКТИРОВАТЬ ═══════════
+
+     Ключ — адрес страницы товара (без домена).
+
+       colors — другие цвета ТОЙ ЖЕ модели:
+                { name, url, hex }  либо  { name, url, img } с фото образца
+       look   — что предложить к этому товару:
+                { name, url, price, img }
+
+     Товара нет в таблице — блоки просто не появятся, ошибки не будет. */
+
+  var DATA = {
+    '/p/olimpiyka-vatanym': {
+      colors: [
+        { name: 'Молочный', url: '/p/olimpiyka-vatanym',        hex: '#fffae5' },
+        { name: 'Чёрный',   url: '/p/olimpiyka-vatanym-black',  hex: '#1d1d1d' },
+        { name: 'Синий',    url: '/p/olimpiyka-vatanym-blue',   hex: '#073763' }
+      ],
+      look: [
+        { name: 'Брюки со стрелкой Space', url: '/p/bryuki-space',
+          price: '13 150 ₽', img: '' },
+        { name: 'Футболка хлопковая',      url: '/p/futbolka-hlopkovaya',
+          price: '6 900 ₽',  img: '' }
+      ]
+    }
+  };
+
+  var TITLE_COLORS = 'Другие цвета';
+  var TITLE_LOOK   = 'Дополните образ';
+
+  /* ═══════════ дальше не трогать ═══════════ */
+
+  function path() { return location.pathname.replace(/\/+$/, ''); }
+  function data()  { return DATA[path()] || null; }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ---------- Блок 9: цвета, под кнопкой «В корзину» ---------- */
+  function buildColors() {
+    var d = data();
+    if (!d || !d.colors || d.colors.length < 2) return;
+
+    document.querySelectorAll('.t780__btn-wrapper, .t760__btn-wrapper')
+      .forEach(function (btn) {
+        if (btn.parentNode.querySelector('.t2y-colors')) return;
+
+        var here = path();
+        var html = '<div class="t2y-colors"><div class="t2y-colors__title">' +
+                   esc(TITLE_COLORS) + '</div><div class="t2y-colors__row">';
+        d.colors.forEach(function (c) {
+          var cur = (c.url.replace(/\/+$/, '') === here);
+          var style = c.img ? 'background-image:url(' + c.img + ')'
+                            : 'background-color:' + (c.hex || '#eee');
+          html += '<a class="t2y-colors__item' + (cur ? ' is-current' : '') +
+                  '" href="' + esc(c.url) + '" title="' + esc(c.name) +
+                  '" aria-label="' + esc(c.name) + '" style="' + style + '"></a>';
+        });
+        html += '</div></div>';
+
+        var box = document.createElement('div');
+        box.innerHTML = html;
+        btn.parentNode.insertBefore(box.firstChild, btn.nextSibling);
+      });
+  }
+
+  /* ---------- Блок 11: «Дополните образ», в самом низу карточки ---------- */
+  function buildLook() {
+    var d = data();
+    if (!d || !d.look || !d.look.length) return;
+    if (document.querySelector('.t2y-look')) return;
+
+    var card = document.querySelector('.t780, .t760');
+    if (!card) return;
+    var rec = card.closest('.t-rec') || card;
+    if (!rec.parentNode) return;
+
+    var html = '<div class="t2y-look"><div class="t2y-look__title">' +
+               esc(TITLE_LOOK) + '</div><div class="t2y-look__row">';
+    d.look.forEach(function (it) {
+      html += '<a class="t2y-look__card" href="' + esc(it.url) + '">' +
+              '<div class="t2y-look__img"' +
+              (it.img ? ' style="background-image:url(' + it.img + ')"' : '') +
+              '></div>' +
+              '<p class="t2y-look__name">' + esc(it.name) + '</p>' +
+              '<p class="t2y-look__price">' + esc(it.price || '') + '</p></a>';
+    });
+    html += '</div></div>';
+
+    var wrap = document.createElement('div');
+    wrap.className = 't-container';
+    wrap.innerHTML = html;
+    rec.parentNode.insertBefore(wrap, rec.nextSibling);
+  }
+
+  function tick() { buildColors(); buildLook(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  [400, 1200, 2500].forEach(function (t) { setTimeout(tick, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    setTimeout(function () { tick(); busy = false; }, 200);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>

@@ -118,6 +118,10 @@ def clean_descr(text):
     return " ".join(parts)
 
 
+# У женского раздела подраздел называется короче — «Олимпийки».
+SUB_BY_GENDER = {("Женское", "Олимпийки и толстовки"): "Олимпийки"}
+
+
 def map_category(feed_cat, gender):
     razdel = GENDER_MAP.get(gender, "Мужское")
     sub = None
@@ -127,6 +131,7 @@ def map_category(feed_cat, gender):
             break
     if not sub:
         return razdel
+    sub = SUB_BY_GENDER.get((razdel, sub), sub)
     return "%s;%s>>>%s" % (razdel, razdel, sub)
 
 
