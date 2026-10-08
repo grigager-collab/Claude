@@ -1,0 +1,76 @@
+<!-- ПОЧИНКА ССЫЛКИ «ТАБЛИЦА РАЗМЕРОВ» ПРИ ПЕРЕНОСЕ СТРОКИ.
+     Добавить в КОНЕЦ HEAD. Искать и править старый код не нужно —
+     этот блок перебивает его.
+
+     ЧТО БЫЛО. Старый код растягивал строку «Размер … таблица размеров»
+     до правого края ПОСЛЕДНЕГО квадратика:
+
+         var last = boxes[boxes.length - 1];
+         var w = last.getBoundingClientRect().right - row.left;
+
+     Пока размеров было четыре, они стояли в одну строку и всё сходилось.
+     С шестью строка переносится, последний квадратик (3XL) оказывается
+     на второй строке у левого края — ширина схлопывается, и ссылка
+     прилипает к слову «Размер».
+
+     ЧТО СТАЛО. Берём САМЫЙ ПРАВЫЙ край среди всех квадратиков, а не край
+     последнего. При переносе это край первой строки, то есть ровно туда,
+     куда и просили.
+
+     ПОЧЕМУ ЧЕРЕЗ MutationObserver, а не просто CSS: старый код пишет ширину
+     инлайново с !important, а инлайновый !important не перебивается стилями.
+     Поэтому следим за атрибутом style и переписываем значение, как только
+     старый код его тронет. -->
+<script>
+(function () {
+  var ROW = '.t2y-size-row';
+
+  function fix(row) {
+    if (window.innerWidth <= 640) {
+      if (row.style.width !== '100%') {
+        row.style.setProperty('width', '100%', 'important');
+      }
+      return;
+    }
+    var scope = row.parentElement;
+    var boxes = scope ? scope.querySelectorAll('.t-product__option-item') : [];
+    if (!boxes.length) return;
+
+    var left = row.getBoundingClientRect().left;
+    var right = 0;
+    Array.prototype.forEach.call(boxes, function (b) {
+      var r = b.getBoundingClientRect().right;
+      if (r > right) right = r;              // ← самый правый край, а не последний
+    });
+
+    var w = Math.round(right - left);
+    if (w < 40) return;
+    if (row.style.width !== w + 'px') {
+      row.style.setProperty('width', w + 'px', 'important');
+    }
+  }
+
+  function run() {
+    document.querySelectorAll(ROW).forEach(function (row) {
+      fix(row);
+      if (row.dataset.t2ySizeWatch) return;
+      row.dataset.t2ySizeWatch = '1';
+      // старый код периодически переписывает width — возвращаем своё значение
+      new MutationObserver(function () { fix(row); })
+        .observe(row, { attributes: true, attributeFilter: ['style'] });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  window.addEventListener('resize', run);
+  [400, 1000, 2000, 3000].forEach(function (t) { setTimeout(run, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    setTimeout(function () { run(); busy = false; }, 250);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
