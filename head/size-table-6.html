@@ -1,0 +1,51 @@
+<!-- ТАБЛИЦА РАЗМЕРОВ — ЗАМЕНА СТАРОГО БЛОКА В HEAD.
+     Обновлено 08.10.2026: шесть размеров вместо четырёх, от S до 3XL.
+
+     ЧТО ДЕЛАТЬ: найти в HEAD секцию «КАРТОЧКА — ТАБЛИЦА РАЗМЕРОВ»
+     и заменить в ней переменную SIZE_MODAL_HTML на вариант ниже.
+     Остальной код секции — стили окна, ссылка «таблица размеров» рядом
+     с названием опции, рамка образца цвета — НЕ трогать.
+
+     ⚠️ ЦИФРЫ В ТАБЛИЦЕ — ЗАГЛУШКИ. Шаг между размерами взят типовой:
+     +4 см по груди и талии, +2 см по длине. Заменить реальными замерами.
+     Методика: мерить изделие, разложенное на плоскости, а не человека. -->
+
+<script>
+  var SIZE_MODAL_HTML =
+    '<div class="t2y-size-overlay" id="t2ySizeOverlay">' +
+      '<div class="t2y-size-modal">' +
+        '<button class="t2y-size-close" aria-label="Закрыть">&times;</button>' +
+        '<h3>ТАБЛИЦА РАЗМЕРОВ</h3>' +
+        '<table class="t2y-size-table">' +
+          '<thead><tr>' +
+            '<th>Размер</th><th>RU</th><th>Обхват груди, см</th>' +
+            '<th>Обхват талии, см</th><th>Длина, см</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+            '<tr><td>S</td><td>46</td><td>96</td><td>84</td><td>66</td></tr>' +
+            '<tr><td>M</td><td>48</td><td>100</td><td>88</td><td>68</td></tr>' +
+            '<tr><td>L</td><td>50</td><td>104</td><td>92</td><td>70</td></tr>' +
+            '<tr><td>XL</td><td>52</td><td>108</td><td>96</td><td>72</td></tr>' +
+            '<tr><td>XXL</td><td>54</td><td>112</td><td>100</td><td>74</td></tr>' +
+            '<tr><td>3XL</td><td>56</td><td>116</td><td>104</td><td>76</td></tr>' +
+          '</tbody>' +
+        '</table>' +
+        '<p class="t2y-size-note">Замеры указаны для изделия, разложенного ' +
+        'на плоскости. Значения примерные — заменить на реальные.</p>' +
+      '</div>' +
+    '</div>';
+</script>
+
+<!-- ДОПОЛНИТЕЛЬНО: на телефоне шесть колонок в ряд уже тесновато.
+     Добавить к стилям таблицы, если начнёт налезать. -->
+<style>
+@media screen and (max-width: 640px) {
+  .t2y-size-modal { padding: 40px 16px 28px; }
+  .t2y-size-table { font-size: 13px; }
+  .t2y-size-table th,
+  .t2y-size-table td { padding: 10px 4px; }
+  /* если всё равно тесно — таблица листается вбок внутри окна,
+     а не ломает вёрстку */
+  .t2y-size-modal table { display: block; overflow-x: auto; white-space: nowrap; }
+}
+</style>

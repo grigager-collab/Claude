@@ -31,6 +31,11 @@ import openpyxl
 # ─────────────────── НАСТРОЙКИ ПО РЕШЕНИЯМ ЗАКАЗЧИЦЫ ───────────────────
 
 QTY = 10              # кол-во на размер у всех (решение 07.10.2026)
+
+# Единая размерная сетка — решение 08.10.2026: у ВСЕХ товаров шесть размеров,
+# от S до 3XL, независимо от того, что указано в фиде.
+# Поставить None, чтобы вернуться к реальным размерам из фида.
+FORCE_SIZES = ["S", "M", "L", "XL", "XXL", "3XL"]
 SEASON_DEFAULT = "Всесезон"   # меняется на «Зима» / «Лето» точечно
 
 # Сезон в фиде — это КОЛЛЕКЦИЯ (FW25/26, SS22), а не погода.
@@ -210,7 +215,8 @@ def build_rows(products):
         rows.append(parent)
 
         hexv = COLOR_HEX.get(color, "#cccccc")
-        for size in sorted(p["sizes"], key=size_key):
+        sizes = FORCE_SIZES if FORCE_SIZES else sorted(p["sizes"], key=size_key)
+        for size in sizes:
             v = {k: "" for k in HEADER}
             v["SKU"] = art
             v["Title"] = "%s - %s - %s" % (title, size, color)
