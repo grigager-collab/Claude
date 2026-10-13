@@ -45,7 +45,14 @@
 @media screen and (max-width: 960px) {
 
   /* Бургер становится точкой отсчёта для подложки.
-     overflow: visible — чтобы круг мог выйти за его границы. */
+     overflow: visible — чтобы круг мог выйти за его границы.
+
+     isolation: isolate — ключевая строка. Она создаёт у бургера
+     собственный слой, и тогда z-index: -1 у подложки уводит её назад,
+     но не дальше самого бургера. Благодаря этому полоски остаются
+     сверху БЕЗ вмешательства в их стили — а это важно: у Tilda они
+     позиционированы абсолютно, и любая правка их позиционирования
+     ломает расстояния между ними. */
   html.t2y-card-page .t-menuburger,
   html.t2y-card-page .t450__burger_container,
   html.t2y-card-page .t450__burger_wrapper,
@@ -53,6 +60,7 @@
   html.t2y-card-page .t-menuburger__wrapper {
     position: relative !important;
     overflow: visible !important;
+    isolation: isolate !important;
     z-index: 900 !important;
   }
 
@@ -72,17 +80,14 @@
     border-radius: 50% !important;
     background: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, .14) !important;
-    z-index: 0 !important;
+    z-index: -1 !important;            /* позади полосок, см. isolation выше */
     pointer-events: none !important;   /* клик проходит на бургер */
   }
 
-  /* Полоски поднимаем над подложкой, иначе она их закроет. */
-  html.t2y-card-page .t-menuburger > span,
-  html.t2y-card-page .t450__burger_container > span,
-  html.t2y-card-page .tmenu-mobile__burger > span {
-    position: relative !important;
-    z-index: 1 !important;
-  }
+  /* ⚠️ ПОЛОСКИ НЕ ТРОГАЕМ. Первая версия ставила им position: relative,
+     чтобы поднять над подложкой, — и расстояния между ними разъехались:
+     у Tilda они position: absolute с заданными отступами сверху.
+     Теперь они лежат выше подложки сами, благодаря isolation: isolate. */
 
   /* Когда меню открыто, подложка не нужна: бургер превращается в крестик
      поверх тёмной шторки, и белый кружок там выглядит заплаткой. */
