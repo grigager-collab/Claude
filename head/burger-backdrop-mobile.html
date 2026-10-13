@@ -1,67 +1,94 @@
-<!-- БУРГЕР НА МОБИЛЬНОЙ — ПОДЛОЖКА, ЧТОБЫ НЕ НАЕЗЖАЛ НА ТЕКСТ.
-     Добавлено 13.10.2026.
+<!-- БУРГЕР НА МОБИЛЬНОЙ — ПОДЛОЖКА ТОЛЬКО НА СТРАНИЦАХ КАРТОЧЕК.
+     Добавлено 13.10.2026, переделано в тот же день.
 
-     ПРОБЛЕМА: на мобильной мы открепили шапку (чтобы не закрывала хлебные
-     крошки), но бургер остался position: fixed. В итоге три полоски висят
-     поверх содержимого без фона — на карточке товара они легли прямо
-     на строку «Параметры модели на фото».
+     ПРОБЛЕМА: на страницах карточек мы открепили шапку (чтобы она не
+     закрывала хлебные крошки), но бургер остался position: fixed. Три
+     полоски повисли поверх содержимого без фона — на карточке товара
+     легли прямо на строку «Параметры модели на фото».
 
-     ЛЕЧЕНИЕ: не откреплять (меню под рукой — это правильно), а дать бургеру
-     собственную подложку: белый кружок с мягкой тенью. Тогда он читается
-     на любом фоне и выглядит как задуманная плавающая кнопка.
+     ЛЕЧЕНИЕ: не откреплять (меню под рукой — это правильно), а подложить
+     под бургер белый кружок с мягкой тенью.
+
+     ЧТО ИСПРАВЛЕНО В ЭТОЙ ВЕРСИИ (две ошибки первой):
+
+     1. КРУЖОК ПРОМАХИВАЛСЯ. Первый вариант задавал бургеру свои
+        width/height — но полоски внутри позиционированы от его
+        собственной коробки, и смена размера их сдвигала. Теперь круг
+        рисуется отдельным слоем (::before) позади полосок и центрируется
+        по бургеру сам. Размеры бургера не трогаются вообще.
+
+     2. КРУЖОК ВЫЛЕЗАЛ ВЕЗДЕ. На остальных страницах шапка прикреплена
+        и подложка там не нужна — она лезла на логотип. Теперь скрипт
+        вешает на <html> класс t2y-card-page, и стили действуют только
+        при нём.
 
      КУДА: Настройки сайта → HTML-код внутрь HEAD, в самый конец.
+     Старую версию этого блока, если уже вставлена, — удалить целиком. -->
 
-     ⚠️ СЕЛЕКТОРЫ. У Tilda бургер живёт в разных блоках под разными классами,
-     поэтому ниже перечислены все ходовые. Если не подхватится — открой на
-     телефоне инспектор (или пришли мне HTML элемента), добавим нужный класс.
-     Лишние селекторы в списке безвредны: они просто ни во что не попадут. -->
+<script>
+/* Помечаем страницы карточек товара. Скрипт лежит в HEAD и отрабатывает
+   до отрисовки, так что подложка не успевает мигнуть на чужих страницах.
+
+   Два шаблона адреса:
+     /p/…        — наши собственные страницы карточек
+     /tproduct/… — стандартная страница Tilda (если у товара не прописан
+                   URL, витрина ведёт туда; на всякий случай ловим и её) */
+(function () {
+  var p = location.pathname;
+  if (p.indexOf('/p/') === 0 || p.indexOf('/tproduct/') !== -1) {
+    document.documentElement.className += ' t2y-card-page';
+  }
+})();
+</script>
 
 <style>
 @media screen and (max-width: 960px) {
 
-  /* Сама кнопка-бургер, какой бы блок её ни рисовал */
-  .t-menuburger.t-menuburger,
-  .t450__burger_container.t450__burger_container,
-  .t450__burger_wrapper.t450__burger_wrapper,
-  .tmenu-mobile__burger.tmenu-mobile__burger,
-  .t-menuburger__wrapper.t-menuburger__wrapper {
-
-    /* подложка */
-    background: #ffffff !important;
-    border-radius: 50% !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, .14) !important;
-
-    /* размер кружка: полоски внутри остаются прежними,
-       место под них добавляем паддингом */
-    width: 44px !important;
-    height: 44px !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-
-    /* полоски по центру кружка */
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    /* гарантированно выше содержимого страницы, но ниже попапов Tilda
-       (у них z-index от 10000) */
+  /* Бургер становится точкой отсчёта для подложки.
+     overflow: visible — чтобы круг мог выйти за его границы. */
+  html.t2y-card-page .t-menuburger,
+  html.t2y-card-page .t450__burger_container,
+  html.t2y-card-page .t450__burger_wrapper,
+  html.t2y-card-page .tmenu-mobile__burger,
+  html.t2y-card-page .t-menuburger__wrapper {
+    position: relative !important;
+    overflow: visible !important;
     z-index: 900 !important;
   }
 
-  /* Полоски внутри — чуть короче, чтобы дышали в кружке */
-  .t-menuburger span,
-  .t450__burger_container span,
-  .tmenu-mobile__burger span {
-    width: 20px !important;
+  /* САМА ПОДЛОЖКА. Отдельный слой, центрируется по бургеру через
+     left/top 50% + transform — поэтому промахнуться не может,
+     каким бы ни был размер самого бургера. */
+  html.t2y-card-page .t-menuburger::before,
+  html.t2y-card-page .t450__burger_container::before,
+  html.t2y-card-page .tmenu-mobile__burger::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .14) !important;
+    z-index: 0 !important;
+    pointer-events: none !important;   /* клик проходит на бургер */
   }
 
-  /* Когда меню открыто, кружок не нужен: бургер превращается в крестик
-     поверх тёмной шторки, и белая плашка там смотрится заплаткой. */
-  .t-menuburger_opened.t-menuburger_opened,
-  .t450__burger_container_opened.t450__burger_container_opened {
-    background: transparent !important;
-    box-shadow: none !important;
+  /* Полоски поднимаем над подложкой, иначе она их закроет. */
+  html.t2y-card-page .t-menuburger > span,
+  html.t2y-card-page .t450__burger_container > span,
+  html.t2y-card-page .tmenu-mobile__burger > span {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  /* Когда меню открыто, подложка не нужна: бургер превращается в крестик
+     поверх тёмной шторки, и белый кружок там выглядит заплаткой. */
+  html.t2y-card-page .t-menuburger_opened::before,
+  html.t2y-card-page .t450__burger_container_opened::before {
+    opacity: 0 !important;
   }
 }
 </style>
