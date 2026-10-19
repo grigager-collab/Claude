@@ -1,0 +1,110 @@
+<!-- ════════════════════════════════════════════════════════════════
+     СТРАНИЦА 404 — «Такой страницы нет».  Создано 19.10.2026.
+
+     КУДА: новая страница, адрес /not-found, один блок
+           «Другое → HTML-код» (T123), вставить ВСЁ содержимое файла.
+     Шапка и подвал подставятся сами (Шапка 1.1 / Подвал 1.1).
+
+     ПОСЛЕ ПУБЛИКАЦИИ:
+       Настройки сайта → Ещё → «Страница ошибки 404» → выбрать эту страницу.
+
+     Пояснения внутри комментариев на странице не видны.
+     ════════════════════════════════════════════════════════════════ -->
+
+<div class="t2y-msg">
+  <div class="t2y-msg__inner">
+    <div class="t2y-msg__code">404</div>
+    <h1 class="t2y-msg__title">Такой страницы нет</h1>
+    <p class="t2y-msg__text">
+      Возможно, ссылка устарела или в адресе опечатка.
+      Загляните в каталог — там всё актуальное.
+    </p>
+    <div class="t2y-msg__btns">
+      <a class="t2y-msg__btn" href="/men">Мужское</a>
+      <a class="t2y-msg__btn t2y-msg__btn_ghost" href="/women">Женское</a>
+    </div>
+    <a class="t2y-msg__link" href="/">На главную</a>
+  </div>
+</div>
+
+<style>
+/* Блок по центру экрана: min-height + flex. Верхний отступ с запасом,
+   чтобы текст гарантированно не уходил под прикреплённую шапку. */
+.t2y-msg {
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 20px 70px;
+  box-sizing: border-box;
+  background: #ffffff;
+  text-align: center;
+}
+.t2y-msg__inner { max-width: 520px; width: 100%; }
+
+.t2y-msg__code {
+  font-family: 'Tenor Sans', Arial, sans-serif;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: 4px;
+  color: #d9d9d9;
+  margin-bottom: 18px;
+}
+.t2y-msg__title {
+  font-family: 'Tenor Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 1.25;
+  color: #000000;
+  margin: 0 0 16px;
+}
+.t2y-msg__text {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #333333;
+  margin: 0 0 32px;
+}
+
+/* Кнопки: на телефоне друг под другом во всю ширину,
+   на компьютере — в строку. Стиль как у «В корзину». */
+.t2y-msg__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.t2y-msg__btn {
+  display: block;
+  padding: 16px 24px;
+  background: #000000;
+  border: 1px solid #000000;
+  color: #ffffff !important;
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none !important;
+  transition: opacity .2s;
+}
+.t2y-msg__btn:hover { opacity: .8; }
+.t2y-msg__btn_ghost {
+  background: #ffffff;
+  color: #000000 !important;
+}
+.t2y-msg__link {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-size: 14px;
+  color: #777777 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+@media screen and (min-width: 640px) {
+  .t2y-msg { padding-top: 150px; }
+  .t2y-msg__code  { font-size: 110px; }
+  .t2y-msg__title { font-size: 34px; }
+  .t2y-msg__btns  { flex-direction: row; justify-content: center; }
+  .t2y-msg__btn   { min-width: 180px; }
+}
+</style>
