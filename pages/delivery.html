@@ -1,0 +1,175 @@
+<!-- ════════════════════════════════════════════════════════════════
+     СТРАНИЦА «ДОСТАВКА И ОПЛАТА».  Создано 21.10.2026.
+
+     КУДА: страница /delivery. Сейчас на ней шаблонный блок Tilda
+     с английским текстом («Katie / RSVP / black raven») — его УДАЛИТЬ,
+     вместо него добавить «Другое → HTML-код» (T123) и вставить ВСЁ.
+
+     SEO (Настройки страницы → SEO):
+       Заголовок:  Доставка и оплата — 2YOUNG4U
+       Описание:   Доставка по Казани и России, самовывоз в Казани.
+                   Оплата картой онлайн. Условия интернет-магазина 2YOUNG4U.
+
+     ПРОВЕРЕННЫЕ ФАКТЫ: три способа доставки — из настроек Tilda («Доставка
+     по г.Казань», «Доставка по РФ», «Самовывоз»); оплата — только картой
+     через Т-Банк, предоплата 100 % (настройки платёжной системы).
+
+     ⚠️ ЧЕГО НЕ ЗНАЕМ и поэтому НЕ ПИШЕМ: цены, сроки, службу доставки
+     по России, адрес самовывоза. Вместо них — «покажем при оформлении»
+     и «сообщим после оформления». Когда заказчица даст цифры — допишу.
+     ════════════════════════════════════════════════════════════════ -->
+
+<div class="t2y-info">
+  <div class="t2y-info__inner">
+    <h1 class="t2y-info__title">Доставка и оплата</h1>
+
+    <h2 class="t2y-info__h2">Способы доставки</h2>
+
+    <div class="t2y-info__block">
+      <p class="t2y-info__lead">По Казани</p>
+      <p>Доставим заказ по вашему адресу. После оформления мы свяжемся с вами и согласуем удобное время.</p>
+    </div>
+
+    <div class="t2y-info__block">
+      <p class="t2y-info__lead">По России</p>
+      <p>Отправляем заказы во все регионы России. Сроки зависят от города — мы сообщим их после оформления заказа.</p>
+    </div>
+
+    <div class="t2y-info__block">
+      <p class="t2y-info__lead">Самовывоз в Казани</p>
+      <p>Заказ можно забрать самостоятельно. Адрес и время самовывоза мы сообщим после оформления.</p>
+    </div>
+
+    <p class="t2y-info__note">Стоимость доставки вы увидите при оформлении заказа — до оплаты.</p>
+
+    <h2 class="t2y-info__h2">Оплата</h2>
+
+    <div class="t2y-info__block">
+      <p>Заказ оплачивается банковской картой онлайн при оформлении. Оплата проходит на защищённой странице Т-Банка — данные карты не передаются нашему сайту.</p>
+      <p>После оформления на почту придёт письмо с номером и составом заказа. Если его нет — загляните в папку «Спам».</p>
+    </div>
+
+    <h2 class="t2y-info__h2">При получении</h2>
+
+    <div class="t2y-info__block">
+      <p>Проверьте внешний вид вещей и комплектность заказа. Если что-то не так — напишите нам, разберёмся.</p>
+      <p>Если вещь не подошла, её можно вернуть в течение 7 дней после получения. Условия — на странице <a href="/returns">«Обмен и возврат»</a>.</p>
+    </div>
+
+    <div class="t2y-info__contacts">
+      <p class="t2y-info__contacts-title">Остались вопросы?</p>
+      <p>
+        <a href="tel:+79196962424">+7 919 696-24-24</a> — звонок или Telegram<br>
+        <a href="mailto:2young4u.official@gmail.com">2young4u.official@gmail.com</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+.t2y-info {
+  padding: 110px 20px 80px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+.t2y-info__inner { max-width: 720px; margin: 0 auto; }
+
+.t2y-info__title {
+  font-family: 'Tenor Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.2;
+  color: #000000;
+  margin: 0 0 28px;
+}
+.t2y-info__h2 {
+  font-family: 'Tenor Sans', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #000000;
+  margin: 40px 0 8px;
+}
+
+/* Вопрос-ответ: строка с плюсом, по нажатию раскрывается */
+.t2y-info__q { border-bottom: 1px solid #e5e5e5; }
+.t2y-info__q summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  padding: 18px 36px 18px 0;
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #000000;
+}
+.t2y-info__q summary::-webkit-details-marker { display: none; }
+.t2y-info__q summary::after {
+  content: '+';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+  font-weight: 300;
+  color: #000000;
+}
+.t2y-info__q[open] summary::after { content: '−'; }
+
+.t2y-info__a { padding: 0 0 18px; }
+.t2y-info__a p,
+.t2y-info__contacts p {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  margin: 0 0 10px;
+}
+.t2y-info a {
+  color: #000000 !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+.t2y-info__contacts {
+  margin-top: 48px;
+  padding: 24px;
+  background: #f6f6f6;
+}
+.t2y-info__contacts-title {
+  font-family: 'Tenor Sans', Arial, sans-serif !important;
+  font-size: 18px !important;
+  color: #000000 !important;
+}
+
+@media screen and (min-width: 640px) {
+  .t2y-info { padding-top: 150px; }
+  .t2y-info__title { font-size: 38px; }
+  .t2y-info__h2 { font-size: 22px; }
+}
+
+/* Доп. элементы страниц «Доставка» и «Возврат» */
+.t2y-info__block { margin: 0 0 18px; }
+.t2y-info__block p,
+.t2y-info__list li,
+.t2y-info__steps li,
+.t2y-info__note {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  margin: 0 0 8px;
+}
+.t2y-info__lead {
+  font-weight: 500 !important;
+  color: #000000 !important;
+  margin-bottom: 4px !important;
+}
+.t2y-info__list, .t2y-info__steps { padding-left: 20px; margin: 4px 0 18px; }
+.t2y-info__steps li { margin-bottom: 10px; }
+.t2y-info__note { color: #777777; margin-top: 24px; }
+.t2y-info b { font-weight: 600; color: #000000; }
+</style>
