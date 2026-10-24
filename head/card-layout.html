@@ -1,0 +1,107 @@
+<!-- ════ 2Y4U: КАРТОЧКА ТОВАРА — крошки, размеры, колонки ════ -->
+<style>
+/* ── 1. Хлебные крошки: один раз, в самом верху карточки ──
+   Скрипт в HEAD вставляет крошки перед названием. Если страница грузится
+   медленно, он успевает раньше стилей Tilda — и крошки попадают ВНУТРЬ
+   сетки названия: вторая копия узкой колонкой справа. Старые копии
+   прячем все, показываем одну — над фото (.t2y-crumbs-top). */
+.t780 .t2y-crumbs:not(.t2y-crumbs-top),
+.t760 .t2y-crumbs:not(.t2y-crumbs-top) { display: none !important; }
+.t2y-crumbs-row { padding: 12px 20px 18px; box-sizing: border-box; }
+.t2y-crumbs-row .t2y-crumbs { margin: 0 !important; }
+
+/* ── 2. Размеры S…3XL всегда в один ряд ──
+   Кнопки делят ширину поровну, но не шире 64 px. Селектор длинный
+   нарочно: старое правило с фиксированной шириной (--variant-box-size)
+   сильнее короткого. */
+.t780 .t-product__option-variants_buttons.t-product__option-variants_simple,
+.t760 .t-product__option-variants_buttons.t-product__option-variants_simple {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+.t780 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple,
+.t760 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 64px !important;
+  width: auto !important;
+  margin: 0 !important;
+  justify-content: center !important;
+}
+
+/* ── 3. ПК: колонки фото / текст по центру и без обрезки ──
+   Было: сетка прижата влево, текст 400 px торчал за колонку — на экране
+   1280 px правая часть уходила за край. Стало: фото тянется, колонка
+   с текстом 360–440 px, всё по центру. */
+@media screen and (min-width: 961px) {
+  .t760 > .t-container.js-product.js-product-single.js-store-product.js-store-product_single {
+    display: flex !important;
+    align-items: stretch !important;  /* колонка текста во всю высоту фото —
+                                         иначе Tilda не «прилепит» её при прокрутке */
+    gap: 56px !important;
+    max-width: 1360px !important;
+    margin: 0 auto !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+  }
+  /* «распорки» Tilda (clearfix) во flex становятся пустыми колонками
+     и сдвигают фото на ширину отступа */
+  .t760 > .t-container.js-product.js-product-single::before,
+  .t760 > .t-container.js-product.js-product-single::after { display: none !important; }
+  .t760 > .t-container > .t760__flexcolumn.t-col_8 {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  .t760 > .t-container > .t760__col_margin {
+    flex: 0 0 clamp(360px, 32vw, 440px) !important;
+    width: clamp(360px, 32vw, 440px) !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+  /* ширину «липкой» части Tilda сам ставит по колонке (max-width в style) —
+     её не трогаем, иначе при прокрутке она растянется на весь экран */
+  .t760 .t760__col_margin .t760__textwrapper {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .t760 .t2y-crumbs-row {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 40px 24px;
+  }
+}
+</style>
+
+<script>
+(function () {
+  /* Одна строка крошек над карточкой. Текст берём из копии, которую
+     построил скрипт в HEAD (там логика разделов), — сами её не строим. */
+  function place() {
+    document.querySelectorAll('.t780, .t760').forEach(function (block) {
+      if (block.querySelector('.t2y-crumbs-top')) return;
+      var src = block.querySelector('.t2y-crumbs');
+      var box = block.querySelector('.t-container');
+      if (!src || !box) return;
+
+      var row = document.createElement('div');
+      row.className = 't2y-crumbs-row';
+      var c = document.createElement('div');
+      c.className = 't2y-crumbs t2y-crumbs-top';
+      c.setAttribute('role', 'navigation');
+      c.setAttribute('aria-label', 'Хлебные крошки');
+      c.innerHTML = src.innerHTML;
+      row.appendChild(c);
+      box.parentNode.insertBefore(row, box);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', place);
+  window.addEventListener('load', place);
+  [500, 1200, 2500, 4000].forEach(function (t) { setTimeout(place, t); });
+})();
+</script>
+<!-- ════ конец: карточка товара ════ -->

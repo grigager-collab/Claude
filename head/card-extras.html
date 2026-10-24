@@ -1,0 +1,45 @@
+<!-- ════ 2Y4U: ПАРАМЕТРЫ МОДЕЛИ + ИЗБРАННОЕ БЕЗ РАЗМЕРА ════ -->
+<script>
+(function () {
+  /* ── Параметры модели на фото ──
+     На карточках в аккордеоне стоят прочерки («Рост модели: — см.»).
+     Заказчица: у всех мужских — 188 см, размер XL/L. Меняем ТОЛЬКО прочерки:
+     если на какой-то карточке вписать свои цифры, скрипт их не тронет. */
+  var HEIGHT = '188';
+  var SIZE = 'XL/L';
+
+  function fillModel() {
+    var src = document.querySelector('.t2y-acc-source');
+    if (!src || src.getAttribute('data-crumb-parent') !== 'Мужское') return;
+    document.querySelectorAll('.t2y-acc-source p, .product-popup-accordion p')
+      .forEach(function (p) {
+        var t = (p.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/^Рост модели: — см\.?$/.test(t)) p.textContent = 'Рост модели: ' + HEIGHT + ' см.';
+        else if (/^На модели размер: —\.?$/.test(t)) p.textContent = 'На модели размер: ' + SIZE + '.';
+      });
+  }
+
+  /* ── Избранное: без строки «Размер» ──
+     Tilda при добавлении в избранное сама берёт первый размер (S) и
+     показывает его. Прячем строку «Размер: …», цвет и артикул остаются. */
+  function cleanWishlist() {
+    document.querySelectorAll('.t1002__product-title__option > div').forEach(function (d) {
+      if (/^\s*Размер\s*:/.test(d.textContent || '')) d.style.display = 'none';
+    });
+  }
+
+  function tick() { fillModel(); cleanWishlist(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  [600, 1500, 3000].forEach(function (t) { setTimeout(tick, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    requestAnimationFrame(function () { tick(); busy = false; });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: параметры модели + избранное ════ -->
