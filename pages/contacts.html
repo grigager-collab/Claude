@@ -1,0 +1,224 @@
+<!-- ════════════════════════════════════════════════════════════════
+     СТРАНИЦА «КОНТАКТЫ» — по тексту заказчицы.  Создано 24.10.2026.
+
+     В ФАЙЛЕ ДВА КУСКА — два блока «Другое → HTML-код» (T123):
+       БЛОК 1 — ставится НАД формой (сайт, студия, почта, телеграм);
+       БЛОК 2 — ставится ПОД формой (VipAvenue, реквизиты, оферта, политика).
+
+     Порядок блоков на странице /contact получается такой:
+       Шапка → БЛОК 1 → форма (старый блок, rec208537002) → БЛОК 2 → подвал.
+
+     ФОРМУ НЕ УДАЛЯЕМ (заказчица: «форма как сейчас»). В ней поменять руками:
+       • заголовок «Наши контакты» → «Рады обратной связи!»;
+       • подзаголовок «Мы всегда рады получить…» — стереть.
+     Остальное в форме (отступ сверху, шрифт заголовка, левая колонка с
+     телефоном, которая теперь дублирует БЛОК 1) правит CSS из БЛОКА 1:
+     в настройках формы ничего трогать не нужно.
+
+     SEO (Настройки страницы → SEO):
+       Заголовок:  Контакты — 2YOUNG4U
+       Описание:   Студия 2young4U в Казани, ИТ-парк им. Башира Рамеева.
+                   Почта, Telegram и MAX. Заказ с примеркой — на VipAvenue.
+     ════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════ БЛОК 1 — НАД ФОРМОЙ (копировать отсюда) ═══════════════ -->
+
+<div class="t2y-info t2y-contacts">
+  <div class="t2y-info__inner">
+    <h1 class="t2y-info__title">Контакты</h1>
+
+    <p class="t2y-contacts__about">Бренд одежды 2young4U основан в 2019 году.</p>
+
+    <h2 class="t2y-info__h2">Студия в Казани</h2>
+    <div class="t2y-info__block">
+      <p>ул. Спартаковская, д. 2, здание ИТ-парка им. Башира Рамеева, 1 этаж, центральный холл.</p>
+      <p>Пожалуйста, согласуйте время визита по телефону или в Telegram.</p>
+      <p><a href="https://yandex.ru/maps/?text=Казань,+Спартаковская+улица,+2" target="_blank" rel="noopener">Открыть на карте</a></p>
+    </div>
+
+    <h2 class="t2y-info__h2">Связаться с нами</h2>
+    <ul class="t2y-contacts__list">
+      <li>
+        <span class="t2y-contacts__label">Почта</span>
+        <a href="mailto:2young4u.official@gmail.com">2young4U.official@gmail.com</a>
+      </li>
+      <li>
+        <span class="t2y-contacts__label">Telegram</span>
+        <a href="https://t.me/tooyoungforyou" target="_blank" rel="noopener">@tooyoungforyou</a>
+      </li>
+      <li>
+        <span class="t2y-contacts__label">Telegram / MAX</span>
+        <a href="tel:+79196962424">+7 919 696-24-24</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.t2y-info {
+  padding: 110px 20px 80px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+.t2y-info__inner { max-width: 720px; margin: 0 auto; }
+
+.t2y-info__title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.2;
+  color: #000000;
+  margin: 0 0 20px;
+}
+.t2y-info__h2 {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.3;
+  color: #000000;
+  margin: 36px 0 10px;
+}
+.t2y-info__block { margin: 0 0 8px; }
+.t2y-info__block p,
+.t2y-contacts__about {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  margin: 0 0 8px;
+}
+.t2y-info a {
+  color: #000000 !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid #bbbbbb;
+}
+
+/* Контакты списком: подпись серым сверху, ссылка крупно — на телефоне
+   каждую строку удобно нажать пальцем. */
+.t2y-contacts { padding-bottom: 20px; }
+.t2y-contacts__about { font-size: 16px; color: #000000; }
+.t2y-contacts__list { list-style: none; margin: 0; padding: 0; }
+.t2y-contacts__list li {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+  font-family: 'Raleway', Arial, sans-serif;
+}
+.t2y-contacts__list li:first-child { border-top: 1px solid #e5e5e5; }
+.t2y-contacts__label {
+  display: block;
+  font-size: 13px;
+  color: #777777;
+  margin-bottom: 2px;
+}
+.t2y-contacts__list a {
+  font-size: 17px;
+  font-weight: 500;
+  border-bottom: none;
+  word-break: break-word;
+  font-variant-numeric: lining-nums;  /* цифры ровные, не «прыгающие» */
+}
+
+/* ── Старая форма Tilda (rec208537002) ──
+   1) отступ сверху 135px был под шапку — теперь над формой БЛОК 1;
+   2) левая колонка (телефон, почта, значки) повторяет БЛОК 1 — скрываем;
+   3) форма по центру, ширина как у текста выше;
+   4) заголовок — шрифтом сайта, как остальные заголовки. */
+#rec208537002 { padding-top: 24px !important; padding-bottom: 32px !important; }
+#rec208537002 .t-container .t-col {
+  float: none !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 760px;  /* 720 + поля по 20 — ровно по краю текста выше */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+#rec208537002 .t-container .t-col.t-prefix_1 { display: none !important; }
+#rec208537002 .t-section__title,
+#rec208537002 .t-section__title div {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 22px !important;
+  line-height: 1.3 !important;
+  color: #000000 !important;
+  text-align: left !important;
+  max-width: none !important;
+}
+#rec208537002 .t-section__title { margin-bottom: 20px !important; }
+#rec208537002 .t-section__descr { display: none !important; }
+/* «EN» под формой ведёт на старый адрес 2young4u.store/contactseng —
+   он не открывается. Прячем; лучше и стереть этот текст в форме. */
+#rec208537002 .t718__form-bottom-text { display: none !important; }
+
+@media screen and (min-width: 640px) {
+  .t2y-info { padding-top: 150px; }
+  .t2y-info__title { font-size: 38px; }
+  .t2y-info__h2 { font-size: 22px; }
+  #rec208537002 .t-section__title,
+  #rec208537002 .t-section__title div { font-size: 24px !important; }
+}
+</style>
+
+<!-- ═══════════════ конец БЛОКА 1 ═══════════════ -->
+
+
+
+<!-- ═══════════════ БЛОК 2 — ПОД ФОРМОЙ (копировать отсюда) ═══════════════ -->
+
+<div class="t2y-info t2y-contacts2">
+  <div class="t2y-info__inner">
+
+    <div class="t2y-contacts2__vip">
+      <p class="t2y-contacts2__vip-title">Заказ с примеркой</p>
+      <p>Заказать продукцию бренда (мужская и женская коллекция) с примеркой можно на сайте <a href="https://vipavenue.ru" target="_blank" rel="noopener">VipAvenue.ru</a>.</p>
+      <p>Клиентские офисы VipAvenue расположены в самых удобных районах Москвы, Санкт-Петербурга, Казани, Екатеринбурга, Самары и Краснодара.</p>
+    </div>
+
+    <div class="t2y-contacts2__legal">
+      <p><a href="/offer">Публичная оферта (заказ, оплата, доставка, возврат)</a></p>
+      <p><a href="/privacy">Политика обработки персональных данных</a></p>
+      <p class="t2y-contacts2__req">
+        ИП Герман Кристина Сергеевна<br>
+        ИНН 165904383131<br>
+        ОГРНИП 322169000056725
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.t2y-contacts2 { padding-top: 8px !important; }
+.t2y-contacts2 p {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  margin: 0 0 8px;
+}
+.t2y-contacts2__vip {
+  padding: 24px;
+  background: #f6f6f6;
+}
+.t2y-contacts2__vip-title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif !important;
+  font-size: 18px !important;
+  color: #000000 !important;
+  margin-bottom: 10px !important;
+}
+.t2y-contacts2__legal { margin-top: 40px; }
+.t2y-contacts2__legal p { font-size: 14px; margin-bottom: 10px; }
+.t2y-contacts2__req {
+  margin-top: 18px !important;
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+  color: #888888 !important;
+  font-variant-numeric: lining-nums;
+}
+</style>
+
+<!-- ═══════════════ конец БЛОКА 2 ═══════════════ -->
