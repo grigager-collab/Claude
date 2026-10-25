@@ -1,8 +1,9 @@
-<!-- ════ 2Y4U: ШАПКА — личный кабинет скрыт, значки и меню на планшетах ════
-     Zero-блок шапки rec2498768581, мобильное меню rec2501340841.
-     Кнопки ищем по ссылке (#formanpopup, #forwomenpopup, /merch), а не
-     по номеру. На ПК у кнопок анимация, Tilda оборачивает ссылку в лишний
-     слой — поэтому :has(a[…]), а не :has(> a[…]).
+<!-- ════ 2Y4U: ШАПКА — меню из 5 пунктов, белая шапка на телефоне, ЛК скрыт ════
+     Zero-блок шапки rec2498768581, мобильное меню rec2501340841,
+     выпадающие списки «Мужское» rec2501315011 и «Женское» rec2501320681.
+     Кнопки ищем по ссылке (#formanpopup, #forwomenpopup, /merch, /aboutus,
+     /vatanym), а не по номеру. На ПК у кнопок анимация, Tilda оборачивает
+     ссылку в лишний слой — поэтому :has(a[…]), а не :has(> a[…]).
      «Контакты» в шапке НЕ нужны — они в подвале; в списке заказчицы
      это пункт бургер-меню. -->
 <style>
@@ -28,37 +29,141 @@
   #rec2498768581 .tn-elem[data-elem-id="1777829627863000004"] { left: auto !important; right: 22px !important; }
 }
 
-/* 4. 641–1199 px: «Мужское / Женское / Мерч» — по центру, вплотную
-      (отступы даёт поле самих кнопок: 100 + 99 + 94 px), иначе «Мерч»
-      обрезался */
-@media screen and (min-width: 641px) and (max-width: 1199px) {
-  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 147px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 47px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% + 52px) !important; }
+/* 4. Меню «Мужское / Женское / Мерч / О нас / Ватаным» — по центру шапки
+      (заказчица 25.10: 5 пунктов). «О нас» и «Ватаным» — копии кнопки «Мерч»
+      в Zero-блоке со ссылками /aboutus и /vatanym; место и ширину им задаёт
+      этот код, двигать их в редакторе не нужно.
+      Расчёт в единицах сетки Zero-блока (Tilda сама масштабирует под экран):
+      текст кнопок 65 / 65 / 38 / 40 / 60 px, текст по центру кнопки
+      (ширина кнопок 100 / 99 / 94 / 94 / 94). Между текстами 43 px, как было;
+      на 641–959 px — 20 px, иначе пять пунктов не влезают между логотипом
+      и значками. */
+@media screen and (min-width: 641px) {
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"]),
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"]) { top: 1px !important; width: 94px !important; }
 }
-
-/* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки
-       с теми же координатами, что у кнопок. Кнопки в п. 4 сдвинуты к центру —
-       сдвигаем списки на столько же, чтобы стояли ровно под кнопками.
-       Сдвиг = (новое место − старое) в координатах сетки × масштаб (ширина/сетка):
-       сетка 960: «Мужское» 333 − 442 = −109, «Женское» 433 − 551 = −118;
-       сетка 640: 173 − 442 = −269, 273 − 551 = −278. */
-@media screen and (min-width: 960px) and (max-width: 1199px) {
-  #rec2501315011 .t396__artboard { transform: translateX(-11.354167vw) !important; } /* −109/960 */
-  #rec2501320681 .t396__artboard { transform: translateX(-12.291667vw) !important; } /* −118/960 */
+@media screen and (min-width: 960px) {
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 237.55px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 128.85px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% - 31.9px) !important; }
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 50.25px) !important; }
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 143.35px) !important; }
 }
 @media screen and (min-width: 641px) and (max-width: 959px) {
-  #rec2501315011 .t396__artboard { transform: translateX(-42.03125vw) !important; }  /* −269/640 */
-  #rec2501320681 .t396__artboard { transform: translateX(-43.4375vw) !important; }   /* −278/640 */
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 179.05px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 93.35px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% - 19.4px) !important; }
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 39.75px) !important; }
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 109.85px) !important; }
 }
 
-/* 5. 480–640 px: тут уже мобильное меню (бургер) — текстовые кнопки прячем,
-      логотип сдвигаем вправо от бургера, как на телефоне */
+/* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки,
+       по месту стояли ровно под кнопками. Кнопки в п. 4 сдвинуты —
+       двигаем пункты списков на столько же (фон списка не трогаем).
+       Сдвиг = новое место кнопки − старое (442 и 551), в единицах сетки:
+       от 1200 px: 362.45 − 442, 471.15 − 551; 960–1199: 242.45 − 442,
+       351.15 − 551; 641–959: 140.95 − 442, 226.65 − 551. */
+@media screen and (min-width: 1200px) {
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -79.55px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -79.85px !important; }
+}
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -199.55px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -199.85px !important; }
+}
+@media screen and (min-width: 641px) and (max-width: 959px) {
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -301.05px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -324.35px !important; }
+}
+
+/* 4в. Список «Мужское»: «Комплекты» 4-м пунктом, после «Мягких пиджаков»
+       (заказчица 25.10). В Zero-блоке списка — копия «Брюк» со ссылкой
+       /men/sets; место ей и пунктам ниже задаёт код, белый фон списка
+       длиннее на один пункт. Пока «Комплектов» в списке нет — ничего не меняется. */
+@media screen and (min-width: 641px) {
+  #rec2501315011 .tn-elem:has(a[href$="/men/sets"]) { top: 141px !important; }
+  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/trousers"]) { top: 168px !important; }
+  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/tshirts"])  { top: 195px !important; }
+  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/shorts"])   { top: 222px !important; }
+  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem[data-elem-id="1777739393928000001"] { height: 197px !important; }
+}
+
+/* 5. До 640 px — мобильное меню (бургер): текстовые кнопки прячем;
+      на 480–640 px логотип сдвигаем вправо от бургера, как на телефоне */
+@media screen and (max-width: 640px) {
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"]),
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"]) { display: none !important; }
+}
 @media screen and (min-width: 480px) and (max-width: 640px) {
   #rec2498768581 .tn-elem:has(a[href="#formanpopup"]),
   #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]),
   #rec2498768581 .tn-elem:has(a[href="/merch"]) { display: none !important; }
   #rec2498768581 .tn-elem[data-elem-id="1778509606390000002"] { left: 49px !important; }
 }
+
+/* 6. Телефоны и планшеты (до 1199 px): шапка всегда белая (просьба
+      заказчицы 25.10: «то белая, то окрашивается от модулей»).
+      В Zero-блоке фон шапки — два слоя: белый проявляется только после
+      прокрутки на 100–600 px, а матовый (белый 15 % + размытие) стоит
+      всегда — сквозь него просвечивали фото и тёмные блоки. Даём шапке
+      плотный белый фон, матовый слой убираем. ПК (от 1200 px) — как было:
+      прозрачная над первым экраном, белеет при прокрутке. */
+@media screen and (max-width: 1199px) {
+  #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
+}
 </style>
+<script>
+(function () {
+  // 7. К п. 6: шапка висит поверх страницы. Если страница начинается с фото
+  //    (главная на телефоне), белая шапка закрыла бы его верх — сдвигаем
+  //    первый блок вниз на высоту шапки (она разная: 50–78 px по ширине).
+  //    Короткую полоску-отступ сверху (белая полоса на «О бренде» на телефоне)
+  //    не трогаем — она для того и стоит. ПК не трогаем.
+  var MEDIA = 'img, video, iframe, .t-bgimg, .t-cover__carrier, [data-original], [data-content-cover-bg]';
+  var moved = null;
+
+  // первый блок страницы, если у него фото под шапкой; иначе null.
+  // shift — сколько добавить сверху, чтобы блок встал ровно под шапку
+  function photoBlock(hh) {
+    var recs = document.querySelectorAll('#allrecords .t-rec');
+    for (var i = 0; i < recs.length; i++) {
+      var r = recs[i];
+      if (r.closest('header, footer') || r.offsetHeight < 5) continue;  // шапка, подвал, коды, скрытые
+      var rt = r.getBoundingClientRect().top;
+      // место блока без нашего сдвига (его не снимаем — страница не дёргается)
+      var top = rt + window.pageYOffset - (r === moved ? parseFloat(r.style.marginTop) || 0 : 0);
+      if (top >= hh || r.offsetHeight < 2 * hh) return null;   // уже ниже шапки / полоска-отступ
+      var m = r.querySelectorAll(MEDIA);
+      for (var j = 0; j < m.length; j++) {
+        var b = m[j].getBoundingClientRect();
+        if (b.width && b.height && top + (b.top - rt) < hh) return { rec: r, shift: Math.round(hh - top) };
+      }
+      return null;
+    }
+    return null;
+  }
+
+  var watched = false;
+  function fit() {
+    var art = document.querySelector('#rec2498768581 .t396__artboard');
+    // высоту шапки Tilda пересчитывает сама и позже нас — следим за ней
+    if (art && !watched && window.ResizeObserver) { watched = true; new ResizeObserver(later).observe(art); }
+    var hh = art && window.innerWidth <= 1199 ? art.offsetHeight : 0;
+    var p = hh ? photoBlock(hh) : null;
+    if (moved && (!p || p.rec !== moved)) { moved.style.marginTop = ''; moved = null; }
+    if (p && p.rec.style.marginTop !== p.shift + 'px') p.rec.style.marginTop = p.shift + 'px';
+    if (p) moved = p.rec;
+  }
+
+  var t;
+  function later() { clearTimeout(t); t = setTimeout(fit, 150); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit);
+  else fit();
+  window.addEventListener('load', fit);
+  [600, 2000].forEach(function (ms) { setTimeout(fit, ms); });
+  window.addEventListener('resize', later);
+  window.addEventListener('orientationchange', later);
+})();
+</script>
 <!-- ════ конец: шапка ════ -->
