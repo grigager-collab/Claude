@@ -1,0 +1,337 @@
+<!-- ════ РЕЗЕРВНАЯ КОПИЯ «Шапки 1.1» — то, что стояло на сайте 25.10 до
+     правок шапки (личный кабинет, планшеты). Сверено с сайтом построчно.
+     ОТКАТ: вставить ВЕСЬ этот файл в блок HTML-кода «Шапки 1.1» вместо
+     текущего → «Опубликовать все страницы». ════ -->
+<!-- ════════════════════════════════════════════════════════════════
+     2Y4U — ВЕСЬ КОД БЛОКА «HTML-код» (T123) НА «ШАПКЕ 1.1».  24–25.10.2026
+     Этот блок есть на каждой странице сайта, поэтому общий код живёт здесь,
+     а не в HEAD (HEAD упёрся в предел 64 КБ).
+
+     КАК ВСТАВИТЬ: открыть «Шапку 1.1» → блок HTML-кода (тот, куда этот
+     файл вставлялся раньше) → выделить ВСЁ старое → вставить ВЕСЬ этот файл
+     вместо него → «Опубликовать все страницы».
+
+     Внутри по порядку:
+       1. Шрифт заголовков (был и раньше)
+       2. Фото в каталоге 3:4 вместо квадрата
+       3. Карточка: крошки один раз сверху, размеры в ряд, колонки на ПК
+       4. Параметры модели 188 / XL/L + избранное без размера
+       5. Окно про cookie
+       6. Ссылки в галочках согласия: реклама (корзина), политика (форма «Контактов»)
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
+<style>
+@font-face {
+  font-family: 'Tenor Sans';
+  src: url('https://static.tildacdn.com/tild3234-3839-4330-b235-623230633564/TenorSans-Regular.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+</style>
+
+<!-- 2Y4U: фото в каталоге 3:4 вместо квадрата. Блок T123 на «Шапке 1.1».
+     В блоках каталога стоит пропорция 1:1, а все фото товаров вертикальные
+     3:4 — квадрат срезал воротник и низ. Правило на все страницы сразу. -->
+<style>
+.t-catalog__card__imgwrapper.t-catalog__card__imgwrapper_1-1 {
+  padding-bottom: 133.33% !important;
+}
+</style>
+
+<!-- ════ 2Y4U: КАРТОЧКА ТОВАРА — крошки, размеры, колонки ════ -->
+<style>
+/* ── 1. Хлебные крошки: один раз, в самом верху карточки ──
+   Скрипт в HEAD вставляет крошки перед названием. Если страница грузится
+   медленно, он успевает раньше стилей Tilda — и крошки попадают ВНУТРЬ
+   сетки названия: вторая копия узкой колонкой справа. Старые копии
+   прячем все, показываем одну — над фото (.t2y-crumbs-top). */
+.t780 .t2y-crumbs:not(.t2y-crumbs-top),
+.t760 .t2y-crumbs:not(.t2y-crumbs-top) { display: none !important; }
+.t2y-crumbs-row { padding: 12px 20px 18px; box-sizing: border-box; }
+.t2y-crumbs-row .t2y-crumbs { margin: 0 !important; }
+
+/* ── 2. Размеры S…3XL всегда в один ряд ──
+   Кнопки делят ширину поровну, но не шире 64 px. Селектор длинный
+   нарочно: старое правило с фиксированной шириной (--variant-box-size)
+   сильнее короткого. */
+.t780 .t-product__option-variants_buttons.t-product__option-variants_simple,
+.t760 .t-product__option-variants_buttons.t-product__option-variants_simple {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+.t780 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple,
+.t760 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 64px !important;
+  width: auto !important;
+  margin: 0 !important;
+  justify-content: center !important;
+}
+
+/* ── 3. ПК: колонки фото / текст по центру и без обрезки ──
+   Было: сетка прижата влево, текст 400 px торчал за колонку — на экране
+   1280 px правая часть уходила за край. Стало: фото тянется, колонка
+   с текстом 360–440 px, всё по центру. */
+@media screen and (min-width: 961px) {
+  .t760 > .t-container.js-product.js-product-single.js-store-product.js-store-product_single {
+    display: flex !important;
+    align-items: stretch !important;  /* колонка текста во всю высоту фото —
+                                         иначе Tilda не «прилепит» её при прокрутке */
+    gap: 56px !important;
+    max-width: 1360px !important;
+    margin: 0 auto !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+  }
+  /* «распорки» Tilda (clearfix) во flex становятся пустыми колонками
+     и сдвигают фото на ширину отступа */
+  .t760 > .t-container.js-product.js-product-single::before,
+  .t760 > .t-container.js-product.js-product-single::after { display: none !important; }
+  .t760 > .t-container > .t760__flexcolumn.t-col_8 {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  .t760 > .t-container > .t760__col_margin {
+    flex: 0 0 clamp(360px, 32vw, 440px) !important;
+    width: clamp(360px, 32vw, 440px) !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+  /* ширину «липкой» части Tilda сам ставит по колонке (max-width в style) —
+     её не трогаем, иначе при прокрутке она растянется на весь экран */
+  .t760 .t760__col_margin .t760__textwrapper {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .t760 .t2y-crumbs-row {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 40px 24px;
+  }
+}
+</style>
+
+<script>
+(function () {
+  /* Одна строка крошек над карточкой. Текст берём из копии, которую
+     построил скрипт в HEAD (там логика разделов), — сами её не строим. */
+  function place() {
+    document.querySelectorAll('.t780, .t760').forEach(function (block) {
+      if (block.querySelector('.t2y-crumbs-top')) return;
+      var src = block.querySelector('.t2y-crumbs');
+      var box = block.querySelector('.t-container');
+      if (!src || !box) return;
+
+      var row = document.createElement('div');
+      row.className = 't2y-crumbs-row';
+      var c = document.createElement('div');
+      c.className = 't2y-crumbs t2y-crumbs-top';
+      c.setAttribute('role', 'navigation');
+      c.setAttribute('aria-label', 'Хлебные крошки');
+      c.innerHTML = src.innerHTML;
+      row.appendChild(c);
+      box.parentNode.insertBefore(row, box);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', place);
+  window.addEventListener('load', place);
+  [500, 1200, 2500, 4000].forEach(function (t) { setTimeout(place, t); });
+})();
+</script>
+<!-- ════ конец: карточка товара ════ -->
+
+<!-- ════ 2Y4U: ПАРАМЕТРЫ МОДЕЛИ + ИЗБРАННОЕ БЕЗ РАЗМЕРА ════ -->
+<script>
+(function () {
+  /* ── Параметры модели на фото ──
+     На карточках в аккордеоне стоят прочерки («Рост модели: — см.»).
+     Заказчица: у всех мужских — 188 см, размер XL/L. Меняем ТОЛЬКО прочерки:
+     если на какой-то карточке вписать свои цифры, скрипт их не тронет. */
+  var HEIGHT = '188';
+  var SIZE = 'XL/L';
+
+  function fillModel() {
+    var src = document.querySelector('.t2y-acc-source');
+    if (!src || src.getAttribute('data-crumb-parent') !== 'Мужское') return;
+    document.querySelectorAll('.t2y-acc-source p, .product-popup-accordion p')
+      .forEach(function (p) {
+        var t = (p.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/^Рост модели: — см\.?$/.test(t)) p.textContent = 'Рост модели: ' + HEIGHT + ' см.';
+        else if (/^На модели размер: —\.?$/.test(t)) p.textContent = 'На модели размер: ' + SIZE + '.';
+      });
+  }
+
+  /* ── Избранное: без строки «Размер» ──
+     Tilda при добавлении в избранное сама берёт первый размер (S) и
+     показывает его. Прячем строку «Размер: …», цвет и артикул остаются. */
+  function cleanWishlist() {
+    document.querySelectorAll('.t1002__product-title__option > div').forEach(function (d) {
+      if (/^\s*Размер\s*:/.test(d.textContent || '')) d.style.display = 'none';
+    });
+  }
+
+  function tick() { fillModel(); cleanWishlist(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  [600, 1500, 3000].forEach(function (t) { setTimeout(tick, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    requestAnimationFrame(function () { tick(); busy = false; });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: параметры модели + избранное ════ -->
+
+<!-- ════ 2Y4U: ОКНО ПРО COOKIE ════
+     Показывается один раз. Выбор хранится в cookie t2y_cc на год:
+     «all» — принял все, «nec» — только необходимые.
+     На будущее (Метрика): ставить её, только если window.t2yCookieOK() === true. -->
+<style>
+.t2y-cc {
+  position: fixed; inset: 0; z-index: 2147483000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; box-sizing: border-box;
+  background: rgba(0, 0, 0, .45);
+}
+.t2y-cc__box {
+  width: 100%; max-width: 420px; box-sizing: border-box;
+  padding: 28px 24px 24px; background: #ffffff; color: #000000;
+}
+.t2y-cc__title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-size: 20px; font-weight: 400; line-height: 1.3;
+  margin: 0 0 12px;
+}
+.t2y-cc__text {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-size: 14px; font-weight: 300; line-height: 1.6; color: #333333;
+  margin: 0 0 22px;
+}
+.t2y-cc__text a {
+  color: #000000 !important; text-decoration: none !important;
+  border-bottom: 1px solid #bbbbbb;
+}
+.t2y-cc__btn {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 15px 20px; margin: 0 0 10px;
+  font-family: 'Raleway', Arial, sans-serif; font-size: 15px; font-weight: 600;
+  border: 1px solid #000000; border-radius: 0; cursor: pointer;
+  background: #000000; color: #ffffff;
+  -webkit-appearance: none; appearance: none;
+}
+.t2y-cc__btn_ghost { background: #ffffff; color: #000000; margin-bottom: 0; }
+.t2y-cc__btn:hover { opacity: .85; }
+</style>
+
+<script>
+(function () {
+  var POLICY_URL = '/politika-obrabotki-persdannyh';
+
+  function read() {
+    var m = document.cookie.match(/(?:^|;\s*)t2y_cc=(all|nec)/);
+    return m ? m[1] : null;
+  }
+  window.t2yCookieOK = function () { return read() === 'all'; };
+
+  function save(v) {
+    document.cookie = 't2y_cc=' + v + '; max-age=31536000; path=/; SameSite=Lax';
+    try { document.dispatchEvent(new CustomEvent('t2y:cookie', { detail: v })); } catch (e) {}
+  }
+
+  function show() {
+    if (read() || document.querySelector('.t2y-cc')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 't2y-cc';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-labelledby', 't2y-cc-title');
+    wrap.innerHTML =
+      '<div class="t2y-cc__box">' +
+        '<p class="t2y-cc__title" id="t2y-cc-title">Файлы cookie</p>' +
+        '<p class="t2y-cc__text">Мы используем cookie, чтобы сайт работал, ' +
+          'и для анализа посещаемости. Подробнее — в <a href="' + POLICY_URL + '">' +
+          'политике обработки персональных данных</a>.</p>' +
+        '<button type="button" class="t2y-cc__btn" data-v="all">Принять</button>' +
+        '<button type="button" class="t2y-cc__btn t2y-cc__btn_ghost" data-v="nec">Только необходимые</button>' +
+      '</div>';
+    wrap.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-v]');
+      if (!b) return;
+      save(b.getAttribute('data-v'));
+      wrap.remove();
+    });
+    document.body.appendChild(wrap);
+  }
+
+  /* небольшая пауза, чтобы окно не мешало первой отрисовке страницы */
+  function start() { setTimeout(show, 700); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+<!-- ════ конец: окно про cookie ════ -->
+
+<!-- ════ 2Y4U: ССЫЛКИ В ГАЛОЧКАХ СОГЛАСИЯ (корзина и формы) ════
+     В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
+     Поэтому в лейбле пишем простой текст, а нужные слова делает ссылкой этот
+     скрипт. Если в лейбле остался код <a …> — он уберёт теги сам.
+     Новая галочка со ссылкой — добавить строку в LINKS. -->
+<style>
+.t-checkbox__control a.t2y-consent-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+</style>
+<script>
+(function () {
+  /* фраза в тексте галочки → страница */
+  var LINKS = [
+    { phrase: 'рекламную информацию', url: '/soglasie' },
+    { phrase: 'политикой обработки персональных данных', url: '/politika-obrabotki-persdannyh' }
+  ];
+
+  function linkify() {
+    document.querySelectorAll('.t-checkbox__control > span').forEach(function (span) {
+      if (span.querySelector('a.t2y-consent-link')) return;
+      var text = (span.textContent || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+      var hit = null, at = -1;
+      LINKS.forEach(function (l) {
+        var i = text.indexOf(l.phrase);
+        if (i >= 0 && !hit) { hit = l; at = i; }
+      });
+      if (!hit) {
+        if (text !== span.textContent) span.textContent = text;
+        return;
+      }
+      var a = document.createElement('a');
+      a.className = 't2y-consent-link';
+      a.href = hit.url;
+      a.target = '_blank';  /* в новой вкладке — корзина и форма не теряются */
+      a.rel = 'noopener';
+      a.textContent = hit.phrase;
+      span.textContent = '';
+      span.appendChild(document.createTextNode(text.slice(0, at)));
+      span.appendChild(a);
+      span.appendChild(document.createTextNode(text.slice(at + hit.phrase.length)));
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', linkify);
+  window.addEventListener('load', linkify);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+})();
+</script>
+<!-- ════ конец: ссылки в галочках согласия ════ -->
