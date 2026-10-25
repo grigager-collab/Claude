@@ -1,0 +1,97 @@
+<!-- ════════════════════════════════════════════════════════════════
+     ПОДБОР ФОНА — служебная страница: фото с разными фонами в плитках,
+     точь-в-точь как в каталоге. Создано 25.10.2026.
+
+     КАК СДЕЛАТЬ:
+       1. Новая страница, адрес /fon. В меню и подвал НЕ ставить.
+       2. На каждый вариант фона — свой блок-галерея с фото этого фона.
+          Проще всего скопировать галерею «Детали, обработка, фурнитура»
+          с главной и заменить в ней картинки. Подойдёт любая галерея.
+       3. В самый низ — блок «Другое → HTML-код» (T123), вставить ВСЁ.
+       4. Опубликовать.
+
+     Код берёт фото из каждой галереи по порядку и показывает их плитками
+     каталога: на телефоне 2 в ряд, на ПК 4 в ряд, фото 3:4, подложка
+     #FAFAFA, скругление 10 px, подпись и цена — те же шрифты и отступы.
+     Галерея = группа «Фон 1», «Фон 2»… Свои названия — в NAMES ниже.
+     ════════════════════════════════════════════════════════════════ -->
+<style>
+/* width: 100% обязательно: страница Tilda — колонка во flex, без него блок сжимается */
+.t2y-fon { width: 100%; max-width: 1200px; margin: 0 auto; padding: 40px 20px 20px; box-sizing: border-box; }
+.t2y-fon_first { padding-top: 135px; }   /* как отступ блока каталога под шапкой */
+.t2y-fon_last { padding-bottom: 80px; }
+.t2y-fon__h {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif; font-weight: 400;
+  font-size: 28px; line-height: 1.2; color: #000000; margin: 0 0 24px;
+}
+/* плитки — размеры сняты с каталога «Олимпийки и толстовки» */
+.t2y-fon__grid { display: flex; flex-wrap: wrap; gap: 40px 20px; }
+.t2y-fon__card { width: calc((100% - 60px) / 4); background: #fafafa; border-radius: 10px; overflow: hidden; }
+.t2y-fon__img { position: relative; padding-bottom: 133.3333%; }
+.t2y-fon__img img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.t2y-fon__txt { padding: 30px; }
+.t2y-fon__name, .t2y-fon__price { font-family: 'Tenor', 'Tenor Sans', Arial, sans-serif; font-weight: 600; color: #000000; }
+.t2y-fon__name { font-size: 16px; line-height: 1.2; }
+.t2y-fon__price { font-size: 16px; line-height: 1.35; margin-top: 12px; }
+@media screen and (max-width: 959px) {
+  .t2y-fon__grid { gap: 40px 10px; }
+  .t2y-fon__card { width: calc((100% - 10px) / 2); }
+  .t2y-fon__name { font-size: 14px; }
+  .t2y-fon__price { font-size: 12px; }
+}
+@media screen and (max-width: 640px) {
+  .t2y-fon__h { font-size: 22px; }
+  .t2y-fon_first { padding-top: 100px; }
+}
+</style>
+<script>
+(function () {
+  // свои названия групп по порядку галерей: ['Светло-серый', 'Бежевый'];
+  // пусто — «Фон 1», «Фон 2»…
+  var NAMES = [];
+  var PRICE = '15 900 р.';
+
+  // уменьшенная копия с CDN Tilda; если не загрузится — оригинал
+  function small(u) {
+    var m = u.match(/^https:\/\/static\.tildacdn\.com\/([^\/]+)\/(.+)$/);
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/resize/700x/-/format/webp/' + m[2] : u;
+  }
+
+  function build() {
+    if (document.querySelector('.t2y-fon')) return;
+    // галереи этой страницы: блоки с картинками, кроме шапки, подвала и HTML-блоков
+    var recs = [].slice.call(document.querySelectorAll('.t-rec')).filter(function (r) {
+      return !r.closest('#t-header, #t-footer, header, footer') &&
+             r.getAttribute('data-record-type') !== '131' &&
+             r.querySelector('[data-original]');
+    });
+    recs.forEach(function (rec, gi) {
+      var urls = [];
+      rec.querySelectorAll('[data-original]').forEach(function (e) {
+        var u = e.getAttribute('data-original');
+        if (u && urls.indexOf(u) < 0) urls.push(u);
+      });
+      var name = NAMES[gi] || ('Фон ' + (gi + 1));
+      var html = '<div class="t2y-fon__h">' + name + '</div><div class="t2y-fon__grid">';
+      urls.forEach(function (u) {
+        html += '<div class="t2y-fon__card"><div class="t2y-fon__img">' +
+                '<img alt="" src="' + small(u) + '" data-orig="' + u + '"></div>' +
+                '<div class="t2y-fon__txt"><div class="t2y-fon__name">' + name + '</div>' +
+                '<div class="t2y-fon__price">' + PRICE + '</div></div></div>';
+      });
+      var box = document.createElement('div');
+      box.className = 't2y-fon' + (gi === 0 ? ' t2y-fon_first' : '') + (gi === recs.length - 1 ? ' t2y-fon_last' : '');
+      box.innerHTML = html + '</div>';
+      box.querySelectorAll('img').forEach(function (im) {
+        im.onerror = function () { if (im.src !== im.getAttribute('data-orig')) im.src = im.getAttribute('data-orig'); };
+      });
+      rec.parentNode.insertBefore(box, rec.nextSibling);
+      rec.style.display = 'none';   // исходную галерею прячем
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', build);
+  window.addEventListener('load', build);
+  setTimeout(build, 1500);
+})();
+</script>
