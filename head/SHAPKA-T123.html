@@ -21,6 +21,7 @@
        9. Таблица размеров: текст заказчицы под таблицей (25.10)
       10. Карточка: «Возможно, вам понравится» из каталога, того же цвета;
           «Рекомендации стилиста» скрыты до коллажей (25.10)
+      11. Карточка: «Рекомендации стилиста» — коллажи по цвету и модели (25.10)
      ════════════════════════════════════════════════════════════════ -->
 
 <!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
@@ -728,7 +729,7 @@
     prev.onclick = function () { row.scrollBy({ left: -row.clientWidth, behavior: 'smooth' }); };
     next.onclick = function () { row.scrollBy({ left: row.clientWidth, behavior: 'smooth' }); };
     function state() {
-      var top = row.querySelector('.t2y-rel__img');
+      var top = row.querySelector('.t2y-rel__img') || row.firstElementChild;
       if (top) prev.style.top = next.style.top = (top.offsetHeight / 2) + 'px';
       box.classList.toggle('t2y-rel_scroll', row.scrollWidth > row.clientWidth + 2);
       box.classList.toggle('t2y-rel_start', row.scrollLeft < 4);
@@ -738,6 +739,7 @@
     window.addEventListener('resize', state);
     state(); setTimeout(state, 600);
   }
+  window.t2yArrows = arrows;   // стрелки нужны и ряду коллажей (часть 11)
 
   function render(rec, items) {
     var html = '<div class="t2y-rel__row">';
@@ -786,3 +788,110 @@
 })();
 </script>
 <!-- ════ конец: «Возможно, вам понравится» ════ -->
+
+<!-- ════ 2Y4U: КАРТОЧКА — «Рекомендации стилиста»: коллажи (25.10.2026) ════
+     Коллажи — картинки, без открытия и ссылок (просьба заказчицы). Каждый
+     стоит в карточках того цвета и модели костюма, что на нём. Картинки
+     загружены на служебную страницу /kollazhi (галерея), здесь — их адреса.
+     Встаёт в блок «Рекомендации стилиста» на странице товара; у товара без
+     коллажей блок остаётся скрытым (см. часть 10).
+     Новый коллаж: загрузить в галерею на /kollazhi → добавить адрес в CARDS. -->
+<style>
+.t2y-sty { max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: relative; }
+.t2y-sty__row {
+  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.t2y-sty__row::-webkit-scrollbar { display: none; }
+.t2y-sty__item {
+  flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start;
+  border-radius: 10px; overflow: hidden; background: #fafafa;
+}
+.t2y-sty__item img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+@media screen and (max-width: 959px) {
+  .t2y-sty__row { gap: 10px; }
+  .t2y-sty__item { flex-basis: calc((100% - 10px) / 2); }
+}
+@media screen and (max-width: 640px) {
+  /* коллаж крупно, чтобы были видны вещи, и краешек следующего */
+  .t2y-sty__item { flex-basis: 82%; }
+}
+</style>
+<script>
+(function () {
+  if (!/^\/p\//.test(location.pathname)) return;
+
+  var CDN = 'https://static.tildacdn.com/';
+  var C = {
+    volcano1: 'tila3337-3064-4662-b032-663233613139/IMG_9466_1.JPEG',
+    volcano2: 'tila3839-3866-4435-b437-336162623532/IMG_9468_1.JPEG',
+    volcano3: 'tila6430-3963-4566-b235-656564666633/IMG_9467_1.JPEG',
+    volcanoD1: 'tila3065-6534-4533-a561-333061343334/IMG_3116_3.JPEG',
+    volcanoD2: 'tila6334-6563-4364-b338-316665653462/IMG_0150.JPG',
+    ocean1: 'tila3535-3965-4631-b130-653435626530/IMG_4218.JPG',
+    oceanD1: 'tila3733-3431-4637-b564-386637353631/IMG_3121_3.JPEG',
+    spaceD1: 'tila3862-3662-4932-a161-353235383137/IMG_9469_1.JPEG',
+    spaceD2: 'tila3237-6432-4630-b363-363966656439/IMG_9511.JPEG',
+    spaceD3: 'tila6662-6635-4361-b663-633432653031/IMG_9512.JPEG',
+    spaceD4: 'tila6364-3533-4336-b663-623936646236/IMG_9513.JPEG',
+    space1: 'tila3861-3063-4035-a432-353639373031/IMG_9509.JPEG',
+    space2: 'tila3339-3930-4231-b465-356435303964/IMG_9510.JPEG',
+    space3: 'tila6537-6366-4662-a633-333935323665/IMG_0129.JPG',
+    phantom1: 'tila3330-3937-4533-b365-636434306465/IMG_3118_1.JPEG'
+  };
+  // страница товара → коллажи (по порядку показа).
+  // «D» — олимпийка с воротничком («Дикаприо»), без «D» — со стойкой.
+  var CARDS = {
+    '/p/olimpiyka-hlopkovaya-volcano-korichnevyy': ['volcano1', 'volcano2', 'volcano3'],
+    '/p/olimpiyka-klassicheskaya-volcano-korichnevyy': ['volcanoD1', 'volcanoD2'],
+    '/p/olimpiyka-hlopkovaya-ocean-siniy': ['ocean1'],
+    '/p/olimpiyka-klassicheskaya-ocean-siniy': ['oceanD1'],
+    '/p/olimpiyka-klassicheskaya-space-siniy': ['spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
+    '/p/kostyum-shelk-vatanym': ['spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
+    '/p/olimpiyka-hlopkovaya-siniy': ['space1', 'space2', 'space3'],
+    '/p/tolstovka-hlopkovaya-siniy': ['space1', 'space2', 'space3'],
+    '/p/bryuki-sportivnye-siniy': ['space1', 'space2', 'space3'],
+    '/p/kostyum-hlopkovyy-winter-tale-siniy': ['space3', 'space1', 'space2'],
+    '/p/olimpiyka-hlopkovaya-chernyy': ['phantom1']
+  };
+
+  // уменьшенная копия с CDN Tilda; если не загрузится — оригинал
+  function small(path) {
+    var i = path.indexOf('/');
+    return 'https://optim.tildacdn.com/' + path.slice(0, i) + '/-/resize/800x/-/format/webp/' + path.slice(i + 1);
+  }
+
+  function run() {
+    var list = CARDS[location.pathname.replace(/\/+$/, '').toLowerCase()];
+    if (!list || !list.length) return;
+    var rec = null;
+    document.querySelectorAll('.t-rec[data-record-type="786"]').forEach(function (r) {
+      var t = (r.querySelector('.js-block-header-title') || {}).textContent || '';
+      if (/стилист/i.test(t)) rec = r;
+    });
+    if (!rec || rec.querySelector('.t2y-sty')) return;
+
+    var html = '<div class="t2y-sty__row">';
+    list.forEach(function (key) {
+      if (!C[key]) return;
+      html += '<div class="t2y-sty__item"><img alt="Образ от стилиста 2young4U" loading="lazy" src="' +
+              small(C[key]) + '" data-orig="' + CDN + C[key] + '"></div>';
+    });
+    var box = document.createElement('div');
+    box.className = 't2y-sty';
+    box.innerHTML = html + '</div>';
+    box.querySelectorAll('img').forEach(function (im) {
+      im.onerror = function () { var o = im.getAttribute('data-orig'); if (o && im.src !== o) im.src = o; };
+    });
+    var head = rec.querySelector('.js-block-header');
+    if (head && head.parentNode) head.parentNode.insertBefore(box, head.nextSibling);
+    else rec.appendChild(box);
+    rec.classList.add('t2y-rel-ready');   // показать блок (часть 10 прячет его до заполнения)
+    if (window.t2yArrows) window.t2yArrows(box, box.querySelector('.t2y-sty__row'));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+<!-- ════ конец: «Рекомендации стилиста» ════ -->
