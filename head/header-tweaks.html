@@ -1,7 +1,10 @@
-<!-- ════ 2Y4U: ШАПКА — личный кабинет скрыт, значки на планшетах, «Контакты» ════
+<!-- ════ 2Y4U: ШАПКА — личный кабинет скрыт, значки и меню на планшетах ════
      Zero-блок шапки rec2498768581, мобильное меню rec2501340841.
-     Кнопки ищем по ссылке (#formanpopup, /merch, /contacts…), а не по номеру:
-     так правило подхватит и новую кнопку «Контакты». -->
+     Кнопки ищем по ссылке (#formanpopup, #forwomenpopup, /merch), а не
+     по номеру. На ПК у кнопок анимация, Tilda оборачивает ссылку в лишний
+     слой — поэтому :has(a[…]), а не :has(> a[…]).
+     «Контакты» в шапке НЕ нужны — они в подвале; в списке заказчицы
+     это пункт бургер-меню. -->
 <style>
 /* 1. Личный кабинет пока скрыт — заказчица: «откроем, когда там появится
       контент». Вернуть: удалить этот пункт и пункт 2. */
@@ -25,28 +28,28 @@
   #rec2498768581 .tn-elem[data-elem-id="1777829627863000004"] { left: auto !important; right: 22px !important; }
 }
 
-/* 4. 641–1199 px: «Мужское / Женское / Мерч / Контакты» — по центру,
-      вплотную (отступы даёт поле самих кнопок), иначе «Мерч» обрезался */
+/* 4. 641–1199 px: «Мужское / Женское / Мерч» — по центру, вплотную
+      (отступы даёт поле самих кнопок: 100 + 99 + 94 px), иначе «Мерч»
+      обрезался */
 @media screen and (min-width: 641px) and (max-width: 1199px) {
-  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 197px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 97px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% + 2px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="/contacts"])       { left: calc(50% + 96px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 147px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 47px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% + 52px) !important; }
 }
 
 /* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки
        с теми же координатами, что у кнопок. Кнопки в п. 4 сдвинуты к центру —
        сдвигаем списки на столько же, чтобы стояли ровно под кнопками.
        Сдвиг = (новое место − старое) в координатах сетки × масштаб (ширина/сетка):
-       сетка 960: «Мужское» 283 − 442 = −159, «Женское» 383 − 551 = −168;
-       сетка 640: 123 − 442 = −319, 223 − 551 = −328. */
+       сетка 960: «Мужское» 333 − 442 = −109, «Женское» 433 − 551 = −118;
+       сетка 640: 173 − 442 = −269, 273 − 551 = −278. */
 @media screen and (min-width: 960px) and (max-width: 1199px) {
-  #rec2501315011 .t396__artboard { transform: translateX(-16.5625vw) !important; }  /* −159/960 */
-  #rec2501320681 .t396__artboard { transform: translateX(-17.5vw) !important; }     /* −168/960 */
+  #rec2501315011 .t396__artboard { transform: translateX(-11.354167vw) !important; } /* −109/960 */
+  #rec2501320681 .t396__artboard { transform: translateX(-12.291667vw) !important; } /* −118/960 */
 }
 @media screen and (min-width: 641px) and (max-width: 959px) {
-  #rec2501315011 .t396__artboard { transform: translateX(-49.84375vw) !important; } /* −319/640 */
-  #rec2501320681 .t396__artboard { transform: translateX(-51.25vw) !important; }    /* −328/640 */
+  #rec2501315011 .t396__artboard { transform: translateX(-42.03125vw) !important; }  /* −269/640 */
+  #rec2501320681 .t396__artboard { transform: translateX(-43.4375vw) !important; }   /* −278/640 */
 }
 
 /* 5. 480–640 px: тут уже мобильное меню (бургер) — текстовые кнопки прячем,
@@ -54,8 +57,7 @@
 @media screen and (min-width: 480px) and (max-width: 640px) {
   #rec2498768581 .tn-elem:has(a[href="#formanpopup"]),
   #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]),
-  #rec2498768581 .tn-elem:has(a[href="/merch"]),
-  #rec2498768581 .tn-elem:has(a[href="/contacts"]) { display: none !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"]) { display: none !important; }
   #rec2498768581 .tn-elem[data-elem-id="1778509606390000002"] { left: 49px !important; }
 }
 </style>
