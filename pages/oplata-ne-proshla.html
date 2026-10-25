@@ -1,0 +1,116 @@
+<!-- ════════════════════════════════════════════════════════════════
+     СТРАНИЦА «ОПЛАТА НЕ ПРОШЛА».  Создано 25.10.2026.
+     Пара к /thanks (успешная оплата). Текст — заготовка, заказчица
+     перепишет («с рандомным текстом, я потом причешу»).
+
+     КУДА: новая страница, адрес /oplata-ne-proshla, один блок
+           «Другое → HTML-код» (T123), вставить ВСЁ содержимое файла.
+           Шапка и подвал подставятся сами.
+           Настройки страницы → SEO: запретить индексацию (как у /thanks).
+
+     В ПЛАТЁЖНОМ МОДУЛЕ (Т-Банк):
+       успешный платёж    → https://2young4u.ru/thanks
+       неуспешный платёж  → https://2young4u.ru/oplata-ne-proshla
+
+     Текст не обещает, что товары остались в корзине: Tilda может
+     очистить корзину, как только заказ отправлен, до оплаты.
+
+     Стили — те же, что у /thanks и 404 (класс t2y-msg), правила одинаковые.
+     ════════════════════════════════════════════════════════════════ -->
+
+<div class="t2y-msg">
+  <div class="t2y-msg__inner">
+    <h1 class="t2y-msg__title">Оплата не прошла</h1>
+    <p class="t2y-msg__text">
+      Платёж не завершён — заказ пока не оплачен. Так бывает, если банк
+      отклонил операцию, не пришёл код подтверждения или страницу оплаты
+      закрыли.
+    </p>
+    <p class="t2y-msg__text">
+      Попробуйте оформить заказ ещё раз или свяжитесь с нами —
+      поможем с оплатой.
+    </p>
+    <div class="t2y-msg__btns">
+      <a class="t2y-msg__btn" href="/men">Вернуться в каталог</a>
+      <a class="t2y-msg__btn t2y-msg__btn_ghost" href="/contacts">Контакты</a>
+    </div>
+    <p class="t2y-msg__contacts">
+      Вопросы по оплате:<br>
+      <a href="tel:+79196962424">+7 919 696-24-24</a><br>
+      <a href="mailto:2young4u.official@gmail.com">2young4u.official@gmail.com</a>
+    </p>
+  </div>
+</div>
+
+<style>
+.t2y-msg {
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 110px 20px 70px;
+  box-sizing: border-box;
+  background: #ffffff;
+  text-align: center;
+}
+.t2y-msg__inner { max-width: 520px; width: 100%; }
+
+.t2y-msg__title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.25;
+  color: #000000;
+  margin: 0 0 20px;
+}
+.t2y-msg__text {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  color: #333333;
+  margin: 0 0 14px;
+}
+.t2y-msg__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 30px 0 32px;
+}
+.t2y-msg__btn {
+  display: block;
+  padding: 16px 24px;
+  background: #000000;
+  border: 1px solid #000000;
+  color: #ffffff !important;
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none !important;
+  transition: opacity .2s;
+}
+.t2y-msg__btn:hover { opacity: .8; }
+.t2y-msg__btn_ghost {
+  background: #ffffff;
+  color: #000000 !important;
+}
+.t2y-msg__contacts {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #777777;
+  margin: 0;
+}
+.t2y-msg__contacts a {
+  color: #000000 !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid #cccccc;
+}
+
+@media screen and (min-width: 640px) {
+  .t2y-msg { padding-top: 150px; }
+  .t2y-msg__title { font-size: 36px; }
+  .t2y-msg__btns  { flex-direction: row; justify-content: center; }
+  .t2y-msg__btn   { min-width: 200px; }
+}
+</style>
