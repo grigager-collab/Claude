@@ -1,0 +1,77 @@
+<!-- ════════════════════════════════════════════════════════════════
+     ПОДВАЛ — три строки слева (25.10.2026, по просьбе заказчицы):
+       Контакты и документы
+       2young4U © 2019–2026
+       значки: Telegram-канал, Instagram, MAX
+
+     КУДА: страница подвала (Настройки сайта → Подвал → эта страница).
+       1. Zero-блок с надписью «Контакты» — удалить.
+       2. На его место — блок «Другое → HTML-код» (T123), вставить ВСЁ.
+       3. Опубликовать все страницы.
+     Остальные блоки HTML-кода на странице подвала НЕ трогать.
+
+     Ссылки соцсетей — в LINKS ниже. Пустая ссылка — значок не показывается.
+     ════════════════════════════════════════════════════════════════ -->
+<div class="t2y-foot">
+  <div class="t2y-foot__in">
+    <a class="t2y-foot__link" href="/contacts">Контакты и документы</a>
+    <div class="t2y-foot__copy">2young4U ©&nbsp;2019–2026</div>
+    <div class="t2y-foot__soc"></div>
+  </div>
+</div>
+
+<style>
+.t2y-foot { background: #000000; }
+.t2y-foot__in { padding: 44px 24px 48px; box-sizing: border-box; }
+.t2y-foot__link {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif; font-size: 16px; line-height: 1.3;
+  color: #ffffff !important; text-decoration: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .35); padding-bottom: 2px;
+}
+.t2y-foot__link:hover { border-bottom-color: #ffffff; }
+.t2y-foot__copy {
+  margin-top: 16px; font-family: 'Raleway', Arial, sans-serif; font-weight: 400;
+  font-size: 13px; line-height: 1.4; color: #8c8c8c; font-variant-numeric: lining-nums;
+}
+.t2y-foot__soc { display: flex; gap: 14px; margin-top: 18px; }
+.t2y-foot__soc a {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%; background: #ffffff;
+  transition: opacity .2s ease;
+}
+.t2y-foot__soc a:hover { opacity: .75; }
+.t2y-foot__soc svg { display: block; }
+.t2y-foot__max { font: 700 9px/1 'Raleway', Arial, sans-serif; letter-spacing: .02em; color: #000000; }
+@media screen and (max-width: 640px) {
+  .t2y-foot__in { padding: 36px 20px 40px; }
+}
+</style>
+
+<script>
+(function () {
+  // ссылки соцсетей; пустая — значок не показывается
+  var LINKS = {
+    telegram:  '',   // Telegram-канал, например https://t.me/…
+    instagram: '',   // https://instagram.com/…
+    max:       ''    // MAX
+  };
+  var ICONS = {
+    telegram: '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#000" d="M21.4 3.6 2.9 10.7c-1.3.5-1.3 1.2-.2 1.5l4.7 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.9-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8L22.8 5c.3-1.3-.5-1.9-1.4-1.4zM9.6 15.2l-.4 3.3-1.5-4.7 10.9-6.9-9 8.3z"/></svg>',
+    instagram: '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#000" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#000" stroke="none"/></svg>',
+    max: '<span class="t2y-foot__max">MAX</span>'
+  };
+  var NAMES = { telegram: 'Telegram', instagram: 'Instagram', max: 'MAX' };
+  document.querySelectorAll('.t2y-foot__soc').forEach(function (box) {
+    if (box.childElementCount) return;
+    ['telegram', 'instagram', 'max'].forEach(function (k) {
+      if (!LINKS[k]) return;
+      var a = document.createElement('a');
+      a.href = LINKS[k]; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', NAMES[k]);
+      a.innerHTML = ICONS[k];
+      box.appendChild(a);
+    });
+    if (!box.childElementCount) box.style.display = 'none';
+  });
+})();
+</script>
