@@ -19,6 +19,8 @@
           сквозь открытую корзину (25.10). Раньше этот скрипт стоял в HEAD —
           там его блок «ШАПКА: «Мужское» / «Женское» — НАВЕДЕНИЕ…» удалить.
        9. Таблица размеров: текст заказчицы под таблицей (25.10)
+      10. Карточка: «Возможно, вам понравится» из каталога, того же цвета;
+          «Рекомендации стилиста» скрыты до коллажей (25.10)
      ════════════════════════════════════════════════════════════════ -->
 
 <!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
@@ -559,3 +561,228 @@
 })();
 </script>
 <!-- ════ конец: таблица размеров — текст ════ -->
+
+<!-- ════ 2Y4U: КАРТОЧКА — «Возможно, вам понравится» из каталога (25.10.2026) ════
+     На страницах товаров (/p/…) два блока каталога — «Рекомендации стилиста»
+     и «Возможно, вам понравится» — показывали «ERROR: Category is not found».
+     • «Возможно, вам понравится» заполняем сами из каталога «Мужское»:
+       сначала вещи ТОГО ЖЕ ЦВЕТА (костюм к олимпийке, брюки, пиджак для
+       тройки, другие модели), потом футболки и жилеты, потом — из того же
+       раздела. Новые товары каталога подтягиваются сами.
+       Цвет — по слову в названии (Volcano, Ocean, Space, Phantom, Milky way,
+       Ironman), иначе по варианту «Цвет» (без слова «Синий» = Space).
+     • «Рекомендации стилиста» скрыты, пока не добавим коллажи.
+     Плитки — как в каталоге; на телефоне листаются пальцем, на ПК — стрелками. -->
+<script>
+  // помечаем страницу товара сразу, до отрисовки: блоки каталога на ней
+  // прячем, пока не заполним, — иначе мелькнёт «ERROR»
+  if (/^\/p\//.test(location.pathname)) document.documentElement.classList.add('t2y-pdp');
+</script>
+<style>
+.t2y-pdp .t-rec[data-record-type="786"] { display: none !important; }
+.t2y-pdp .t-rec[data-record-type="786"].t2y-rel-ready { display: block !important; }
+.t2y-rel-ready .t-store { display: none !important; }
+
+.t2y-rel { max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: relative; }
+.t2y-rel__row {
+  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.t2y-rel__row::-webkit-scrollbar { display: none; }
+.t2y-rel__card {
+  flex: 0 0 calc((100% - 60px) / 4); scroll-snap-align: start;
+  background: #fafafa; border-radius: 10px; overflow: hidden;
+  text-decoration: none !important; color: #000000 !important;
+}
+.t2y-rel__img { position: relative; padding-bottom: 133.3333%; background: #ffffff; }
+.t2y-rel__img img {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block; transition: opacity .3s ease;
+}
+.t2y-rel__img img + img { opacity: 0; }
+@media (hover: hover) { .t2y-rel__card:hover .t2y-rel__img img + img { opacity: 1; } }
+.t2y-rel__txt { padding: 30px; }
+.t2y-rel__name, .t2y-rel__price { font-family: 'Tenor', 'Tenor Sans', Arial, sans-serif; font-weight: 600; }
+.t2y-rel__name { font-size: 16px; line-height: 1.2; }
+.t2y-rel__price { font-size: 16px; line-height: 1.35; margin-top: 12px; }
+/* стрелки — только на ПК и только если есть что листать */
+.t2y-rel__nav {
+  position: absolute; top: 0; z-index: 2; width: 44px; height: 44px; margin-top: -22px;
+  border: none; border-radius: 50%; background: #ffffff; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .12); display: none;
+  align-items: center; justify-content: center; padding: 0;
+}
+.t2y-rel__nav svg { width: 18px; height: 18px; }
+.t2y-rel__nav_prev { left: 0; }
+.t2y-rel__nav_next { right: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .t2y-rel_scroll .t2y-rel__nav { display: flex; }
+  .t2y-rel_start .t2y-rel__nav_prev, .t2y-rel_end .t2y-rel__nav_next { display: none; }
+}
+@media screen and (max-width: 959px) {
+  .t2y-rel__row { gap: 10px; }
+  .t2y-rel__card { flex-basis: calc((100% - 10px) / 2); }
+  .t2y-rel__name { font-size: 14px; }
+  .t2y-rel__price { font-size: 12px; }
+}
+@media screen and (max-width: 640px) {
+  /* две плитки и краешек третьей — видно, что ряд листается */
+  .t2y-rel__card { flex-basis: calc((100% - 10px) / 2.2); }
+}
+</style>
+<script>
+(function () {
+  if (!/^\/p\//.test(location.pathname)) return;
+
+  var PARTS = ['364366089229'];   // каталог «Мужское»; добавить «Женское», когда появятся товары
+  var MAX = 8;
+  var API = 'https://store.tildaapi.com/api/getproductslist/?getoptions=true&slice=1&size=100&storepartuid=';
+  var WORDS = [['volcano', 'volcano'], ['ocean', 'ocean'], ['space', 'space'], ['phantom', 'phantom'],
+               ['milky', 'milky'], ['ironman', 'grey'], ['winter tale', 'space']];
+  var VALUES = { 'коричневый': 'volcano', 'чёрный': 'phantom', 'черный': 'phantom', 'белый': 'milky',
+                 'молочный': 'milky', 'серый': 'grey', 'синий': 'space', 'зелёный': 'green',
+                 'зеленый': 'green', 'бежевый': 'beige' };
+
+  function color(p) {
+    var t = (p.title || '').toLowerCase();
+    for (var i = 0; i < WORDS.length; i++) if (t.indexOf(WORDS[i][0]) >= 0) return WORDS[i][1];
+    var ed = p.editions || [];
+    for (var j = 0; j < ed.length; j++) {
+      var v = VALUES[String(ed[j]['Цвет'] || '').toLowerCase().trim()];
+      if (v) return v;
+    }
+    return '';
+  }
+  function kind(p) {
+    var t = (p.title || '').toLowerCase();
+    if (/костюм|комплект/.test(t)) return 'suit';
+    if (/брюки|шорты/.test(t)) return 'bottom';
+    if (/пиджак|френч|жакет/.test(t)) return 'blazer';
+    if (/футболк|лонгслив|жилет/.test(t)) return 'basic';
+    return 'top';
+  }
+  function path(u) {
+    try { u = decodeURI(new URL(u, location.href).pathname); } catch (e) { u = String(u || ''); }
+    return u.replace(/\/+$/, '').toLowerCase();
+  }
+  // разделы товара каталог отдаёт строкой вида «[364366089229,184306918613]»
+  function parts(p) { return String(p.partuids || '').match(/\d+/g) || []; }
+
+  function pick(all, cur) {
+    var c = color(cur), k = kind(cur), here = path(cur.url), out = [], seen = {};
+    var others = all.filter(function (p) { return p.url && path(p.url) !== here; });
+    function add(list) {
+      list.forEach(function (p) { if (out.length < MAX && !seen[p.uid]) { seen[p.uid] = 1; out.push(p); } });
+    }
+    var same = others.filter(function (p) { return c && color(p) === c; });
+    add(same.filter(function (p) { return kind(p) !== k; }));   // другие вещи этого цвета
+    add(same.filter(function (p) { return kind(p) === k; }));   // другие модели этого цвета
+    add(others.filter(function (p) { return kind(p) === 'basic'; }));   // футболки, жилеты
+    var sub = parts(cur).filter(function (id) { return PARTS.indexOf(id) < 0; });
+    add(others.filter(function (p) {                            // добираем из того же раздела
+      return parts(p).some(function (id) { return sub.indexOf(id) >= 0; });
+    }));
+    return out;
+  }
+
+  function img(u, w) {
+    var m = String(u || '').match(/^https:\/\/static\.tildacdn\.com\/([^\/]+)\/(.+)$/);
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/resize/' + w + 'x/-/format/webp/' + m[2] : u;
+  }
+  function price(p) {
+    var n = Math.round(parseFloat(p.price));
+    return isNaN(n) || !n ? '' : n.toLocaleString('ru-RU') + ' р.';
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch];
+    });
+  }
+
+  function load() {
+    var KEY = 't2y_cat_v1';
+    try {
+      var c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      if (c && Date.now() - c.t < 10 * 60 * 1000) return Promise.resolve(c.list);
+    } catch (e) {}
+    return Promise.all(PARTS.map(function (id) {
+      return fetch(API + id + '&c=' + Date.now()).then(function (r) { return r.json(); })
+        .then(function (d) { return d.products || []; });
+    })).then(function (lists) {
+      var list = [].concat.apply([], lists);
+      try { sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), list: list })); } catch (e) {}
+      return list;
+    });
+  }
+
+  function arrows(box, row) {
+    var svg = function (d) {
+      return '<svg viewBox="0 0 18 18" fill="none"><path d="' + d + '" stroke="#111" stroke-width="1.5"/></svg>';
+    };
+    var prev = document.createElement('button'), next = document.createElement('button');
+    prev.type = next.type = 'button';
+    prev.className = 't2y-rel__nav t2y-rel__nav_prev'; prev.setAttribute('aria-label', 'Назад');
+    next.className = 't2y-rel__nav t2y-rel__nav_next'; next.setAttribute('aria-label', 'Вперёд');
+    prev.innerHTML = svg('M11 3L5 9l6 6'); next.innerHTML = svg('M7 3l6 6-6 6');
+    box.appendChild(prev); box.appendChild(next);
+    prev.onclick = function () { row.scrollBy({ left: -row.clientWidth, behavior: 'smooth' }); };
+    next.onclick = function () { row.scrollBy({ left: row.clientWidth, behavior: 'smooth' }); };
+    function state() {
+      var top = row.querySelector('.t2y-rel__img');
+      if (top) prev.style.top = next.style.top = (top.offsetHeight / 2) + 'px';
+      box.classList.toggle('t2y-rel_scroll', row.scrollWidth > row.clientWidth + 2);
+      box.classList.toggle('t2y-rel_start', row.scrollLeft < 4);
+      box.classList.toggle('t2y-rel_end', row.scrollLeft + row.clientWidth > row.scrollWidth - 4);
+    }
+    row.addEventListener('scroll', state);
+    window.addEventListener('resize', state);
+    state(); setTimeout(state, 600);
+  }
+
+  function render(rec, items) {
+    var html = '<div class="t2y-rel__row">';
+    items.forEach(function (p) {
+      var g = [];
+      try { g = JSON.parse(p.gallery || '[]'); } catch (e) {}
+      var a = g[0] && g[0].img, b = g[1] && g[1].img;
+      html += '<a class="t2y-rel__card" href="' + esc(p.url) + '">' +
+        '<div class="t2y-rel__img">' +
+          (a ? '<img alt="' + esc(p.title) + '" src="' + img(a, 600) + '" data-orig="' + esc(a) + '">' : '') +
+          (b ? '<img alt="" src="' + img(b, 600) + '" data-orig="' + esc(b) + '">' : '') +
+        '</div><div class="t2y-rel__txt"><div class="t2y-rel__name">' + esc(p.title) + '</div>' +
+        '<div class="t2y-rel__price">' + price(p) + '</div></div></a>';
+    });
+    var box = document.createElement('div');
+    box.className = 't2y-rel';
+    box.innerHTML = html + '</div>';
+    box.querySelectorAll('img').forEach(function (im) {
+      im.onerror = function () { var o = im.getAttribute('data-orig'); if (o && im.src !== o) im.src = o; };
+    });
+    var head = rec.querySelector('.js-block-header');
+    if (head && head.parentNode) head.parentNode.insertBefore(box, head.nextSibling);
+    else rec.appendChild(box);
+    rec.classList.add('t2y-rel-ready');
+    arrows(box, box.querySelector('.t2y-rel__row'));
+  }
+
+  function run() {
+    var rec = null;
+    document.querySelectorAll('.t-rec[data-record-type="786"]').forEach(function (r) {
+      var t = (r.querySelector('.js-block-header-title') || {}).textContent || '';
+      if (/понрав/i.test(t)) rec = r;
+    });
+    if (!rec || rec.querySelector('.t2y-rel')) return;
+    load().then(function (all) {
+      var here = path(location.pathname);
+      var cur = all.filter(function (p) { return p.url && path(p.url) === here; })[0];
+      if (!cur || rec.querySelector('.t2y-rel')) return;
+      var items = pick(all, cur);
+      if (items.length) render(rec, items);
+    }).catch(function () {});
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+<!-- ════ конец: «Возможно, вам понравится» ════ -->
