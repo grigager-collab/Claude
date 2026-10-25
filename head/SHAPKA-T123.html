@@ -1,11 +1,11 @@
 <!-- ════════════════════════════════════════════════════════════════
-     2Y4U — ВЕСЬ КОД БЛОКА «HTML-код» (T123) НА «ШАПКЕ 1.1».  24.10.2026
+     2Y4U — ВЕСЬ КОД БЛОКА «HTML-код» (T123) НА «ШАПКЕ 1.1».  24–25.10.2026
      Этот блок есть на каждой странице сайта, поэтому общий код живёт здесь,
      а не в HEAD (HEAD упёрся в предел 64 КБ).
 
-     КАК ВСТАВИТЬ: открыть «Шапку 1.1» → блок HTML-кода (там сейчас шрифт
-     Tenor) → выделить ВСЁ старое → вставить ВЕСЬ этот файл вместо него →
-     «Опубликовать все страницы».
+     КАК ВСТАВИТЬ: открыть «Шапку 1.1» → блок HTML-кода (тот, куда этот
+     файл вставлялся раньше) → выделить ВСЁ старое → вставить ВЕСЬ этот файл
+     вместо него → «Опубликовать все страницы».
 
      Внутри по порядку:
        1. Шрифт заголовков (был и раньше)
@@ -13,6 +13,7 @@
        3. Карточка: крошки один раз сверху, размеры в ряд, колонки на ПК
        4. Параметры модели 188 / XL/L + избранное без размера
        5. Окно про cookie
+       6. Корзина: ссылка в галочке согласия на рекламу (25.10)
      ════════════════════════════════════════════════════════════════ -->
 
 <!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
@@ -277,3 +278,49 @@
 })();
 </script>
 <!-- ════ конец: окно про cookie ════ -->
+
+<!-- ════ 2Y4U: ССЫЛКА В ГАЛОЧКЕ СОГЛАСИЯ НА РЕКЛАМУ (корзина) ════
+     В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
+     Поэтому слова «рекламную информацию» делает ссылкой на /soglasie этот
+     скрипт. Если в лейбле остался код <a …> — он уберёт теги сам. -->
+<style>
+.t706 .t-checkbox__control a.t2y-consent-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+</style>
+<script>
+(function () {
+  var NAME = 'soglasie_reklama_24_10_2026';  /* «Имя переменной» галочки */
+  var PHRASE = 'рекламную информацию';
+  var URL = '/soglasie';
+
+  function linkify() {
+    var box = document.querySelector('.t706 input[name="' + NAME + '"]');
+    var label = box && box.closest('label');
+    var span = label && label.querySelector('span');
+    if (!span || span.querySelector('a.t2y-consent-link')) return;
+
+    var text = (span.textContent || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    var i = text.indexOf(PHRASE);
+    span.textContent = '';
+    if (i < 0) { span.textContent = text; return; }
+
+    var a = document.createElement('a');
+    a.className = 't2y-consent-link';
+    a.href = URL;
+    a.target = '_blank';  /* в новой вкладке — корзина не теряется */
+    a.rel = 'noopener';
+    a.textContent = PHRASE;
+    span.appendChild(document.createTextNode(text.slice(0, i)));
+    span.appendChild(a);
+    span.appendChild(document.createTextNode(text.slice(i + PHRASE.length)));
+  }
+
+  document.addEventListener('DOMContentLoaded', linkify);
+  window.addEventListener('load', linkify);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+})();
+</script>
+<!-- ════ конец: ссылка в галочке согласия ════ -->

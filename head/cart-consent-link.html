@@ -1,0 +1,45 @@
+<!-- ════ 2Y4U: ССЫЛКА В ГАЛОЧКЕ СОГЛАСИЯ НА РЕКЛАМУ (корзина) ════
+     В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
+     Поэтому слова «рекламную информацию» делает ссылкой на /soglasie этот
+     скрипт. Если в лейбле остался код <a …> — он уберёт теги сам. -->
+<style>
+.t706 .t-checkbox__control a.t2y-consent-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+</style>
+<script>
+(function () {
+  var NAME = 'soglasie_reklama_24_10_2026';  /* «Имя переменной» галочки */
+  var PHRASE = 'рекламную информацию';
+  var URL = '/soglasie';
+
+  function linkify() {
+    var box = document.querySelector('.t706 input[name="' + NAME + '"]');
+    var label = box && box.closest('label');
+    var span = label && label.querySelector('span');
+    if (!span || span.querySelector('a.t2y-consent-link')) return;
+
+    var text = (span.textContent || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    var i = text.indexOf(PHRASE);
+    span.textContent = '';
+    if (i < 0) { span.textContent = text; return; }
+
+    var a = document.createElement('a');
+    a.className = 't2y-consent-link';
+    a.href = URL;
+    a.target = '_blank';  /* в новой вкладке — корзина не теряется */
+    a.rel = 'noopener';
+    a.textContent = PHRASE;
+    span.appendChild(document.createTextNode(text.slice(0, i)));
+    span.appendChild(a);
+    span.appendChild(document.createTextNode(text.slice(i + PHRASE.length)));
+  }
+
+  document.addEventListener('DOMContentLoaded', linkify);
+  window.addEventListener('load', linkify);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+})();
+</script>
+<!-- ════ конец: ссылка в галочке согласия ════ -->
