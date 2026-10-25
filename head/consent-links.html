@@ -1,0 +1,52 @@
+<!-- ════ 2Y4U: ССЫЛКИ В ГАЛОЧКАХ СОГЛАСИЯ (корзина и формы) ════
+     В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
+     Поэтому в лейбле пишем простой текст, а нужные слова делает ссылкой этот
+     скрипт. Если в лейбле остался код <a …> — он уберёт теги сам.
+     Новая галочка со ссылкой — добавить строку в LINKS. -->
+<style>
+.t-checkbox__control a.t2y-consent-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+</style>
+<script>
+(function () {
+  /* фраза в тексте галочки → страница */
+  var LINKS = [
+    { phrase: 'рекламную информацию', url: '/soglasie' },
+    { phrase: 'политикой обработки персональных данных', url: '/politika-obrabotki-persdannyh' }
+  ];
+
+  function linkify() {
+    document.querySelectorAll('.t-checkbox__control > span').forEach(function (span) {
+      if (span.querySelector('a.t2y-consent-link')) return;
+      var text = (span.textContent || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+      var hit = null, at = -1;
+      LINKS.forEach(function (l) {
+        var i = text.indexOf(l.phrase);
+        if (i >= 0 && !hit) { hit = l; at = i; }
+      });
+      if (!hit) {
+        if (text !== span.textContent) span.textContent = text;
+        return;
+      }
+      var a = document.createElement('a');
+      a.className = 't2y-consent-link';
+      a.href = hit.url;
+      a.target = '_blank';  /* в новой вкладке — корзина и форма не теряются */
+      a.rel = 'noopener';
+      a.textContent = hit.phrase;
+      span.textContent = '';
+      span.appendChild(document.createTextNode(text.slice(0, at)));
+      span.appendChild(a);
+      span.appendChild(document.createTextNode(text.slice(at + hit.phrase.length)));
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', linkify);
+  window.addEventListener('load', linkify);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+})();
+</script>
+<!-- ════ конец: ссылки в галочках согласия ════ -->

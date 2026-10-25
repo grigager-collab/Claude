@@ -2,26 +2,30 @@
      СТРАНИЦА «КОНТАКТЫ» — по тексту заказчицы.  Создано 24.10.2026.
 
      В ФАЙЛЕ ДВА КУСКА — два блока «Другое → HTML-код» (T123):
-       БЛОК 1 — ставится НАД формой (сайт, студия, почта, телеграм);
-       БЛОК 2 — ставится ПОД формой (VipAvenue, реквизиты, оферта, политика).
+       БЛОК 1 — НАД формой (о бренде, студия, почта, телеграм);
+       БЛОК 2 — ПОД формой (VipAvenue, ссылки на оферту и политику, реквизиты).
 
-     Порядок блоков на странице /contact получается такой:
-       Шапка → БЛОК 1 → форма (старый блок, rec208537002) → БЛОК 2 → подвал.
+     КУДА (25.10): на страницу, где уже есть форма «Наши контакты» —
+     старая /contact. Порядок: Шапка → БЛОК 1 → форма → БЛОК 2 → подвал.
+       1. Новую страницу /contacts (там оба куска одним блоком, без формы)
+          удалить — освободить адрес.
+       2. Старой странице «Контакты»: Настройки страницы → адрес «contacts».
+          (В подвале ссылка уже ведёт на /contacts.)
+       3. Над формой — HTML-код с БЛОКОМ 1, под формой — с БЛОКОМ 2.
 
-     ФОРМУ НЕ УДАЛЯЕМ (заказчица: «форма как сейчас»). В ней поменять руками:
+     В САМОЙ ФОРМЕ («Контент» формы), руками:
        • заголовок «Наши контакты» → «Рады обратной связи!»;
        • подзаголовок «Мы всегда рады получить…» — стереть;
-       • «EN» под формой — стереть;
-       • добавить поле «Чекбокс», обязательное, галка НЕ стоит заранее:
-         «Соглашаюсь с политикой обработки персональных данных», слова
-         «политикой обработки…» — ссылка на /politika-obrabotki-persdannyh.
-
-     Адреса юр. страниц — из таблицы заказчицы: /oferta и
-     /politika-obrabotki-persdannyh (в самом тексте политики стоит
-     /personal-data — ждём, какой из двух оставить).
+       • «EN» под формой — стереть (ведёт на мёртвый 2young4u.store);
+       • новое поле: «Тип» → «Галочка». Лейбл — простым текстом:
+         «Соглашаюсь с политикой обработки персональных данных»
+         (ссылкой его сделает скрипт из «Шапки 1.1» — head/consent-links.html;
+         код <a> в лейбле Tilda показывает буквами). «Обязательно для
+         заполнения» — ВКЛ, «Отмечено по умолчанию» — НЕ вкл. Имя переменной:
+         soglasie_pd.
      Остальное в форме (отступ сверху, шрифт заголовка, левая колонка с
-     телефоном, которая теперь дублирует БЛОК 1) правит CSS из БЛОКА 1:
-     в настройках формы ничего трогать не нужно.
+     контактами-дублем, «EN») правит CSS из БЛОКА 1 — по типу блока формы
+     (T718), поэтому работает и со старой формой, и с её копией.
 
      SEO (Настройки страницы → SEO):
        Заголовок:  Контакты — 2YOUNG4U
@@ -128,13 +132,14 @@
   font-variant-numeric: lining-nums;  /* цифры ровные, не «прыгающие» */
 }
 
-/* ── Старая форма Tilda (rec208537002) ──
+/* ── Форма Tilda «Наши контакты» (тип T718; правила по типу блока, а не по
+   номеру — работают и со старой формой, и с её копией) ──
    1) отступ сверху 135px был под шапку — теперь над формой БЛОК 1;
    2) левая колонка (телефон, почта, значки) повторяет БЛОК 1 — скрываем;
    3) форма по центру, ширина как у текста выше;
    4) заголовок — шрифтом сайта, как остальные заголовки. */
-#rec208537002 { padding-top: 24px !important; padding-bottom: 32px !important; }
-#rec208537002 .t-container .t-col {
+.t-rec[data-record-type="718"] { padding-top: 24px !important; padding-bottom: 32px !important; }
+.t-rec[data-record-type="718"] .t-container .t-col {
   float: none !important;
   display: block !important;
   width: 100% !important;
@@ -144,9 +149,9 @@
   padding: 0 20px;
   box-sizing: border-box;
 }
-#rec208537002 .t-container .t-col.t-prefix_1 { display: none !important; }
-#rec208537002 .t-section__title,
-#rec208537002 .t-section__title div {
+.t-rec[data-record-type="718"] .t-container .t-col.t-prefix_1 { display: none !important; }
+.t-rec[data-record-type="718"] .t-section__title,
+.t-rec[data-record-type="718"] .t-section__title div {
   font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif !important;
   font-weight: 400 !important;
   font-size: 22px !important;
@@ -155,18 +160,18 @@
   text-align: left !important;
   max-width: none !important;
 }
-#rec208537002 .t-section__title { margin-bottom: 20px !important; }
-#rec208537002 .t-section__descr { display: none !important; }
+.t-rec[data-record-type="718"] .t-section__title { margin-bottom: 20px !important; }
+.t-rec[data-record-type="718"] .t-section__descr { display: none !important; }
 /* «EN» под формой ведёт на старый адрес 2young4u.store/contactseng —
    он не открывается. Прячем; лучше и стереть этот текст в форме. */
-#rec208537002 .t718__form-bottom-text { display: none !important; }
+.t-rec[data-record-type="718"] .t718__form-bottom-text { display: none !important; }
 
 @media screen and (min-width: 640px) {
   .t2y-info { padding-top: 150px; }
   .t2y-info__title { font-size: 38px; }
   .t2y-info__h2 { font-size: 22px; }
-  #rec208537002 .t-section__title,
-  #rec208537002 .t-section__title div { font-size: 24px !important; }
+  .t-rec[data-record-type="718"] .t-section__title,
+  .t-rec[data-record-type="718"] .t-section__title div { font-size: 24px !important; }
 }
 </style>
 
