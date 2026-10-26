@@ -468,7 +468,7 @@
     if (busy) return;
     busy = true;
     setTimeout(function () { tick(); busy = false; }, 120);
-  }).observe(document.body, { childList: true, subtree: true });
+  }).observe(document.documentElement, { childList: true, subtree: true });   // HEAD выполняется до <body>: document.body ещё нет (26.10)
 })();
 </script>
 

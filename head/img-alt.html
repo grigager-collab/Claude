@@ -1,0 +1,113 @@
+<!-- ════ 2Y4U: ПОДПИСИ К КАРТИНКАМ (alt) — 26.10.2026 ════
+     alt — невидимая подпись картинки. Её читают поисковики (по ней фото
+     находят в Яндекс и Google Картинках), программы для незрячих, и браузер
+     показывает её, если фото не загрузилось. В блоках Tilda alt почти везде
+     пустой — код вписывает его по смыслу:
+       значки шапки — «Поиск», «Избранное», «Корзина», «Меню», логотип — «2YOUNG4U»;
+       фото товара — «Олимпийка хлопковая Volcano 2young4U — фото 2»;
+       слайд с подписью — его подпись; галерея — заголовок своего раздела
+       (или отдельного блока-заголовка над ней), иначе — название страницы.
+     Несколько разных фото с одной подписью в одном блоке — «— фото 1, 2, 3…».
+     Подписи, вписанные в самой Tilda, код не трогает: свою можно поставить
+     в любой момент (Контент блока → картинка → «SEO: alt-текст»). -->
+<script>
+(function () {
+  var BRAND = '2young4U';
+  // значки Zero-блока шапки — по ссылке; у избранного и корзины ссылки нет — по номеру элемента
+  var ICON_IDS = { '1777829642192000006': 'Избранное', '1777829627863000004': 'Корзина' };
+  var ICONS = [
+    [/^(https?:\/\/(www\.)?2young4u\.ru)?\/?$/i, '2YOUNG4U'],
+    [/^#searchpopup/, 'Поиск'],
+    [/^#registerpopup|^\/members/, 'Личный кабинет'],
+    [/^#mobilemenupopup/, 'Меню'],
+    [/^#order/, 'Корзина'],
+    [/^#showfavorites/, 'Избранное']
+  ];
+
+  function clean(s) {
+    s = String(s || '').replace(/ /g, ' ').replace(/\s+/g, ' ').replace(/[\s:–—-]+$/, '').trim();
+    return s.length > 90 ? s.slice(0, 90).replace(/\s+\S*$/, '') : s;
+  }
+  function textOf(root, sel) { var e = root && root.querySelector(sel); return e ? clean(e.textContent) : ''; }
+  // одно и то же фото в слайдере повторяется (копии слайдов, миниатюры) — узнаём его по папке на CDN
+  function key(im) {
+    var u = im.getAttribute('data-original') || im.getAttribute('src') || '';
+    var m = /\/((?:tild|stor)[0-9a-f]{4}(?:-[0-9a-f]+){4})\//.exec(u);
+    return m ? m[1] : u.split(/[?#]/)[0];
+  }
+
+  function pageName() {
+    return textOf(document, '.js-product-single .js-product-name') ||   // карточка товара
+           clean(document.title.split(/\s[—–|-]\s/)[0]) || BRAND;
+  }
+
+  var sections;   // заголовки разделов — один раз за проход
+  function sectionName(rec) {
+    if (!rec) return '';
+    if (rec.id in sections) return sections[rec.id];
+    var t = textOf(rec, '.js-block-header-title, .t-section__title');
+    // заголовок часто стоит отдельным блоком прямо над галереей
+    for (var r = rec.previousElementSibling, i = 0; !t && r && i < 6; r = r.previousElementSibling, i++) {
+      if (!r.classList.contains('t-rec') || !r.offsetHeight) continue;
+      t = textOf(r, '.t795__title, .js-block-header-title, .t-section__title');
+      break;
+    }
+    return (sections[rec.id] = t);
+  }
+
+  // null — не значок; '' — значок или линия без смысла, подпись не нужна
+  function iconAlt(im) {
+    var el = im.closest('.tn-elem');
+    if (!el) return null;
+    var id = el.getAttribute('data-elem-id');
+    if (ICON_IDS[id]) return ICON_IDS[id];
+    var a = im.closest('a'), href = a ? a.getAttribute('href') || '' : '';
+    for (var i = 0; href && i < ICONS.length; i++) if (ICONS[i][0].test(href)) return ICONS[i][1];
+    return /\.svg($|\?)/i.test(im.getAttribute('data-original') || im.getAttribute('src') || '') ? '' : null;
+  }
+
+  function photoBase(im) {
+    var prod = im.closest('.js-product');
+    var t = prod ? textOf(prod, '.js-product-name') : '';
+    var item = !t && im.closest('[class*="__item"]');
+    if (item) t = textOf(item, '[class*="__title"]');
+    var a = !t && im.closest('a');
+    if (a) t = textOf(a, '.js-store-prod-name, .js-product-name, [class*="__name"], [class*="__title"]') ||
+               clean(a.getAttribute('aria-label') || a.getAttribute('title'));
+    t = t || sectionName(im.closest('.t-rec')) || pageName();
+    return /2young4u/i.test(t) ? t : t + ' ' + BRAND;
+  }
+
+  function run() {
+    sections = {};
+    var todo = [], groups = [];
+    // сначала всё читаем, потом пишем — чтобы браузер не пересчитывал страницу на каждой картинке
+    document.querySelectorAll('img').forEach(function (im) {
+      var own = im.getAttribute('alt');
+      if (own && own.trim() && !im.hasAttribute('data-t2y-alt')) return;   // подпись из Tilda
+      if (/mc\.yandex|top-fwz1|vk\.com\/rtrg|facebook\.com\/tr/.test(im.getAttribute('src') || '')) return;
+      var icon = iconAlt(im);
+      if (icon !== null) { if (icon) todo.push({ im: im, alt: icon }); return; }
+      var x = { im: im, base: photoBase(im), g: im.closest('.js-product, .t-rec') || document.body, k: key(im) };
+      for (var i = 0; i < groups.length && !x.grp; i++) if (groups[i].g === x.g && groups[i].base === x.base) x.grp = groups[i];
+      if (!x.grp) groups.push(x.grp = { g: x.g, base: x.base, keys: [] });
+      if (x.grp.keys.indexOf(x.k) < 0) x.grp.keys.push(x.k);
+      todo.push(x);
+    });
+    todo.forEach(function (x) {
+      var v = x.alt || (x.base + (x.grp.keys.length > 1 ? ' — фото ' + (x.grp.keys.indexOf(x.k) + 1) : ''));
+      if (x.im.getAttribute('alt') !== v) x.im.setAttribute('alt', v);
+      if (!x.im.hasAttribute('data-t2y-alt')) x.im.setAttribute('data-t2y-alt', '');
+    });
+  }
+
+  // слайдеры, поиск и увеличение фото Tilda достраивает позже — проходим ещё раз
+  var pending = false;
+  function later() { if (pending) return; pending = true; setTimeout(function () { pending = false; run(); }, 300); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+  [1500, 4000, 8000].forEach(function (ms) { setTimeout(run, ms); });
+  if (window.MutationObserver) new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: подписи к картинкам ════ -->

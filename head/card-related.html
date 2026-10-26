@@ -186,7 +186,7 @@
       html += '<a class="t2y-rel__card" href="' + esc(p.url) + '">' +
         '<div class="t2y-rel__img">' +
           (a ? '<img alt="' + esc(p.title) + '" src="' + img(a, 600) + '" data-orig="' + esc(a) + '">' : '') +
-          (b ? '<img alt="" src="' + img(b, 600) + '" data-orig="' + esc(b) + '">' : '') +
+          (b ? '<img alt="' + esc(p.title) + ' — фото 2" src="' + img(b, 600) + '" data-orig="' + esc(b) + '">' : '') +
         '</div><div class="t2y-rel__txt"><div class="t2y-rel__name">' + esc(p.title) + '</div>' +
         '<div class="t2y-rel__price">' + price(p) + '</div></div></a>';
     });
