@@ -1,0 +1,172 @@
+<!-- ════════════════════════════════════════════════════════════════
+     ГЛАВНАЯ, ПК: ВЕРХНИЙ БЛОК — КРУПНЫЕ ФОТО ПОЧТИ БЕЗ ПОЛЕЙ.  26.10.2026
+     Заказчица: «В мобилке выглядит отлично. В десктопе ужас) …чтобы были
+     крупные, более квадратные фотки? Или вообще любые фотки с минимальными
+     полями».
+
+     Как устроено: слайдер Tilda (блок T994, версия для ПК — видна от 480 px)
+     остаётся на странице и редактируется как раньше: фото, подписи, ссылки
+     «Больше». Код берёт из него слайды и показывает их по-новому: крупные
+     фото в ряд во весь экран, подпись белым по фото — как на телефоне,
+     стрелки листают дальше. Сам слайдер Tilda на ПК скрыт. Телефонная
+     версия (до 480 px) — отдельный блок, его код не трогает.
+
+     КУДА: Главная → блок «Другое → HTML-код» (T123) в любое место страницы
+     (удобнее — в самый низ), вставить ВСЁ. Опубликовать.
+
+     Сколько фото в ряд на ПК — COLS ниже: 2 (крупно, почти квадрат) или 3.
+     ════════════════════════════════════════════════════════════════ -->
+<style>
+.t2y-hero-on > .t994 { display: none !important; }
+.t2y-hero {
+  position: relative; background: #ffffff; box-sizing: border-box;
+  padding: calc(var(--t2y-hh, 72px) + 10px) 20px 40px;
+}
+.t2y-hero__wrap { position: relative; }
+.t2y-hero__row {
+  display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.t2y-hero__row::-webkit-scrollbar { display: none; }
+.t2y-hero__item {
+  position: relative; display: block; overflow: hidden; background: #f2f2f2;
+  flex: 0 0 calc((100% - (var(--t2y-cols) - 1) * 10px) / var(--t2y-cols));
+  /* 4:5 — как сами фото; на широком экране ниже — не выше экрана под шапкой */
+  aspect-ratio: 4 / 5;
+  max-height: calc(100vh - var(--t2y-hh, 72px) - 30px);
+  scroll-snap-align: start;
+  text-decoration: none !important;
+}
+.t2y-hero__item img {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 30%;   /* при обрезке сохраняем голову */
+  transition: transform .8s ease;
+}
+.t2y-hero__item:hover img { transform: scale(1.03); }
+/* лёгкое затемнение снизу — белая подпись читается и на светлом фото */
+.t2y-hero__item::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 45%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, .38));
+  pointer-events: none;
+}
+.t2y-hero__cap { position: absolute; left: 32px; right: 32px; bottom: 30px; z-index: 1; }
+.t2y-hero__title {
+  display: block; font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif; font-weight: 400;
+  font-size: 30px; line-height: 1.2; color: #ffffff;
+}
+.t2y-hero_c3 .t2y-hero__title { font-size: 26px; }   /* три в ряд — фото уже */
+.t2y-hero__more {
+  display: inline-block; margin-top: 12px; padding-bottom: 1px;
+  font-family: 'Raleway', Arial, sans-serif; font-size: 15px; color: #ffffff;
+  border-bottom: 1px solid #ffffff;
+}
+.t2y-hero__nav {
+  position: absolute; top: 50%; z-index: 2; width: 48px; height: 48px; margin-top: -24px;
+  display: flex; align-items: center; justify-content: center; padding: 0;
+  border: none; border-radius: 50%; background: #ffffff; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .12); transition: opacity .2s;
+}
+.t2y-hero__nav svg { width: 18px; height: 18px; }
+.t2y-hero__nav_prev { left: 16px; }
+.t2y-hero__nav_next { right: 16px; }
+.t2y-hero_start .t2y-hero__nav_prev,
+.t2y-hero_end .t2y-hero__nav_next,
+.t2y-hero_still .t2y-hero__nav { opacity: 0; pointer-events: none; }
+@media screen and (max-width: 1199px) {
+  .t2y-hero { --t2y-cols: 2 !important; }   /* планшеты — всегда по 2 */
+  .t2y-hero__title { font-size: 24px; }
+  .t2y-hero__cap { left: 22px; right: 22px; bottom: 22px; }
+}
+</style>
+<script>
+(function () {
+  var COLS = 2;   // фото в ряд на ПК: 2 — крупно, почти квадрат; 3 — целиком, видно больше
+  // первый слайдер T994 для ПК (у телефонного класс t-screenmax-480px)
+  var SRC = '.t-rec[data-record-type="994"]:not(.t-screenmax-480px)';
+
+  function esc(s) {
+    return String(s || '').replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  // webp-копия с CDN Tilda (меньше весит); не загрузится — оригинал
+  function webp(u) {
+    var m = /^https:\/\/static\.tildacdn\.com\/(til[ad][^/]+)\/([^/?#]+)$/.exec(u);
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/format/webp/' + m[2] : u;
+  }
+
+  function arrows(box, row) {
+    var svg = function (d) {
+      return '<svg viewBox="0 0 18 18" fill="none"><path d="' + d + '" stroke="#111" stroke-width="1.5"/></svg>';
+    };
+    var wrap = row.parentNode;
+    var prev = document.createElement('button'), next = document.createElement('button');
+    prev.type = next.type = 'button';
+    prev.className = 't2y-hero__nav t2y-hero__nav_prev'; prev.setAttribute('aria-label', 'Назад');
+    next.className = 't2y-hero__nav t2y-hero__nav_next'; next.setAttribute('aria-label', 'Вперёд');
+    prev.innerHTML = svg('M11 3L5 9l6 6'); next.innerHTML = svg('M7 3l6 6-6 6');
+    wrap.appendChild(prev); wrap.appendChild(next);
+    prev.onclick = function () { row.scrollBy({ left: -row.clientWidth, behavior: 'smooth' }); };
+    next.onclick = function () { row.scrollBy({ left: row.clientWidth, behavior: 'smooth' }); };
+    function state() {
+      box.classList.toggle('t2y-hero_still', row.scrollWidth <= row.clientWidth + 2);
+      box.classList.toggle('t2y-hero_start', row.scrollLeft < 4);
+      box.classList.toggle('t2y-hero_end', row.scrollLeft + row.clientWidth > row.scrollWidth - 4);
+    }
+    row.addEventListener('scroll', state);
+    window.addEventListener('resize', state);
+    state();
+  }
+
+  // отступ сверху = высота шапки (она меняется с шириной экрана)
+  function headerHeight(box) {
+    var art = document.querySelector('#rec2498768581 .t396__artboard');
+    if (!art) return;
+    var set = function () { if (art.offsetHeight) box.style.setProperty('--t2y-hh', art.offsetHeight + 'px'); };
+    set();
+    if (window.ResizeObserver) new ResizeObserver(set).observe(art);
+  }
+
+  function build() {
+    var rec = document.querySelector(SRC);
+    if (!rec || rec.querySelector('.t2y-hero')) return;
+    var html = '', n = 0;
+    rec.querySelectorAll('.t994__item').forEach(function (li) {
+      var im = li.querySelector('[data-original]');
+      var src = im && im.getAttribute('data-original');
+      if (!src) return;
+      var title = ((li.querySelector('.t994__title') || {}).textContent || '').trim();
+      var a = li.querySelector('a[href]');
+      var href = a ? a.getAttribute('href') : '';
+      var more = ((li.querySelector('.t-btntext__text') || {}).textContent || '').replace(/[→\s]+$/, '').trim() || 'Больше';
+      var tag = href ? 'a' : 'div';
+      var attrs = href ? ' href="' + esc(href) + '"' +
+        (a.getAttribute('target') === '_blank' ? ' target="_blank" rel="noopener"' : '') : '';
+      html += '<' + tag + ' class="t2y-hero__item"' + attrs + '>' +
+        '<img alt="' + esc(title) + '" src="' + esc(webp(src)) + '" data-orig="' + esc(src) + '"' +
+          (n < 3 ? '' : ' loading="lazy"') + '>' +
+        '<span class="t2y-hero__cap">' +
+          (title ? '<span class="t2y-hero__title">' + esc(title) + '</span>' : '') +
+          (href ? '<span class="t2y-hero__more">' + esc(more) + ' →</span>' : '') +
+        '</span></' + tag + '>';
+      n++;
+    });
+    if (!n) return;   // слайдов нет — остаётся обычный слайдер Tilda
+
+    var box = document.createElement('div');
+    box.className = 't2y-hero' + (COLS > 2 ? ' t2y-hero_c3' : '');
+    box.style.setProperty('--t2y-cols', COLS);
+    box.innerHTML = '<div class="t2y-hero__wrap"><div class="t2y-hero__row">' + html + '</div></div>';
+    box.querySelectorAll('img').forEach(function (im) {
+      im.onerror = function () { var o = im.getAttribute('data-orig'); if (o && im.src !== o) im.src = o; };
+    });
+    rec.insertBefore(box, rec.firstChild);
+    rec.classList.add('t2y-hero-on');
+    headerHeight(box);
+    arrows(box, box.querySelector('.t2y-hero__row'));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
+</script>

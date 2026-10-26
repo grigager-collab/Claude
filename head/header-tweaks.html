@@ -37,43 +37,61 @@
       текст кнопок 65 / 65 / 38 / 40 / 60 px, текст по центру кнопки
       (ширина кнопок 100 / 99 / 94 / 94 / 94). Между текстами 43 px, как было;
       на 641–959 px — 20 px, иначе пять пунктов не влезают между логотипом
-      и значками. */
+      и значками.
+      Пока «Ватаным» в шапке нет — работает прежняя раскладка из трёх пунктов
+      (на ПК — как в редакторе, на 641–1199 px — по центру вплотную), меню
+      не съезжает, если код вставлен раньше кнопок. */
+@media screen and (min-width: 641px) and (max-width: 1199px) {
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 147px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 47px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% + 52px) !important; }
+}
 @media screen and (min-width: 641px) {
   #rec2498768581 .tn-elem:has(a[href$="/aboutus"]),
   #rec2498768581 .tn-elem:has(a[href$="/vatanym"]) { top: 1px !important; width: 94px !important; }
 }
 @media screen and (min-width: 960px) {
-  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 237.55px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 128.85px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% - 31.9px) !important; }
-  #rec2498768581 .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 50.25px) !important; }
-  #rec2498768581 .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 143.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 237.55px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 128.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% - 31.9px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 50.25px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 143.35px) !important; }
 }
 @media screen and (min-width: 641px) and (max-width: 959px) {
-  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 179.05px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 93.35px) !important; }
-  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% - 19.4px) !important; }
-  #rec2498768581 .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 39.75px) !important; }
-  #rec2498768581 .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 109.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 179.05px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 93.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% - 19.4px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 39.75px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 109.85px) !important; }
 }
 
 /* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки,
        по месту стояли ровно под кнопками. Кнопки в п. 4 сдвинуты —
        двигаем пункты списков на столько же (фон списка не трогаем).
-       Сдвиг = новое место кнопки − старое (442 и 551), в единицах сетки:
-       от 1200 px: 362.45 − 442, 471.15 − 551; 960–1199: 242.45 − 442,
-       351.15 − 551; 641–959: 140.95 − 442, 226.65 − 551. */
-@media screen and (min-width: 1200px) {
-  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -79.55px !important; }
-  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -79.85px !important; }
-}
+       Сдвиг = новое место кнопки − старое (442 и 551), в единицах сетки.
+       Три пункта: 960–1199 px: 333 − 442, 433 − 551; 641–959: 173 − 442,
+       273 − 551. Пять пунктов: от 1200 px: 362.45 − 442, 471.15 − 551;
+       960–1199: 242.45 − 442, 351.15 − 551; 641–959: 140.95 − 442,
+       226.65 − 551. */
 @media screen and (min-width: 960px) and (max-width: 1199px) {
-  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -199.55px !important; }
-  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -199.85px !important; }
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -109px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -118px !important; }
 }
 @media screen and (min-width: 641px) and (max-width: 959px) {
-  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -301.05px !important; }
-  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -324.35px !important; }
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -269px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -278px !important; }
+}
+@media screen and (min-width: 1200px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -79.55px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -79.85px !important; }
+}
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -199.55px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -199.85px !important; }
+}
+@media screen and (min-width: 641px) and (max-width: 959px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -301.05px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -324.35px !important; }
 }
 
 /* 4в. Список «Мужское»: «Комплекты» 4-м пунктом, после «Мягких пиджаков»
@@ -111,6 +129,10 @@
 @media screen and (max-width: 1199px) {
   #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
   #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
+  /* к п. 7: слайдер на весь экран (главная на телефоне) встал под шапку —
+     он короче на её высоту, подпись и «Больше» остаются на первом экране */
+  .t2y-fs .t994__width-wrapper, .t2y-fs .t994__slidecontainer,
+  .t2y-fs .t994__item, .t2y-fs .t994__item-wrapper { height: var(--t2y-fs-h) !important; }
 }
 </style>
 <script>
@@ -118,6 +140,7 @@
   // 7. К п. 6: шапка висит поверх страницы. Если страница начинается с фото
   //    (главная на телефоне), белая шапка закрыла бы его верх — сдвигаем
   //    первый блок вниз на высоту шапки (она разная: 50–78 px по ширине).
+  //    Слайдер на весь экран при этом становится короче на ту же высоту.
   //    Короткую полоску-отступ сверху (белая полоса на «О бренде» на телефоне)
   //    не трогаем — она для того и стоит. ПК не трогаем.
   var MEDIA = 'img, video, iframe, .t-bgimg, .t-cover__carrier, [data-original], [data-content-cover-bg]';
@@ -151,9 +174,20 @@
     if (art && !watched && window.ResizeObserver) { watched = true; new ResizeObserver(later).observe(art); }
     var hh = art && window.innerWidth <= 1199 ? art.offsetHeight : 0;
     var p = hh ? photoBlock(hh) : null;
-    if (moved && (!p || p.rec !== moved)) { moved.style.marginTop = ''; moved = null; }
-    if (p && p.rec.style.marginTop !== p.shift + 'px') p.rec.style.marginTop = p.shift + 'px';
-    if (p) moved = p.rec;
+    if (moved && (!p || p.rec !== moved)) {
+      moved.style.marginTop = ''; moved.classList.remove('t2y-fs'); moved = null;
+    }
+    if (!p) return;
+    var r = p.rec;
+    if (r.style.marginTop !== p.shift + 'px') r.style.marginTop = p.shift + 'px';
+    // слайдер Tilda на весь экран: высоту ему пишет сама Tilda (по высоте экрана) —
+    // берём её и уменьшаем на сдвиг (CSS в п. 6)
+    var w = r.querySelector('.t994__width-wrapper'), H = w ? parseFloat(w.style.height) || 0 : 0;
+    if (H >= window.innerHeight - 2) r.classList.add('t2y-fs');
+    if (H && r.classList.contains('t2y-fs')) r.style.setProperty('--t2y-fs-h', (H - p.shift) + 'px');
+    // блок может вырасти позже (слайдер Tilda запускается не сразу) — пересчитать
+    if (window.ResizeObserver && !r.t2yWatch) { r.t2yWatch = true; new ResizeObserver(later).observe(r); }
+    moved = r;
   }
 
   var t;
