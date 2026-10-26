@@ -1206,7 +1206,7 @@ a.t2y-colors__item:hover { border-color: #999999; }
      показывает её, если фото не загрузилось. В блоках Tilda alt почти везде
      пустой — код вписывает его по смыслу:
        значки шапки — «Поиск», «Избранное», «Корзина», «Меню», логотип — «2YOUNG4U»;
-       фото товара — «Олимпийка хлопковая Volcano 2young4U — фото 2»;
+       фото товара — «Олимпийка хлопковая 2young4U, цвет чёрный — фото 2»;
        слайд с подписью — его подпись; галерея — заголовок своего раздела
        (или отдельного блока-заголовка над ней), иначе — название страницы.
      Несколько разных фото с одной подписью в одном блоке — «— фото 1, 2, 3…».
@@ -1226,8 +1226,11 @@ a.t2y-colors__item:hover { border-color: #999999; }
     [/^#showfavorites/, 'Избранное']
   ];
 
+  // невидимые буквы: из них сделаны «пустые» имена служебных товаров-коллажей.
+  // Коды, а не сами символы — Tilda может вырезать такие символы при сохранении блока.
+  var INVISIBLE = new RegExp('[' + String.fromCharCode(0x115f, 0x1160, 0x3164, 0xffa0, 0x200b, 0x200c, 0x200d, 0x2060, 0xfeff) + ']', 'g');
   function clean(s) {
-    s = String(s || '').replace(/ /g, ' ').replace(/\s+/g, ' ').replace(/[\s:–—-]+$/, '').trim();
+    s = String(s || '').replace(INVISIBLE, '').replace(/\s+/g, ' ').replace(/[\s:–—-]+$/, '').trim();
     return s.length > 90 ? s.slice(0, 90).replace(/\s+\S*$/, '') : s;
   }
   function textOf(root, sel) { var e = root && root.querySelector(sel); return e ? clean(e.textContent) : ''; }
@@ -1238,9 +1241,16 @@ a.t2y-colors__item:hover { border-color: #999999; }
     return m ? m[1] : u.split(/[?#]/)[0];
   }
 
-  function pageName() {
-    return textOf(document, '.js-product-single .js-product-name') ||   // карточка товара
-           clean(document.title.split(/\s[—–|-]\s/)[0]) || BRAND;
+  function pageName() { return clean(document.title.split(/\s[—–|-]\s/)[0]) || BRAND; }
+
+  // товар: «Олимпийка хлопковая 2young4U, цвет чёрный» — у разных цветов
+  // одной модели названия часто одинаковые, цвет берём из варианта «Цвет»
+  function productName(prod) {
+    var n = textOf(prod, '.js-product-name');
+    if (!n) return '';
+    var sel = prod.querySelector('.js-product-edition-option[data-edition-option-id="Цвет"] select');
+    var c = sel ? clean(sel.value || (sel.options[0] && sel.options[0].value)).toLowerCase() : '';
+    return n + ' ' + BRAND + (c ? ', цвет ' + c : '');
   }
 
   var sections;   // заголовки разделов — один раз за проход
@@ -1269,9 +1279,11 @@ a.t2y-colors__item:hover { border-color: #999999; }
   }
 
   function photoBase(im) {
-    var prod = im.closest('.js-product');
-    var t = prod ? textOf(prod, '.js-product-name') : '';
-    var item = !t && im.closest('[class*="__item"]');
+    // увеличенное фото Tilda строит вне блоков — это фото товара страницы
+    var prod = im.closest('.js-product') || (!im.closest('.t-rec') && document.querySelector('.js-product-single'));
+    var t = prod ? productName(prod) : '';
+    if (t) return t;
+    var item = im.closest('[class*="__item"]');
     if (item) t = textOf(item, '[class*="__title"]');
     var a = !t && im.closest('a');
     if (a) t = textOf(a, '.js-store-prod-name, .js-product-name, [class*="__name"], [class*="__title"]') ||
