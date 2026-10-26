@@ -1,0 +1,130 @@
+<!-- ════════════════════════════════════════════════════════════════
+     «О БРЕНДЕ» (/aboutus): БЛОК «НАША ТВОРЧЕСКАЯ КОМАНДА».  26.10.2026
+     Три фото с подписями — из презентации заказчицы (слайд 2).
+     Чёрный фон, шрифты и размеры — как у блока «Премиальное качество» над ним.
+     Телефон: карточки листаются пальцем; от 640 px — три в ряд.
+
+     КУДА (два блока, по порядку, сразу ПОД блоком «Премиальное качество»
+     — тот, что заканчивается «Цветовой палитрой 2young4U»):
+       1. «Другое → HTML-код» (T123) — вставить ВЕСЬ этот файл.
+       2. Сразу под ним — блок галереи «плиткой» (как «Детали, обработка,
+          фурнитура» на этой же странице), в нём 3 фото ПО ПОРЯДКУ:
+          Кристина, Вадим, Анастасия. Код берёт фото из этой плитки, а саму
+          плитку на сайте прячет — поменять фото потом можно в ней же.
+     Опубликовать.
+
+     Тексты — ниже, в карточках. Поправлено по сравнению с презентацией:
+     «Со-основатель» → «Сооснователь», «AvenueVip» → «VipAvenue».
+     ════════════════════════════════════════════════════════════════ -->
+<div class="t2y-team">
+  <div class="t2y-team__in">
+    <h2 class="t2y-team__title">Наша творческая команда</h2>
+    <div class="t2y-team__row">
+      <div class="t2y-team__card">
+        <div class="t2y-team__img"></div>
+        <div class="t2y-team__name">Кристина Герман</div>
+        <div class="t2y-team__role">Сооснователь и управляющая брендов 2young4U, Spaceroom</div>
+        <div class="t2y-team__text">В прошлом 20 лет работы в IT.</div>
+      </div>
+      <div class="t2y-team__card">
+        <div class="t2y-team__img"></div>
+        <div class="t2y-team__name">Вадим Герман</div>
+        <div class="t2y-team__role">Дизайнер, студент КФУ</div>
+        <div class="t2y-team__text">Первую коллекцию одежды презентовал в 13 лет, в апреле 2019 года. Сооснователь брендов 2young4U, Dolore.</div>
+      </div>
+      <div class="t2y-team__card">
+        <div class="t2y-team__img"></div>
+        <div class="t2y-team__name">Анастасия Максимова</div>
+        <div class="t2y-team__role">Тренд-аналитик, стилист</div>
+        <div class="t2y-team__text">10-летний опыт работы в федеральном ритейлере люксовых брендов VipAvenue — от консультанта до креативного директора.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.t2y-team { background: #000000; color: #ffffff; padding: 0 0 90px; }
+.t2y-team__in { max-width: 1160px; margin: 0 auto; }
+.t2y-team__title {
+  margin: 0 20px 32px; text-align: center;
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif; font-weight: 600;
+  font-size: 30px; line-height: 1.23; color: #ffffff;
+}
+/* телефон: ряд листается пальцем, видно край следующей карточки */
+.t2y-team__row {
+  display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 0 20px; scroll-padding: 0 20px;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.t2y-team__row::-webkit-scrollbar { display: none; }
+.t2y-team__card { flex: 0 0 78%; scroll-snap-align: start; }
+.t2y-team__img {
+  aspect-ratio: 4 / 5; background: #1a1a1a center / cover no-repeat;
+}
+.t2y-team__name {
+  margin-top: 18px;
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif; font-weight: 600;
+  font-size: 22px; line-height: 1.2; color: #ffffff;
+}
+.t2y-team__role, .t2y-team__text {
+  margin-top: 8px; font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-size: 15px; line-height: 1.45; font-variant-numeric: lining-nums;
+}
+.t2y-team__role { font-weight: 400; color: #ffffff; }
+.t2y-team__text { font-weight: 300; color: rgba(255, 255, 255, .65); }
+/* фото-источник (плитка под блоком) на сайте не показываем */
+.t2y-team-src { display: none !important; }
+
+@media screen and (min-width: 640px) {
+  .t2y-team { padding-bottom: 135px; }
+  .t2y-team__title { font-size: 42px; margin-bottom: 48px; }
+  .t2y-team__row { overflow: visible; gap: 40px; padding: 0 40px; }
+  .t2y-team__card { flex: 1 1 0; min-width: 0; }
+  .t2y-team__name { font-size: 24px; }
+}
+@media screen and (min-width: 640px) and (max-width: 959px) {
+  .t2y-team__row { gap: 20px; padding: 0 20px; }
+  .t2y-team__name { font-size: 20px; }
+  .t2y-team__role, .t2y-team__text { font-size: 14px; }
+}
+</style>
+
+<script>
+(function () {
+  // Фото — из первого блока с картинками сразу под этим (плитка галереи),
+  // по порядку карточек. Сам тот блок прячем.
+  function webp(u) {   // лёгкая webp-копия с CDN Tilda; не загрузится — оригинал
+    var m = /^https:\/\/static\.tildacdn\.com\/(til[ad][^/]+)\/([^/?#]+)$/.exec(u);
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/format/webp/' + m[2] : u;
+  }
+  function build() {
+    var box = document.querySelector('.t2y-team');
+    var me = box && box.closest('.t-rec');
+    if (!me || box.getAttribute('data-ready')) return;
+    var src = null;
+    for (var r = me.nextElementSibling, i = 0; r && i < 3 && !src; r = r.nextElementSibling, i++) {
+      if (r.querySelector('[data-original], img')) src = r;
+    }
+    if (!src) return;   // плитки нет — карточки остаются с тёмным местом под фото
+    var urls = [];
+    src.querySelectorAll('[data-original], img').forEach(function (e) {
+      var u = e.getAttribute('data-original') || e.getAttribute('src') || '';
+      if (/^https?:/.test(u) && !/\/-\/(empty|resizeb?)\//.test(u) && urls.indexOf(u) < 0) urls.push(u);
+    });
+    src.classList.add('t2y-team-src');
+    box.querySelectorAll('.t2y-team__img').forEach(function (d, k) {
+      var u = urls[k];
+      if (!u) return;
+      var im = new Image();
+      im.onload = function () { d.style.backgroundImage = 'url("' + im.src + '")'; };
+      im.onerror = function () { if (im.src !== u) im.src = u; };
+      im.src = webp(u);
+      d.setAttribute('role', 'img');
+      d.setAttribute('aria-label', (d.parentNode.querySelector('.t2y-team__name') || {}).textContent || '');
+    });
+    box.setAttribute('data-ready', '1');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
+</script>
