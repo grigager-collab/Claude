@@ -94,17 +94,8 @@
   body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -324.35px !important; }
 }
 
-/* 4в. Список «Мужское»: «Комплекты» 4-м пунктом, после «Мягких пиджаков»
-       (заказчица 25.10). В Zero-блоке списка — копия «Брюк» со ссылкой
-       /men/sets; место ей и пунктам ниже задаёт код, белый фон списка
-       длиннее на один пункт. Пока «Комплектов» в списке нет — ничего не меняется. */
-@media screen and (min-width: 641px) {
-  #rec2501315011 .tn-elem:has(a[href$="/men/sets"]) { top: 141px !important; }
-  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/trousers"]) { top: 168px !important; }
-  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/tshirts"])  { top: 195px !important; }
-  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem:has(a[href$="/men/shorts"])   { top: 222px !important; }
-  #rec2501315011:has(a[href$="/men/sets"]) .tn-elem[data-elem-id="1777739393928000001"] { height: 197px !important; }
-}
+/* 4в. Порядок пунктов в списке «Мужское» на ПК — как в мобильном меню
+       (бургере): его задаёт скрипт п. 8 ниже. */
 
 /* 5. До 640 px — мобильное меню (бургер): текстовые кнопки прячем;
       на 480–640 px логотип сдвигаем вправо от бургера, как на телефоне */
@@ -198,6 +189,59 @@
   [600, 2000].forEach(function (ms) { setTimeout(fit, ms); });
   window.addEventListener('resize', later);
   window.addEventListener('orientationchange', later);
+})();
+
+(function () {
+  // 8. Список «Мужское» на ПК (Zero-блок) — в том же порядке, что раздел
+  //    «Мужское» в мобильном меню (бургере). Порядок меняется в одном месте —
+  //    в бургере (Контент меню), список на ПК подстраивается сам, двигать
+  //    пункты в Zero-блоке не нужно. Пункт, которого нет в бургере, — в конце.
+  //    Для «Женского» — добавить ['#rec2501320681', '/women/'] в LISTS.
+  var LISTS = [['#rec2501315011', '/men/']];
+  var TOP = 58, STEP = 27;   // место первого пункта и шаг, в единицах сетки Zero-блока
+
+  function path(h) {
+    try { return new URL(h, location.href).pathname.replace(/\/+$/, ''); } catch (e) { return ''; }
+  }
+
+  // Места пишем правилами CSS с !important: Tilda сама проставляет пунктам
+  // top прямо в style (при запуске Zero-блока) и перетёрла бы значения в style.
+  function sync() {
+    var burger = [];
+    document.querySelectorAll('#rec2501340841 a[href]').forEach(function (a) {
+      var p = path(a.getAttribute('href'));
+      if (burger.indexOf(p) < 0) burger.push(p);
+    });
+    var css = '';
+    LISTS.forEach(function (L) {
+      var rec = document.querySelector(L[0]);
+      if (!rec) return;
+      var items = [];
+      rec.querySelectorAll('.tn-elem[data-elem-type="text"]').forEach(function (e) {
+        var a = e.querySelector('a[href]');
+        if (!a) return;
+        var i = burger.indexOf(path(a.getAttribute('href')));
+        var top = parseFloat(e.getAttribute('data-field-top-value')) || 0;
+        items.push({ id: e.getAttribute('data-elem-id'), key: i < 0 ? 1000 + top : i });
+      });
+      if (!items.length) return;
+      items.sort(function (a, b) { return a.key - b.key; });
+      items.forEach(function (x, k) {
+        // высота у всех одна: у копии пункта она бывает другой, и текст съезжает вниз
+        css += L[0] + ' .tn-elem[data-elem-id="' + x.id + '"] { top: ' + (TOP + k * STEP) + 'px !important; height: 28px !important; }\n';
+      });
+      // белый фон списка — под число пунктов (последний пункт + 5 px снизу)
+      var bg = rec.querySelector('.tn-elem[data-elem-type="shape"]');
+      if (bg) css += L[0] + ' .tn-elem[data-elem-id="' + bg.getAttribute('data-elem-id') + '"] { height: ' +
+                     ((items.length - 1) * STEP + 33) + 'px !important; }\n';
+    });
+    var st = document.getElementById('t2y-menu-order');
+    if (!st) { st = document.createElement('style'); st.id = 't2y-menu-order'; document.head.appendChild(st); }
+    st.textContent = '@media screen and (min-width: 641px) {\n' + css + '}';
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync);
+  else sync();
 })();
 </script>
 <!-- ════ конец: шапка ════ -->
