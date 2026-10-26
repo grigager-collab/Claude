@@ -1,0 +1,68 @@
+<!-- ════════════════════════════════════════════════════════════════
+     «О БРЕНДЕ» (/aboutus): ФОТО «НОВОЙ КОЛЛЕКЦИИ» ВЕДУТ В КАРТОЧКИ.  26.10.2026
+     У блока-галереи «Новая коллекция» (T1148) нет поля для ссылки — код
+     кладёт поверх каждого фото невидимую ссылку на карточку товара.
+     Фото узнаём по имени файла, поэтому порядок в галерее можно менять.
+     Новое фото — строка в LINKS: 'имя файла без .JPG': ['/p/адрес', 'Название'].
+     Фото без строки остаётся без ссылки, как сейчас.
+
+     КУДА: «Другое → HTML-код» (T123) в любом месте страницы «О бренде»
+     (удобно — сразу под «Новой коллекцией») → вставить ВЕСЬ этот файл →
+     Опубликовать.
+     ════════════════════════════════════════════════════════════════ -->
+<style>
+.t1148__item.t2y-glink-on { position: relative; }
+.t2y-glink { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 2; -webkit-user-drag: none; }
+/* название — для поисковиков и программ для незрячих, на экране не видно */
+.t2y-glink__t { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.t1148__item.t2y-glink-on .t1148__img { transition: opacity .2s ease; }
+@media (hover: hover) { .t1148__item.t2y-glink-on:hover .t1148__img { opacity: .9; } }
+</style>
+<script>
+(function () {
+  var LINKS = {
+    'IMG_9008': ['/p/olimpiyka-klassicheskaya-volcano-korichnevyy', 'Олимпийка классическая Volcano'],
+    'IMG_9009': ['/p/kostyum-povsednevnyy-vatanym', 'Костюм повседневный Ватаным'],
+    'IMG_9010': ['/p/kostyum-sportivnyy-vatanym', 'Костюм спортивный Ватаным'],
+    'IMG_9011': ['/p/kostyum-hlopkovyy-winter-tale-siniy', 'Костюм хлопковый Winter tale']
+  };
+
+  // .../IMG_9008.JPG и .../-/format/webp/IMG_9008.JPG.webp → IMG_9008
+  function file(im) {
+    var u = im.getAttribute('data-original') || im.getAttribute('src') || '';
+    return u.split(/[?#]/)[0].split('/').pop().replace(/\.(jpe?g|png|webp)(\.webp)?$/i, '');
+  }
+
+  function run() {
+    document.querySelectorAll('.t1148__item').forEach(function (it) {
+      if (it.querySelector('.t2y-glink')) return;
+      var im = it.querySelector('img'), l = im && LINKS[file(im)];
+      if (!l) return;
+      var a = document.createElement('a');
+      a.className = 't2y-glink';
+      a.href = l[0];
+      a.draggable = false;
+      a.innerHTML = '<span class="t2y-glink__t"></span>';
+      a.firstChild.textContent = l[1];
+      it.appendChild(a);
+      it.classList.add('t2y-glink-on');
+      // подпись фото — название товара; без метки data-t2y-alt часть 13 «Шапки» её не перепишет
+      im.alt = l[1] + ' 2young4U';
+      im.removeAttribute('data-t2y-alt');
+    });
+  }
+
+  // галерею листают и мышью: если фото протащили, это не клик
+  // (e.detail = 0 — нажатие с клавиатуры, его не трогаем)
+  var x0 = 0;
+  document.addEventListener('pointerdown', function (e) { x0 = e.clientX; }, true);
+  document.addEventListener('click', function (e) {
+    if (e.detail && e.target.closest && e.target.closest('.t2y-glink') && Math.abs(e.clientX - x0) > 8) e.preventDefault();
+  }, true);
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+  [1000, 3000].forEach(function (ms) { setTimeout(run, ms); });
+})();
+</script>
+<!-- ════ конец: ссылки «Новой коллекции» ════ -->
