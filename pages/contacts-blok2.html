@@ -1,0 +1,63 @@
+<!-- ════════════════════════════════════════════════════════════════
+     «КОНТАКТЫ» — НИЖНИЙ БЛОК, ПОД ФОРМОЙ (БЛОК 2 из pages/contacts.html).
+     26.10.2026: отдельным файлом, чтобы вставлять ЦЕЛИКОМ.
+
+     КУДА: страница «Контакты» → HTML-код ПОД формой → выделить всё старое →
+     вставить ВЕСЬ этот файл. Верхний HTML-код (над формой) не трогать.
+     Внутри: VipAvenue («мужская» / «женская» — ссылки на коллекции бренда),
+     оферта, политика, реквизиты.
+     Правка текста — здесь и в БЛОКЕ 2 файла pages/contacts.html одинаково.
+     ════════════════════════════════════════════════════════════════ -->
+
+<div class="t2y-info t2y-contacts2">
+  <div class="t2y-info__inner">
+
+    <div class="t2y-contacts2__vip">
+      <p class="t2y-contacts2__vip-title">Заказ с примеркой</p>
+      <p>Заказать продукцию бренда (<a href="https://vipavenue.ru/brands/mens/2young4u/" target="_blank" rel="noopener">мужская</a> и <a href="https://vipavenue.ru/brands/womens/2young4u/" target="_blank" rel="noopener">женская</a> коллекция) с примеркой можно на сайте VipAvenue.ru.</p>
+      <p>Клиентские офисы VipAvenue расположены в самых удобных районах Москвы, Санкт-Петербурга, Казани, Екатеринбурга, Самары и Краснодара.</p>
+    </div>
+
+    <div class="t2y-contacts2__legal">
+      <p><a href="/oferta">Публичная оферта (заказ, оплата, доставка, возврат)</a></p>
+      <p><a href="/politika-obrabotki-persdannyh">Политика обработки персональных данных</a></p>
+      <p class="t2y-contacts2__req">
+        ИП Герман Кристина Сергеевна<br>
+        ИНН 165904383131<br>
+        ОГРНИП 322169000056725
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.t2y-contacts2 { padding-top: 8px !important; }
+.t2y-contacts2 p {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333333;
+  margin: 0 0 8px;
+}
+.t2y-contacts2__vip {
+  padding: 24px;
+  background: #f6f6f6;
+}
+.t2y-contacts2__vip-title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif !important;
+  font-size: 18px !important;
+  color: #000000 !important;
+  margin-bottom: 10px !important;
+}
+.t2y-contacts2__legal { margin-top: 40px; }
+.t2y-contacts2__legal p { font-size: 14px; margin-bottom: 10px; }
+.t2y-contacts2__req {
+  margin-top: 18px !important;
+  font-size: 12px !important;
+  line-height: 1.7 !important;
+  color: #888888 !important;
+  font-variant-numeric: lining-nums;
+}
+</style>
