@@ -1,0 +1,60 @@
+<!-- ════ 2Y4U: ФОН КАРТОЧЕК ТОВАРОВ — проба цветов (27.10.2026) ════
+     Заказчица: «первые три костюма в разделе «Костюмы» — фон карточки цвет
+     номер 1, оставшиеся 2 костюма — цвет номер 3. Посмотрим их в общей массе,
+     на разных страницах». Цвета — из товаров «Выбор фона»:
+     №1 #F0ECEB (тёплый светло-серый), №3 #F7F7F7 (почти белый).
+
+     Фото товаров сняты на белом — белое «перекрашивается» в цвет фона
+     (наложение «умножение»), сама вещь почти не меняется. Красим всю
+     карточку: фото и подпись под ним (в каталоге у подписи и так своя
+     серая подложка — заменяем её).
+     Где: каталог и разделы, «Новая коллекция» на главной, «Ватаным»,
+     «Возможно, вам понравится» на карточках.
+
+     Свой цвет товару — строка в BG: 'адрес-из-/p/': '#цвет'. Убрать пробу —
+     стереть строки (или весь этот кусок). -->
+<style>
+.t-catalog__card.t2y-bg { background-color: var(--t2y-bg) !important; }
+.t2y-bg .t-catalog__card__imgwrapper,
+.t2y-bg .t-store__card__imgwrapper,
+.t2y-bg .t2y-rel__img { background-color: var(--t2y-bg) !important; }
+/* главное фото (на белом) — белое становится цветом фона; фото при наведении не трогаем */
+.t2y-bg .t-catalog__card__bgimg.js-product-img,
+.t2y-bg .t-store__card__bgimg.js-product-img,
+.t2y-bg .t2y-rel__img img:first-child { mix-blend-mode: multiply; }
+</style>
+<script>
+(function () {
+  var BG = {
+    // «Костюмы»: первые три — цвет №1
+    'kostyum-shelk-vatanym':               '#F0ECEB',
+    'kostyum-povsednevnyy-vatanym':        '#F0ECEB',
+    'kostyum-vatanym-print':               '#F0ECEB',
+    // оставшиеся два — цвет №3
+    'kostyum-sportivnyy-vatanym':          '#F7F7F7',
+    'kostyum-hlopkovyy-winter-tale-siniy': '#F7F7F7'
+  };
+
+  function slug(u) { return String(u || '').split(/[?#]/)[0].replace(/\/+$/, '').split('/').pop().toLowerCase(); }
+
+  function paint() {
+    document.querySelectorAll('.t-catalog__card, .t-store__card, .t2y-rel__card').forEach(function (c) {
+      if (c.classList.contains('t2y-bg')) return;
+      var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]');
+      var col = a && BG[slug(a.getAttribute('href'))];
+      if (!col) return;
+      c.style.setProperty('--t2y-bg', col);
+      c.classList.add('t2y-bg');
+    });
+  }
+
+  // каталоги Tilda и «Возможно, вам понравится» появляются позже — красим по мере появления
+  var pending = false;
+  function later() { if (pending) return; pending = true; setTimeout(function () { pending = false; paint(); }, 250); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
+  window.addEventListener('load', paint);
+  [1500, 4000, 8000].forEach(function (ms) { setTimeout(paint, ms); });
+  if (window.MutationObserver) new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: фон карточек ════ -->

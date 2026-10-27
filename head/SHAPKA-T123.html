@@ -13,10 +13,12 @@
        3. Карточка: крошки один раз сверху, размеры в ряд, колонки на ПК
        4. Параметры модели 188 / XL/L + избранное без размера
        5. Окно про cookie
-       6. Ссылки в галочках согласия: реклама (корзина), политика (форма «Контактов»)
-       7. Шапка: меню из 5 пунктов (+ «О нас», «Ватаным»); список «Мужское» на ПК —
-          в порядке бургера (26.10); на телефоне всегда белая, фото не уходит
-          под неё; личный кабинет скрыт, значки и меню на планшетах (25.10)
+       6. Ссылки в галочках согласия: реклама (корзина), политика (форма «Контактов»);
+          под кнопкой формы «Контактов» — согласие с политикой и галочка рассылки (27.10)
+       7. Шапка: меню из 5 пунктов — Мужское, Женское, Ватаным, Мерч, О нас (27.10);
+          список «Мужское» на ПК — в порядке бургера (26.10); белая везде, на ПК
+          тоже, кроме страниц с крупным фото сверху (27.10); на телефоне фото
+          не уходит под неё; личный кабинет скрыт, значки и меню на планшетах
        8. Шапка: клик по «Мужское» / «Женское» ведёт в каталог, но не
           сквозь открытую корзину (25.10). Раньше этот скрипт стоял в HEAD —
           там его блок «ШАПКА: «Мужское» / «Женское» — НАВЕДЕНИЕ…» удалить.
@@ -28,6 +30,7 @@
           страницы (26.10)
       13. Подписи к картинкам (alt) для поисковиков: значки шапки, фото
           товаров, слайды и галереи (26.10)
+      14. Фон карточек: проба цветов на «Костюмах» — №1 у первых трёх, №3 у двух (27.10)
      ════════════════════════════════════════════════════════════════ -->
 
 <!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
@@ -297,13 +300,23 @@
      В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
      Поэтому в лейбле пишем простой текст, а нужные слова делает ссылкой этот
      скрипт. Если в лейбле остался код <a …> — он уберёт теги сам.
-     Новая галочка со ссылкой — добавить строку в LINKS. -->
+     Новая галочка со ссылкой — добавить строку в LINKS.
+     Форма «Контактов» (27.10, заказчица): под кнопкой «Отправить» мелко —
+     «Нажимая «Отправить», вы соглашаетесь с политикой…» и с новой строки
+     пустая галочка «Соглашаюсь с получением информационных материалов».
+     Галочка уходит в заявку тем же полем, что в корзине
+     (soglasie_reklama_24_10_2026). Другая форма — номер её блока в FORMS. -->
 <style>
 .t-checkbox__control a.t2y-consent-link {
   color: inherit !important;
   text-decoration: underline !important;
   text-underline-offset: 2px;
 }
+/* под кнопкой формы: согласие с политикой и галочка рассылки */
+.t2y-legal { margin-top: 14px; font-family: 'Raleway', Arial, sans-serif; font-size: 12px; line-height: 1.45; color: #777777; text-align: left; }
+.t2y-legal a { color: inherit !important; text-decoration: underline !important; text-underline-offset: 2px; }
+.t2y-legal__cb { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; cursor: pointer; }
+.t2y-legal__cb input { flex: 0 0 auto; width: 14px; height: 14px; margin: 1px 0 0; accent-color: #111111; cursor: pointer; }
 </style>
 <script>
 (function () {
@@ -339,9 +352,27 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', linkify);
-  window.addEventListener('load', linkify);
-  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+  /* формы, под кнопкой которых нужны согласия (номер блока — «Block id») */
+  var FORMS = ['rec208537002'];   // «Контакты»
+  function legal() {
+    FORMS.forEach(function (id) {
+      var form = document.querySelector('#' + id + ' form');
+      var btn = form && form.querySelector('.t-form__submit');
+      if (!btn || form.querySelector('.t2y-legal')) return;
+      var box = document.createElement('div');
+      box.className = 't2y-legal';
+      box.innerHTML =
+        '<div>Нажимая «Отправить», вы соглашаетесь с <a href="/politika-obrabotki-persdannyh" target="_blank" rel="noopener">политикой обработки персональных данных</a></div>' +
+        '<label class="t2y-legal__cb"><input type="checkbox" name="soglasie_reklama_24_10_2026" value="yes">' +
+        '<span>Соглашаюсь с получением <a href="/soglasie" target="_blank" rel="noopener">информационных материалов</a></span></label>';
+      btn.parentNode.insertBefore(box, btn.nextSibling);
+    });
+  }
+
+  function run() { linkify(); legal(); }
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(run, t); });
 })();
 </script>
 <!-- ════ конец: ссылки в галочках согласия ════ -->
@@ -376,15 +407,16 @@
   #rec2498768581 .tn-elem[data-elem-id="1777829627863000004"] { left: auto !important; right: 22px !important; }
 }
 
-/* 4. Меню «Мужское / Женское / Мерч / О нас / Ватаным» — по центру шапки
-      (заказчица 25.10: 5 пунктов). «О нас» и «Ватаным» — копии кнопки «Мерч»
-      в Zero-блоке со ссылками /aboutus и /vatanym; место и ширину им задаёт
-      этот код, двигать их в редакторе не нужно.
+/* 4. Меню «Мужское / Женское / Ватаным / Мерч / О нас» — по центру шапки
+      (заказчица 25.10: 5 пунктов; 27.10: «Ватаным» третьим). «О нас» и
+      «Ватаным» — копии кнопки «Мерч» в Zero-блоке со ссылками /aboutus и
+      /vatanym; место и ширину им задаёт этот код, двигать их в редакторе не нужно.
       Расчёт в единицах сетки Zero-блока (Tilda сама масштабирует под экран):
-      текст кнопок 65 / 65 / 38 / 40 / 60 px, текст по центру кнопки
+      текст кнопок 65 / 65 / 60 / 38 / 40 px, текст по центру кнопки
       (ширина кнопок 100 / 99 / 94 / 94 / 94). Между текстами 43 px, как было;
       на 641–959 px — 20 px, иначе пять пунктов не влезают между логотипом
-      и значками.
+      и значками. «Мужское» и «Женское» на прежних местах — списки под ними
+      не двигаются.
       Пока «Ватаным» в шапке нет — работает прежняя раскладка из трёх пунктов
       (на ПК — как в редакторе, на 641–1199 px — по центру вплотную), меню
       не съезжает, если код вставлен раньше кнопок. */
@@ -400,16 +432,16 @@
 @media screen and (min-width: 960px) {
   #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 237.55px) !important; }
   #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 128.85px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% - 31.9px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 50.25px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 143.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% - 20.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% + 71.15px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 153.15px) !important; }
 }
 @media screen and (min-width: 641px) and (max-width: 959px) {
   #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 179.05px) !important; }
   #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 93.35px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% - 19.4px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 39.75px) !important; }
-  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% + 109.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% - 8.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% + 60.65px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 119.65px) !important; }
 }
 
 /* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки,
@@ -462,8 +494,12 @@
       В Zero-блоке фон шапки — два слоя: белый проявляется только после
       прокрутки на 100–600 px, а матовый (белый 15 % + размытие) стоит
       всегда — сквозь него просвечивали фото и тёмные блоки. Даём шапке
-      плотный белый фон, матовый слой убираем. ПК (от 1200 px) — как было:
-      прозрачная над первым экраном, белеет при прокрутке. */
+      плотный белый фон, матовый слой убираем. ПК (от 1200 px) — тоже белая
+      (заказчица 27.10: «шапка должна быть обычной белой и не принимать на себя
+      цвет остальной страницы» — при прокрутке белый слой Tilda проявлялся
+      постепенно, и сквозь шапку просвечивал каталог). Исключение — страница
+      начинается с крупного фото во всю ширину (обложка «О бренде»): там
+      шапка прозрачная поверх фото, как задумано. Класс ставит скрипт п. 7. */
 @media screen and (max-width: 1199px) {
   #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
   #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
@@ -471,6 +507,10 @@
      он короче на её высоту, подпись и «Больше» остаются на первом экране */
   .t2y-fs .t994__width-wrapper, .t2y-fs .t994__slidecontainer,
   .t2y-fs .t994__item, .t2y-fs .t994__item-wrapper { height: var(--t2y-fs-h) !important; }
+}
+@media screen and (min-width: 1200px) {
+  html.t2y-hdr-white #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
+  html.t2y-hdr-white #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
 }
 </style>
 <script>
@@ -480,7 +520,10 @@
   //    первый блок вниз на высоту шапки (она разная: 50–78 px по ширине).
   //    Слайдер на весь экран при этом становится короче на ту же высоту.
   //    Короткую полоску-отступ сверху (белая полоса на «О бренде» на телефоне)
-  //    не трогаем — она для того и стоит. ПК не трогаем.
+  //    не трогаем — она для того и стоит.
+  //    ПК (от 1200 px) ничего не сдвигаем: там содержимое и так ниже шапки.
+  //    Только решаем, какой быть шапке: белой (класс t2y-hdr-white) или
+  //    прозрачной — если страница начинается с крупного фото во всю ширину.
   var MEDIA = 'img, video, iframe, .t-bgimg, .t-cover__carrier, [data-original], [data-content-cover-bg]';
   var moved = null;
 
@@ -498,7 +541,7 @@
       var m = r.querySelectorAll(MEDIA);
       for (var j = 0; j < m.length; j++) {
         var b = m[j].getBoundingClientRect();
-        if (b.width && b.height && top + (b.top - rt) < hh) return { rec: r, shift: Math.round(hh - top) };
+        if (b.width && b.height && top + (b.top - rt) < hh) return { rec: r, shift: Math.round(hh - top), media: b };
       }
       return null;
     }
@@ -510,8 +553,17 @@
     var art = document.querySelector('#rec2498768581 .t396__artboard');
     // высоту шапки Tilda пересчитывает сама и позже нас — следим за ней
     if (art && !watched && window.ResizeObserver) { watched = true; new ResizeObserver(later).observe(art); }
-    var hh = art && window.innerWidth <= 1199 ? art.offsetHeight : 0;
+    var desk = window.innerWidth >= 1200;
+    var hh = art ? art.offsetHeight : 0;
     var p = hh ? photoBlock(hh) : null;
+    if (desk) {
+      // крупное фото — шире 60 % экрана прямо под шапкой
+      var big = !!(p && p.media.width >= 0.6 * window.innerWidth);
+      document.documentElement.classList.toggle('t2y-hdr-white', !big);
+      p = null;
+    } else {
+      document.documentElement.classList.remove('t2y-hdr-white');
+    }
     if (moved && (!p || p.rec !== moved)) {
       moved.style.marginTop = ''; moved.classList.remove('t2y-fs'); moved = null;
     }
@@ -1325,3 +1377,63 @@ a.t2y-colors__item:hover { border-color: #999999; }
 })();
 </script>
 <!-- ════ конец: подписи к картинкам ════ -->
+<!-- ════ 2Y4U: ФОН КАРТОЧЕК ТОВАРОВ — проба цветов (27.10.2026) ════
+     Заказчица: «первые три костюма в разделе «Костюмы» — фон карточки цвет
+     номер 1, оставшиеся 2 костюма — цвет номер 3. Посмотрим их в общей массе,
+     на разных страницах». Цвета — из товаров «Выбор фона»:
+     №1 #F0ECEB (тёплый светло-серый), №3 #F7F7F7 (почти белый).
+
+     Фото товаров сняты на белом — белое «перекрашивается» в цвет фона
+     (наложение «умножение»), сама вещь почти не меняется. Красим всю
+     карточку: фото и подпись под ним (в каталоге у подписи и так своя
+     серая подложка — заменяем её).
+     Где: каталог и разделы, «Новая коллекция» на главной, «Ватаным»,
+     «Возможно, вам понравится» на карточках.
+
+     Свой цвет товару — строка в BG: 'адрес-из-/p/': '#цвет'. Убрать пробу —
+     стереть строки (или весь этот кусок). -->
+<style>
+.t-catalog__card.t2y-bg { background-color: var(--t2y-bg) !important; }
+.t2y-bg .t-catalog__card__imgwrapper,
+.t2y-bg .t-store__card__imgwrapper,
+.t2y-bg .t2y-rel__img { background-color: var(--t2y-bg) !important; }
+/* главное фото (на белом) — белое становится цветом фона; фото при наведении не трогаем */
+.t2y-bg .t-catalog__card__bgimg.js-product-img,
+.t2y-bg .t-store__card__bgimg.js-product-img,
+.t2y-bg .t2y-rel__img img:first-child { mix-blend-mode: multiply; }
+</style>
+<script>
+(function () {
+  var BG = {
+    // «Костюмы»: первые три — цвет №1
+    'kostyum-shelk-vatanym':               '#F0ECEB',
+    'kostyum-povsednevnyy-vatanym':        '#F0ECEB',
+    'kostyum-vatanym-print':               '#F0ECEB',
+    // оставшиеся два — цвет №3
+    'kostyum-sportivnyy-vatanym':          '#F7F7F7',
+    'kostyum-hlopkovyy-winter-tale-siniy': '#F7F7F7'
+  };
+
+  function slug(u) { return String(u || '').split(/[?#]/)[0].replace(/\/+$/, '').split('/').pop().toLowerCase(); }
+
+  function paint() {
+    document.querySelectorAll('.t-catalog__card, .t-store__card, .t2y-rel__card').forEach(function (c) {
+      if (c.classList.contains('t2y-bg')) return;
+      var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]');
+      var col = a && BG[slug(a.getAttribute('href'))];
+      if (!col) return;
+      c.style.setProperty('--t2y-bg', col);
+      c.classList.add('t2y-bg');
+    });
+  }
+
+  // каталоги Tilda и «Возможно, вам понравится» появляются позже — красим по мере появления
+  var pending = false;
+  function later() { if (pending) return; pending = true; setTimeout(function () { pending = false; paint(); }, 250); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
+  window.addEventListener('load', paint);
+  [1500, 4000, 8000].forEach(function (ms) { setTimeout(paint, ms); });
+  if (window.MutationObserver) new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: фон карточек ════ -->

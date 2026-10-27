@@ -2,13 +2,23 @@
      В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
      Поэтому в лейбле пишем простой текст, а нужные слова делает ссылкой этот
      скрипт. Если в лейбле остался код <a …> — он уберёт теги сам.
-     Новая галочка со ссылкой — добавить строку в LINKS. -->
+     Новая галочка со ссылкой — добавить строку в LINKS.
+     Форма «Контактов» (27.10, заказчица): под кнопкой «Отправить» мелко —
+     «Нажимая «Отправить», вы соглашаетесь с политикой…» и с новой строки
+     пустая галочка «Соглашаюсь с получением информационных материалов».
+     Галочка уходит в заявку тем же полем, что в корзине
+     (soglasie_reklama_24_10_2026). Другая форма — номер её блока в FORMS. -->
 <style>
 .t-checkbox__control a.t2y-consent-link {
   color: inherit !important;
   text-decoration: underline !important;
   text-underline-offset: 2px;
 }
+/* под кнопкой формы: согласие с политикой и галочка рассылки */
+.t2y-legal { margin-top: 14px; font-family: 'Raleway', Arial, sans-serif; font-size: 12px; line-height: 1.45; color: #777777; text-align: left; }
+.t2y-legal a { color: inherit !important; text-decoration: underline !important; text-underline-offset: 2px; }
+.t2y-legal__cb { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; cursor: pointer; }
+.t2y-legal__cb input { flex: 0 0 auto; width: 14px; height: 14px; margin: 1px 0 0; accent-color: #111111; cursor: pointer; }
 </style>
 <script>
 (function () {
@@ -44,9 +54,27 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', linkify);
-  window.addEventListener('load', linkify);
-  [800, 2000, 4000].forEach(function (t) { setTimeout(linkify, t); });
+  /* формы, под кнопкой которых нужны согласия (номер блока — «Block id») */
+  var FORMS = ['rec208537002'];   // «Контакты»
+  function legal() {
+    FORMS.forEach(function (id) {
+      var form = document.querySelector('#' + id + ' form');
+      var btn = form && form.querySelector('.t-form__submit');
+      if (!btn || form.querySelector('.t2y-legal')) return;
+      var box = document.createElement('div');
+      box.className = 't2y-legal';
+      box.innerHTML =
+        '<div>Нажимая «Отправить», вы соглашаетесь с <a href="/politika-obrabotki-persdannyh" target="_blank" rel="noopener">политикой обработки персональных данных</a></div>' +
+        '<label class="t2y-legal__cb"><input type="checkbox" name="soglasie_reklama_24_10_2026" value="yes">' +
+        '<span>Соглашаюсь с получением <a href="/soglasie" target="_blank" rel="noopener">информационных материалов</a></span></label>';
+      btn.parentNode.insertBefore(box, btn.nextSibling);
+    });
+  }
+
+  function run() { linkify(); legal(); }
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(run, t); });
 })();
 </script>
 <!-- ════ конец: ссылки в галочках согласия ════ -->
