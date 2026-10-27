@@ -25,22 +25,22 @@
   -webkit-overflow-scrolling: touch; scrollbar-width: none;
 }
 .t2y-rel__row::-webkit-scrollbar { display: none; }
+/* как плитки каталога (27.10): без серой подложки и скруглений, подпись по центру */
 .t2y-rel__card {
-  flex: 0 0 calc((100% - 60px) / 4); scroll-snap-align: start;
-  background: #fafafa; border-radius: 10px; overflow: hidden;
+  flex: 0 0 calc((100% - 60px) / 4); scroll-snap-align: start; overflow: hidden;
   text-decoration: none !important; color: #000000 !important;
 }
-.t2y-rel__img { position: relative; padding-bottom: 133.3333%; background: #ffffff; }
+.t2y-rel__img { position: relative; padding-bottom: 133.3333%; background: #ffffff; overflow: hidden; }
 .t2y-rel__img img {
   position: absolute; left: 0; top: 0; width: 100%; height: 100%;
   object-fit: cover; display: block; transition: opacity .3s ease;
 }
 .t2y-rel__img img + img { opacity: 0; }
 @media (hover: hover) { .t2y-rel__card:hover .t2y-rel__img img + img { opacity: 1; } }
-.t2y-rel__txt { padding: 30px; }
-.t2y-rel__name, .t2y-rel__price { font-family: 'Tenor', 'Tenor Sans', Arial, sans-serif; font-weight: 600; }
-.t2y-rel__name { font-size: 16px; line-height: 1.2; }
-.t2y-rel__price { font-size: 16px; line-height: 1.35; margin-top: 12px; }
+.t2y-rel__txt { padding: 20px 6px 0; text-align: center; }
+.t2y-rel__name, .t2y-rel__price { font-family: 'Tenor', 'Tenor Sans', Arial, sans-serif; }
+.t2y-rel__name { font-size: 18px; line-height: 1.2; font-weight: 400; }
+.t2y-rel__price { font-size: 18px; line-height: 1.35; font-weight: 300; margin-top: 12px; }
 /* стрелки — только на ПК и только если есть что листать */
 .t2y-rel__nav {
   position: absolute; top: 0; z-index: 2; width: 44px; height: 44px; margin-top: -22px;
@@ -58,8 +58,7 @@
 @media screen and (max-width: 959px) {
   .t2y-rel__row { gap: 10px; }
   .t2y-rel__card { flex-basis: calc((100% - 10px) / 2); }
-  .t2y-rel__name { font-size: 14px; }
-  .t2y-rel__price { font-size: 12px; }
+  .t2y-rel__name, .t2y-rel__price { font-size: 14px; }
 }
 @media screen and (max-width: 640px) {
   /* две плитки и краешек третьей — видно, что ряд листается */

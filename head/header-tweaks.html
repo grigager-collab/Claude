@@ -147,7 +147,7 @@
   //    Только решаем, какой быть шапке: белой (класс t2y-hdr-white) или
   //    прозрачной — если страница начинается с крупного фото во всю ширину.
   var MEDIA = 'img, video, iframe, .t-bgimg, .t-cover__carrier, [data-original], [data-content-cover-bg]';
-  var moved = null;
+  var moved = null, fsLock = null;
 
   // первый блок страницы, если у него фото под шапкой; иначе null.
   // shift — сколько добавить сверху, чтобы блок встал ровно под шапку
@@ -196,7 +196,14 @@
     // берём её и уменьшаем на сдвиг (CSS в п. 6)
     var w = r.querySelector('.t994__width-wrapper'), H = w ? parseFloat(w.style.height) || 0 : 0;
     if (H >= window.innerHeight - 2) r.classList.add('t2y-fs');
-    if (H && r.classList.contains('t2y-fs')) r.style.setProperty('--t2y-fs-h', (H - p.shift) + 'px');
+    if (H && r.classList.contains('t2y-fs')) {
+      // в Safari при прокрутке сворачивается панель браузера и меняется высота
+      // экрана — Tilda тут же меняет высоту слайдера, и всё под ним ездит
+      // (заказчица 27.10: «стало всё двигаться»). Высоту берём при открытии
+      // страницы и меняем только при смене ширины (поворот телефона)
+      if (!fsLock || fsLock.w !== window.innerWidth) fsLock = { w: window.innerWidth, h: H };
+      r.style.setProperty('--t2y-fs-h', (fsLock.h - p.shift) + 'px');
+    }
     // блок может вырасти позже (слайдер Tilda запускается не сразу) — пересчитать
     if (window.ResizeObserver && !r.t2yWatch) { r.t2yWatch = true; new ResizeObserver(later).observe(r); }
     moved = r;

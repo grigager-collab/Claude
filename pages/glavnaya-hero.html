@@ -13,7 +13,8 @@
      (фото, подписи, ссылки). Код берёт из них слайды и на ПК показывает
      по-новому, сами блоки на ПК прячет. Телефон (до 480 px) — блоки Tilda
      как есть; у женского блока только точки внизу заменены палочками
-     наверху, как в остальных слайдерах.
+     наверху, как в остальных слайдерах; у верхнего полоски — без бега
+     (вариант — BARS в скрипте ниже).
 
      Листать: свободно, без привязки к краям фото — тачпад/колесо, мышью
      перетаскиванием (отпустили — плавно докатывается), тонкие стрелки по
@@ -133,6 +134,24 @@
     background: rgba(255, 255, 255, .45) !important;
   }
   #rec1641003561 .t-slds__bullet_active .t-slds__bullet_body { background: #ffffff !important; }
+}
+
+/* Телефон, верхний блок (T994): полоски-таймер Tilda — без бегущей заливки,
+   тоньше; текущий слайд — белая полоска, остальные прозрачнее (вариант — BARS в скрипте) */
+@media screen and (max-width: 479px) {
+  #rec2271738541 .t994__loader-inner { display: none !important; }
+  #rec2271738541 .t994__loader, #rec2271738541 .t994__loader-outer { height: 1px !important; }
+  #rec2271738541 .t994__loader-outer { background: rgba(255, 255, 255, .45) !important; }
+  #rec2271738541 .t994__loader.t2y-on .t994__loader-outer { background: #ffffff !important; }
+  .t2y-bars_bottom .t944__loaders-container {
+    position: absolute !important; top: auto !important; bottom: 18px !important; margin: 0 !important;
+  }
+  .t2y-bars_count { position: relative; }
+  .t2y-bars_count .t944__loaders-container { display: none !important; }
+  .t2y-bars__count {
+    position: absolute; right: 22px; z-index: 5; transform: translateY(-50%); pointer-events: none;
+    font-family: 'Raleway', Arial, sans-serif; font-size: 14px; letter-spacing: .06em; color: #ffffff;
+  }
 }
 </style>
 <script>
@@ -371,7 +390,39 @@
     if (cfg.kind === 'hero') { headerHeight(box); cursor(box.querySelector('.t2y-strip__wrap')); }
   }
 
-  function run() { BLOCKS.forEach(build); }
+  // Телефон, верхний блок: полоски-таймер Tilda без бега (заказчица 27.10: полоски
+  // наезжали на лица и «ездили»). Вариант: 'top' — тонкие сверху, 'bottom' — внизу
+  // под «Больше», 'count' — счётчик «1 / 6» справа от «Больше»
+  var BARS = 'top';
+  function heroBars() {
+    var rec = document.getElementById('rec2271738541');
+    if (!rec || rec.t2yBars) return;
+    rec.t2yBars = true;
+    rec.classList.add('t2y-bars_' + BARS);
+    var cnt = null;
+    if (BARS === 'count') { cnt = document.createElement('div'); cnt.className = 't2y-bars__count'; rec.appendChild(cnt); }
+    // полоски Tilda создаёт сама и позже; текущий слайд помечаем при каждой смене
+    var mark = function () {
+      var a = rec.querySelector('.t994__item.t-slds__item_active');
+      var n = a ? parseInt(a.getAttribute('data-slide-index'), 10) || 1 : 1;
+      var L = rec.querySelectorAll('.t994__loader');
+      for (var i = 0; i < L.length; i++) {
+        if (L[i].classList.contains('t2y-on') !== (i === n - 1)) L[i].classList.toggle('t2y-on', i === n - 1);
+      }
+      var btn = cnt && L.length && a && a.querySelector('.t994__btn');
+      if (btn) {
+        // пишем, только если изменилось, — иначе запись снова будит наблюдателя
+        var t = n + ' / ' + L.length;
+        var y = Math.round(btn.getBoundingClientRect().top - rec.getBoundingClientRect().top + btn.offsetHeight / 2) + 'px';
+        if (cnt.textContent !== t) cnt.textContent = t;
+        if (cnt.style.top !== y) cnt.style.top = y;
+      }
+    };
+    new MutationObserver(mark).observe(rec, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+    mark();
+  }
+
+  function run() { BLOCKS.forEach(build); heroBars(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
 })();
