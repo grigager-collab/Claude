@@ -916,10 +916,10 @@
 
   function pick(all, cur) {
     var c = color(cur), k = kind(cur), here = path(cur.url), out = [], seen = {};
-    // тестовые копии карточек (артикул или адрес с «test», 28.10) — только в каталоге,
-    // сюда не берём: иначе рядом с вещью показалась бы она же
+    // тестовые копии карточек («ТЕСТ» в названии, test в артикуле или адресе, 28.10) —
+    // только в каталоге, сюда не берём: иначе рядом с вещью показалась бы она же
     var others = all.filter(function (p) {
-      return p.url && path(p.url) !== here && !/test/i.test((p.sku || '') + ' ' + p.url);
+      return p.url && path(p.url) !== here && !/test|тест/i.test((p.sku || '') + ' ' + p.url + ' ' + (p.title || ''));
     });
     function add(list) {
       list.forEach(function (p) { if (out.length < MAX && !seen[p.uid]) { seen[p.uid] = 1; out.push(p); } });
@@ -1477,8 +1477,9 @@ img.t2y-kadr {
     'bryuki-sportivnye-siniy':             '#F0ECEB',
     // 28.10: чёрная олимпийка Ватаным — на фон №2, «уменьшаем примерно так»
     'olimpiyka-s-printom-vatanym-chernyy': ['#EBEBEB', 0.80],
-    // 28.10: копия «Олимпийки классической Space» — на фон №4, «масштаб не меняем»
-    'olimpiyka-klassicheskaya-space-siniy-test': ['#F5F4EF', 0]
+    // 28.10: копия «Олимпийки классической Space» (в названии «ТЕСТ») — на фон №4,
+    // «масштаб не меняем». Строки для копий: 'адрес оригинала тест'
+    'olimpiyka-klassicheskaya-space-siniy тест': ['#F5F4EF', 0]
   };
   // высота вещи — доля высоты фото (по названию или адресу товара);
   // ширина — не больше 84% фото, чтобы и по бокам оставался воздух
@@ -1622,9 +1623,13 @@ img.t2y-kadr {
   function paint() {
     document.querySelectorAll('.t-catalog__card, .t-store__card, .t2y-rel__card').forEach(function (c) {
       if (c.t2yKadr) return;
-      var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]');
+      var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]') || c.querySelector('a[href]:not([href^="#"])');
       var href = a ? slug(a.getAttribute('href')) : '';
-      var v = BG[href], col = v && (typeof v === 'string' ? v : v[0]);
+      // тестовые копии («ТЕСТ» в названии, 28.10) ведут на страницу оригинала —
+      // фон и кадр оригинала им не даём; свои — строкой 'адрес оригинала тест'
+      var name = txt(c.querySelector('.t-catalog__card__title, .t-store__card__title, .t2y-rel__name'));
+      var v = BG[/тест|test/i.test(name) ? href.replace(/-test\d*$/, '') + ' тест' : href];
+      var col = v && (typeof v === 'string' ? v : v[0]);
       var size = v && typeof v !== 'string' ? v[1] : undefined;
       if (col && !c.classList.contains('t2y-bg')) {
         c.style.setProperty('--t2y-bg', col);
