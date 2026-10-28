@@ -1,10 +1,13 @@
-<!-- ════ 2Y4U: КАРТОЧКА — «Рекомендации стилиста»: коллажи (25.10.2026) ════
-     Коллажи — картинки, без открытия и ссылок (просьба заказчицы). Каждый
-     стоит в карточках того цвета и модели костюма, что на нём. Картинки
-     загружены на служебную страницу /kollazhi (галерея), здесь — их адреса.
+<!-- ════ 2Y4U: КАРТОЧКА — «Рекомендации стилиста»: фото на моделях и коллажи (25–28.10.2026) ════
+     Картинки, без открытия и ссылок (просьба заказчицы). Каждая стоит в
+     карточках того цвета и модели костюма, что на ней. Сначала — наши
+     генерации на моделях (28.10: «все качественные имиджевые фото… из серии —
+     одну лучшую, можно несколько из разных серий»), потом коллажи.
+     Коллажи загружены на служебную страницу /kollazhi (галерея), фото на
+     моделях — те, что уже стоят на сайте; здесь — их адреса.
      Встаёт в блок «Рекомендации стилиста» на странице товара; у товара без
-     коллажей блок остаётся скрытым (см. часть 10).
-     Новый коллаж: загрузить в галерею на /kollazhi → добавить адрес в CARDS. -->
+     картинок блок остаётся скрытым (см. часть 10).
+     Новая картинка: загрузить в галерею на /kollazhi → адрес в C → ключ в CARDS. -->
 <style>
 .t2y-sty { max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: relative; }
 .t2y-sty__row {
@@ -14,7 +17,7 @@
 .t2y-sty__row::-webkit-scrollbar { display: none; }
 .t2y-sty__item {
   flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start;
-  border-radius: 10px; overflow: hidden; background: #fafafa;
+  overflow: hidden; background: #fafafa;   /* углы острые, как у плиток товаров (27.10) */
 }
 .t2y-sty__item img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
 @media screen and (max-width: 959px) {
@@ -46,22 +49,41 @@
     space1: 'tila3861-3063-4035-a432-353639373031/IMG_9509.JPEG',
     space2: 'tila3339-3930-4231-b465-356435303964/IMG_9510.JPEG',
     space3: 'tila6537-6366-4662-a633-333935323665/IMG_0129.JPG',
-    phantom1: 'tila3330-3937-4533-b365-636434306465/IMG_3118_1.JPEG'
+    phantom1: 'tila3330-3937-4533-b365-636434306465/IMG_3118_1.JPEG',
+    // фото на моделях (наши генерации, 28.10): по одному из разных серий.
+    // vs — Volcano стойка, vd — Volcano «Дикаприо», ss/sd — Space стойка/«Дикаприо»,
+    // fr — френч, wt — Winter tale, vr — Ватаным с белыми рукавами
+    f_vs1: 'tila6634-3330-4437-b533-336439383263/IMG_4346.jpg',
+    f_vs2: 'tild6536-6536-4531-b665-636633646161/IMG_6999.JPG',
+    f_vs3: 'tild6436-3462-4462-b961-303437363361/photo_2026-04-06_19-.jpg',
+    f_vs4: 'tild3835-3266-4364-a539-373632633762/378b3826-2ef8-4307-a.jpg',
+    f_vd1: 'tild3239-3938-4430-b966-616132633434/IMG_4273.JPG',
+    f_ss1: 'tila3337-3938-4664-b738-323361316237/IMG_4211.JPG',
+    f_ss2: 'tild6361-3465-4138-b433-323236643331/photo_2026-04-06_19-.jpg',
+    f_sd1: 'tild3937-3330-4733-a231-353031323634/hf_20260422_090319_6.jpeg',
+    f_sd2: 'tild6339-6563-4430-b461-623731376562/photo_2026-04-06_19-.jpg',
+    f_fr1: 'tila3836-3137-4936-a365-656564343332/IMG_4057.JPG',
+    f_fr2: 'tild3030-3863-4864-a634-343363306232/photo_2026-04-06_19-.jpg',
+    f_wt1: 'tila3135-6131-4230-a135-643039643632/IMG_4208.JPG',
+    f_vr1: 'tild6134-3364-4964-a665-636639323037/hf_20260429_163501_c.jpeg'
   };
-  // страница товара → коллажи (по порядку показа).
+  // страница товара → сначала фото на моделях, потом коллажи (по порядку показа).
   // «D» — олимпийка с воротничком («Дикаприо»), без «D» — со стойкой.
   var CARDS = {
-    '/p/olimpiyka-hlopkovaya-volcano-korichnevyy': ['volcano1', 'volcano2', 'volcano3'],
-    '/p/olimpiyka-klassicheskaya-volcano-korichnevyy': ['volcanoD1', 'volcanoD2'],
+    '/p/olimpiyka-hlopkovaya-volcano-korichnevyy': ['f_vs1', 'f_vs2', 'f_vs3', 'f_vs4', 'volcano1', 'volcano2', 'volcano3'],
+    '/p/olimpiyka-klassicheskaya-volcano-korichnevyy': ['f_vd1', 'volcanoD1', 'volcanoD2'],
     '/p/olimpiyka-hlopkovaya-ocean-siniy': ['ocean1'],
     '/p/olimpiyka-klassicheskaya-ocean-siniy': ['oceanD1'],
-    '/p/olimpiyka-klassicheskaya-space-siniy': ['spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
+    '/p/olimpiyka-klassicheskaya-space-siniy': ['f_sd1', 'f_sd2', 'spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
     '/p/kostyum-shelk-vatanym': ['spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
-    '/p/olimpiyka-hlopkovaya-siniy': ['space1', 'space2', 'space3'],
-    '/p/tolstovka-hlopkovaya-siniy': ['space1', 'space2', 'space3'],
-    '/p/bryuki-sportivnye-siniy': ['space1', 'space2', 'space3'],
-    '/p/kostyum-hlopkovyy-winter-tale-siniy': ['space3', 'space1', 'space2'],
-    '/p/olimpiyka-hlopkovaya-chernyy': ['phantom1']
+    '/p/olimpiyka-hlopkovaya-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/tolstovka-hlopkovaya-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/bryuki-sportivnye-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/kostyum-hlopkovyy-winter-tale-siniy': ['f_wt1', 'space3', 'space1', 'space2'],
+    '/p/olimpiyka-hlopkovaya-chernyy': ['phantom1'],
+    '/p/french-hlopkovyy-siniy': ['f_fr1', 'f_fr2'],
+    '/p/olimpiyka-s-printom-vatanym-siniy': ['f_vr1'],
+    '/p/kostyum-vatanym-print': ['f_vr1']
   };
 
   // уменьшенная копия с CDN Tilda; если не загрузится — оригинал
@@ -83,7 +105,8 @@
     var html = '<div class="t2y-sty__row">';
     list.forEach(function (key) {
       if (!C[key]) return;
-      html += '<div class="t2y-sty__item"><img alt="Образ от стилиста 2young4U" loading="lazy" src="' +
+      var alt = key.indexOf('f_') === 0 ? 'Образ на модели 2young4U' : 'Образ от стилиста 2young4U';
+      html += '<div class="t2y-sty__item"><img alt="' + alt + '" loading="lazy" src="' +
               small(C[key]) + '" data-orig="' + CDN + C[key] + '"></div>';
     });
     var box = document.createElement('div');
