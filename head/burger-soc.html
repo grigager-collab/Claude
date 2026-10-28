@@ -1,0 +1,47 @@
+<!-- ════ 2Y4U: БУРГЕР-МЕНЮ — значки соцсетей как в подвале (28.10.2026) ════
+     Заказчица: «иконки надо сделать такие же 3 как в подвале. Надпись «Мы в
+     соцсетях» убираем». Значки Tilda в меню прячем, ставим наши — Telegram,
+     Instagram, MAX тонкой линией в кружке, как в подвале. Ссылки те же, что в
+     подвале (pages/podval.html): поменялась ссылка — поменять в обоих местах. -->
+<style>
+#rec2501340841 .t450__right_descr { display: none !important; }
+#rec2501340841 .t450__right_social_links .t-sociallinks { display: none !important; }
+.t2y-bsoc { display: flex; gap: 14px; }
+.t2y-bsoc a {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  width: 32px; height: 32px; border-radius: 50%; background: transparent;
+  border: 1px solid #8c8c8c; color: #bdbdbd; text-decoration: none !important;
+}
+.t2y-bsoc a:hover { border-color: #ffffff; color: #ffffff; }
+.t2y-bsoc svg { display: block; }
+.t2y-bsoc__max { font: 600 8.5px/1 'Raleway', Arial, sans-serif; letter-spacing: .03em; color: currentColor; }
+</style>
+<script>
+(function () {
+  var LINKS = [
+    ['Telegram', 'https://t.me/tooyoung4U',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M21 4 3 11l6 2.3M21 4l-3 16-6.8-5M21 4 9 13.3m0 0V19l2.6-3.7"/></svg>'],
+    ['Instagram', 'https://www.instagram.com/2young4u_official',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".9" fill="currentColor" stroke="none"/></svg>'],
+    ['MAX', 'https://max.ru/join/vz8ZX6vwSj2GKv31UmPe0LekHr_JbgvXK8X9rOGWpcI',
+     '<span class="t2y-bsoc__max">MAX</span>']
+  ];
+  function run() {
+    var box = document.querySelector('#rec2501340841 .t450__right_social_links');
+    if (!box || box.querySelector('.t2y-bsoc')) return;
+    var w = document.createElement('div');
+    w.className = 't2y-bsoc';
+    LINKS.forEach(function (l) {
+      var a = document.createElement('a');
+      a.href = l[1]; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', l[0]);
+      a.innerHTML = l[2];
+      w.appendChild(a);
+    });
+    box.appendChild(w);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+})();
+</script>
+<!-- ════ конец: значки в бургере ════ -->

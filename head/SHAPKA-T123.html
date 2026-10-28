@@ -35,7 +35,9 @@
           товаров, слайды и галереи (26.10)
       14. Фон карточек: проба цветов на «Костюмах» — №1 у первых трёх, №3 у двух (27.10);
           фон только под фото, углы острые, единый кадр: костюм > брюки > олимпийка;
-          на фоне ещё толстовка и брюки (27.10, вечер)
+          на фоне ещё толстовка и брюки (27.10, вечер); свой размер у Winter tale и чёрной
+          олимпийки Ватаным, копия классической Space на фоне (28.10)
+      15. Бургер-меню: значки соцсетей как в подвале, без «Мы в соцсетях» (28.10)
      ════════════════════════════════════════════════════════════════ -->
 
 <!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
@@ -914,7 +916,11 @@
 
   function pick(all, cur) {
     var c = color(cur), k = kind(cur), here = path(cur.url), out = [], seen = {};
-    var others = all.filter(function (p) { return p.url && path(p.url) !== here; });
+    // тестовые копии карточек (артикул или адрес с «test», 28.10) — только в каталоге,
+    // сюда не берём: иначе рядом с вещью показалась бы она же
+    var others = all.filter(function (p) {
+      return p.url && path(p.url) !== here && !/test/i.test((p.sku || '') + ' ' + p.url);
+    });
     function add(list) {
       list.forEach(function (p) { if (out.length < MAX && !seen[p.uid]) { seen[p.uid] = 1; out.push(p); } });
     }
@@ -1428,8 +1434,13 @@ a.t2y-colors__item:hover { border-color: #999999; }
      как есть. Где: каталог и разделы, «Новая коллекция» на главной,
      «Ватаным», «Возможно, вам понравится» на карточках.
 
+     28.10: Winter tale крупнее (89 %), чёрная олимпийка Ватаным — на фон №2
+     #EBEBEB и 80 %, копия «Олимпийки классической Space» — на фон №4 #F5F4EF
+     без изменения масштаба.
+
      Свой цвет товару — строка в BG: 'адрес-из-/p/': '#цвет' (кадр подстроится
-     сам). Убрать пробу — стереть строки (или весь этот кусок). -->
+     сам) или ['#цвет', размер] — свой размер вещи (доля высоты фото, 0 — как
+     на фото). Убрать пробу — стереть строки (или весь этот кусок). -->
 <style>
 /* фон — только под фото, углы острые */
 .t2y-bg .t-catalog__card__imgwrapper,
@@ -1451,17 +1462,23 @@ img.t2y-kadr {
 </style>
 <script>
 (function () {
+  // адрес из /p/ → цвет или [цвет, размер]: размер — доля высоты фото вместо
+  // обычной по виду вещи (KADR); 0 — вещь как на фото, без кадра
   var BG = {
     // «Костюмы»: первые три — цвет №1
     'kostyum-shelk-vatanym':               '#F0ECEB',
     'kostyum-povsednevnyy-vatanym':        '#F0ECEB',
     'kostyum-vatanym-print':               '#F0ECEB',
-    // оставшиеся два — цвет №3
+    // оставшиеся два — цвет №3; Winter tale — «увеличиваем примерно до полосок» (28.10)
     'kostyum-sportivnyy-vatanym':          '#F7F7F7',
-    'kostyum-hlopkovyy-winter-tale-siniy': '#F7F7F7',
+    'kostyum-hlopkovyy-winter-tale-siniy': ['#F7F7F7', 0.89],
     // олимпийка (толстовка на молнии) и брюки — цвет №1
     'tolstovka-hlopkovaya-siniy':          '#F0ECEB',
-    'bryuki-sportivnye-siniy':             '#F0ECEB'
+    'bryuki-sportivnye-siniy':             '#F0ECEB',
+    // 28.10: чёрная олимпийка Ватаным — на фон №2, «уменьшаем примерно так»
+    'olimpiyka-s-printom-vatanym-chernyy': ['#EBEBEB', 0.80],
+    // 28.10: копия «Олимпийки классической Space» — на фон №4, «масштаб не меняем»
+    'olimpiyka-klassicheskaya-space-siniy-test': ['#F5F4EF', 0]
   };
   // высота вещи — доля высоты фото (по названию или адресу товара);
   // ширина — не больше 84% фото, чтобы и по бокам оставался воздух
@@ -1486,6 +1503,8 @@ img.t2y-kadr {
     '01bdacf3e9237c1457aed455f3d69d7b.webp': [0.275, 0.014, 0.725, 0.981, 1.333],
     'f22d8dbafb0cde00091a9d44924de437.webp': [0.05, 0.033, 0.95, 0.962, 1.333],
     'd116875c9460bdf51725c5b90ad903cc.webp': [0.231, 0.023, 0.756, 0.972, 1.333],
+    'eda0860955d19fb99fa435e41b7dc139.webp': [0.019, 0.014, 0.981, 0.986, 1.333],
+    '38504558d60ef88e4fdfc7c87ab738e4.webp': 0,
     // фото при наведении: на модели или срезаны — без кадра
     '4f8e70836f040726e45c79d102a18941.webp': 0, '3a65d8dcfd7e7682a2466fe3b7483184.webp': 0,
     'f1256deee02ec8ae37a2261590cec8cd.webp': 0, 'b845f1d1571711bbfa9cb31a5a20de63.webp': 0,
@@ -1575,9 +1594,10 @@ img.t2y-kadr {
     el.classList.add('t2y-kadr');
   }
 
-  function frame(c, href) {
+  function frame(c, href, size) {
+    if (size === 0) { c.t2yKadr = true; return; }   // как на фото
     var t = href + ' ' + txt(c.querySelector('.t-catalog__card__title, .t-store__card__title, .t2y-rel__name'));
-    var f = 0;
+    var f = size || 0;
     for (var i = 0; i < KADR.length && !f; i++) if (KADR[i][0].test(t)) f = KADR[i][1];
     if (!f) return;
     var els = [].slice.call(c.querySelectorAll('.js-product-img, .t-catalog__card__bgimg_second, .t-store__card__bgimg_second, .t2y-rel__img img'))
@@ -1604,12 +1624,13 @@ img.t2y-kadr {
       if (c.t2yKadr) return;
       var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]');
       var href = a ? slug(a.getAttribute('href')) : '';
-      var col = BG[href];
+      var v = BG[href], col = v && (typeof v === 'string' ? v : v[0]);
+      var size = v && typeof v !== 'string' ? v[1] : undefined;
       if (col && !c.classList.contains('t2y-bg')) {
         c.style.setProperty('--t2y-bg', col);
         c.classList.add('t2y-bg');
       }
-      if (col || (ALL && href)) frame(c, href);
+      if (col || (ALL && href)) frame(c, href, size);
     });
   }
 
@@ -1623,3 +1644,50 @@ img.t2y-kadr {
 })();
 </script>
 <!-- ════ конец: фон карточек ════ -->
+<!-- ════ 2Y4U: БУРГЕР-МЕНЮ — значки соцсетей как в подвале (28.10.2026) ════
+     Заказчица: «иконки надо сделать такие же 3 как в подвале. Надпись «Мы в
+     соцсетях» убираем». Значки Tilda в меню прячем, ставим наши — Telegram,
+     Instagram, MAX тонкой линией в кружке, как в подвале. Ссылки те же, что в
+     подвале (pages/podval.html): поменялась ссылка — поменять в обоих местах. -->
+<style>
+#rec2501340841 .t450__right_descr { display: none !important; }
+#rec2501340841 .t450__right_social_links .t-sociallinks { display: none !important; }
+.t2y-bsoc { display: flex; gap: 14px; }
+.t2y-bsoc a {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  width: 32px; height: 32px; border-radius: 50%; background: transparent;
+  border: 1px solid #8c8c8c; color: #bdbdbd; text-decoration: none !important;
+}
+.t2y-bsoc a:hover { border-color: #ffffff; color: #ffffff; }
+.t2y-bsoc svg { display: block; }
+.t2y-bsoc__max { font: 600 8.5px/1 'Raleway', Arial, sans-serif; letter-spacing: .03em; color: currentColor; }
+</style>
+<script>
+(function () {
+  var LINKS = [
+    ['Telegram', 'https://t.me/tooyoung4U',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M21 4 3 11l6 2.3M21 4l-3 16-6.8-5M21 4 9 13.3m0 0V19l2.6-3.7"/></svg>'],
+    ['Instagram', 'https://www.instagram.com/2young4u_official',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".9" fill="currentColor" stroke="none"/></svg>'],
+    ['MAX', 'https://max.ru/join/vz8ZX6vwSj2GKv31UmPe0LekHr_JbgvXK8X9rOGWpcI',
+     '<span class="t2y-bsoc__max">MAX</span>']
+  ];
+  function run() {
+    var box = document.querySelector('#rec2501340841 .t450__right_social_links');
+    if (!box || box.querySelector('.t2y-bsoc')) return;
+    var w = document.createElement('div');
+    w.className = 't2y-bsoc';
+    LINKS.forEach(function (l) {
+      var a = document.createElement('a');
+      a.href = l[1]; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', l[0]);
+      a.innerHTML = l[2];
+      w.appendChild(a);
+    });
+    box.appendChild(w);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+})();
+</script>
+<!-- ════ конец: значки в бургере ════ -->

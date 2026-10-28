@@ -105,7 +105,11 @@
 
   function pick(all, cur) {
     var c = color(cur), k = kind(cur), here = path(cur.url), out = [], seen = {};
-    var others = all.filter(function (p) { return p.url && path(p.url) !== here; });
+    // тестовые копии карточек (артикул или адрес с «test», 28.10) — только в каталоге,
+    // сюда не берём: иначе рядом с вещью показалась бы она же
+    var others = all.filter(function (p) {
+      return p.url && path(p.url) !== here && !/test/i.test((p.sku || '') + ' ' + p.url);
+    });
     function add(list) {
       list.forEach(function (p) { if (out.length < MAX && !seen[p.uid]) { seen[p.uid] = 1; out.push(p); } });
     }
