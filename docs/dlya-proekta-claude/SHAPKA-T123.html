@@ -1,0 +1,1698 @@
+<!-- ════════════════════════════════════════════════════════════════
+     2Y4U — ВЕСЬ КОД БЛОКА «HTML-код» (T123) НА «ШАПКЕ 1.1».  24–25.10.2026
+     Этот блок есть на каждой странице сайта, поэтому общий код живёт здесь,
+     а не в HEAD (HEAD упёрся в предел 64 КБ).
+
+     КАК ВСТАВИТЬ: открыть «Шапку 1.1» → блок HTML-кода (тот, куда этот
+     файл вставлялся раньше) → выделить ВСЁ старое → вставить ВЕСЬ этот файл
+     вместо него → «Опубликовать все страницы».
+
+     Внутри по порядку:
+       1. Шрифт заголовков (был и раньше)
+       2. Плитки каталога: фото 3:4 вместо квадрата, без сердечка (25.10)
+       3. Карточка: крошки один раз сверху, размеры в ряд, колонки на ПК
+       4. Параметры модели 188 / XL/L + избранное без размера
+       5. Окно про cookie
+       6. Ссылки в галочках согласия: реклама (корзина), политика (форма «Контактов»);
+          под кнопкой формы «Контактов» — согласие с политикой и галочка рассылки (27.10)
+       7. Шапка: меню из 5 пунктов — Мужское, Женское, Ватаным, Мерч, О нас (27.10);
+          список «Мужское» на ПК — в порядке бургера (26.10); белая везде, на ПК
+          тоже, кроме страниц с крупным фото сверху (27.10); на телефоне фото
+          не уходит под неё, высота верхнего слайдера не прыгает при прокрутке
+          (27.10, вечер); личный кабинет скрыт, значки и меню на планшетах
+       8. Шапка: клик по «Мужское» / «Женское» ведёт в каталог, но не
+          сквозь открытую корзину (25.10). Раньше этот скрипт стоял в HEAD —
+          там его блок «ШАПКА: «Мужское» / «Женское» — НАВЕДЕНИЕ…» удалить.
+       9. Таблица размеров: текст заказчицы под таблицей (25.10)
+      10. Карточка: «Возможно, вам понравится» из каталога, того же цвета;
+          «Рекомендации стилиста» скрыты до коллажей (25.10); плитки — как в
+          каталоге, без серой подложки и скруглений (27.10, вечер)
+      11. Карточка: «Рекомендации стилиста» — коллажи по цвету и модели (25.10);
+          первыми — наши фото на моделях, по одному из разных серий (28.10)
+      12. Карточка: квадратики других цветов той же модели — ссылки на их
+          страницы (26.10)
+      13. Подписи к картинкам (alt) для поисковиков: значки шапки, фото
+          товаров, слайды и галереи (26.10)
+      14. Фон карточек: проба цветов на «Костюмах» — №1 у первых трёх, №3 у двух (27.10);
+          фон только под фото, углы острые, единый кадр: костюм > брюки > олимпийка;
+          на фоне ещё толстовка и брюки (27.10, вечер); свой размер у Winter tale и чёрной
+          олимпийки Ватаным, копия классической Space на фоне (28.10)
+      15. Бургер-меню: значки соцсетей как в подвале, без «Мы в соцсетях» (28.10)
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- 2Y4U: Tenor Sans = файл шрифта Tenor. Блок T123 на «Шапке 1.1». -->
+<style>
+@font-face {
+  font-family: 'Tenor Sans';
+  src: url('https://static.tildacdn.com/tild3234-3839-4330-b235-623230633564/TenorSans-Regular.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+</style>
+<!-- 2Y4U: плитки каталога. Блок T123 на «Шапке 1.1».
+     1) Фото 3:4 вместо квадрата: в блоках каталога стоит пропорция 1:1, а все
+        фото товаров вертикальные 3:4 — квадрат срезал воротник и низ.
+     2) Без сердечка «в избранное» на плитках (25.10, просьба заказчицы —
+        слишком много внимания). В карточке товара и во всплывающей карточке
+        сердечко остаётся: там оно не внутри плитки. -->
+<style>
+.t-catalog__card__imgwrapper.t-catalog__card__imgwrapper_1-1 {
+  padding-bottom: 133.33% !important;
+}
+.t-catalog__card .t1002__addBtn,
+.t-store__card .t1002__addBtn { display: none !important; }
+</style>
+<!-- ════ 2Y4U: КАРТОЧКА ТОВАРА — крошки, размеры, колонки ════ -->
+<style>
+/* ── 1. Хлебные крошки: один раз, в самом верху карточки ──
+   Скрипт в HEAD вставляет крошки перед названием. Если страница грузится
+   медленно, он успевает раньше стилей Tilda — и крошки попадают ВНУТРЬ
+   сетки названия: вторая копия узкой колонкой справа. Старые копии
+   прячем все, показываем одну — над фото (.t2y-crumbs-top). */
+.t780 .t2y-crumbs:not(.t2y-crumbs-top),
+.t760 .t2y-crumbs:not(.t2y-crumbs-top) { display: none !important; }
+.t2y-crumbs-row { padding: 12px 20px 18px; box-sizing: border-box; }
+.t2y-crumbs-row .t2y-crumbs { margin: 0 !important; }
+
+/* ── 2. Размеры S…3XL всегда в один ряд ──
+   Кнопки делят ширину поровну, но не шире 64 px. Селектор длинный
+   нарочно: старое правило с фиксированной шириной (--variant-box-size)
+   сильнее короткого. */
+.t780 .t-product__option-variants_buttons.t-product__option-variants_simple,
+.t760 .t-product__option-variants_buttons.t-product__option-variants_simple {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+}
+.t780 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple,
+.t760 .t-product__option-variants.t-product__option-variants_simple .t-product__option-item.t-product__option-item_buttons.t-product__option-item_simple {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 64px !important;
+  width: auto !important;
+  margin: 0 !important;
+  justify-content: center !important;
+}
+
+/* ── 3. ПК: колонки фото / текст по центру и без обрезки ──
+   Было: сетка прижата влево, текст 400 px торчал за колонку — на экране
+   1280 px правая часть уходила за край. Стало: фото тянется, колонка
+   с текстом 360–440 px, всё по центру. */
+@media screen and (min-width: 961px) {
+  .t760 > .t-container.js-product.js-product-single.js-store-product.js-store-product_single {
+    display: flex !important;
+    align-items: stretch !important;  /* колонка текста во всю высоту фото —
+                                         иначе Tilda не «прилепит» её при прокрутке */
+    gap: 56px !important;
+    max-width: 1360px !important;
+    margin: 0 auto !important;
+    padding: 0 40px !important;
+    box-sizing: border-box !important;
+  }
+  /* «распорки» Tilda (clearfix) во flex становятся пустыми колонками
+     и сдвигают фото на ширину отступа */
+  .t760 > .t-container.js-product.js-product-single::before,
+  .t760 > .t-container.js-product.js-product-single::after { display: none !important; }
+  .t760 > .t-container > .t760__flexcolumn.t-col_8 {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  .t760 > .t-container > .t760__col_margin {
+    flex: 0 0 clamp(360px, 32vw, 440px) !important;
+    width: clamp(360px, 32vw, 440px) !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+  }
+  /* ширину «липкой» части Tilda сам ставит по колонке (max-width в style) —
+     её не трогаем, иначе при прокрутке она растянется на весь экран */
+  .t760 .t760__col_margin .t760__textwrapper {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .t760 .t2y-crumbs-row {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 0 40px 24px;
+  }
+}
+</style>
+
+<script>
+(function () {
+  /* Одна строка крошек над карточкой. Текст берём из копии, которую
+     построил скрипт в HEAD (там логика разделов), — сами её не строим. */
+  function place() {
+    document.querySelectorAll('.t780, .t760').forEach(function (block) {
+      if (block.querySelector('.t2y-crumbs-top')) return;
+      var src = block.querySelector('.t2y-crumbs');
+      var box = block.querySelector('.t-container');
+      if (!src || !box) return;
+
+      var row = document.createElement('div');
+      row.className = 't2y-crumbs-row';
+      var c = document.createElement('div');
+      c.className = 't2y-crumbs t2y-crumbs-top';
+      c.setAttribute('role', 'navigation');
+      c.setAttribute('aria-label', 'Хлебные крошки');
+      c.innerHTML = src.innerHTML;
+      row.appendChild(c);
+      box.parentNode.insertBefore(row, box);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', place);
+  window.addEventListener('load', place);
+  [500, 1200, 2500, 4000].forEach(function (t) { setTimeout(place, t); });
+})();
+</script>
+<!-- ════ конец: карточка товара ════ -->
+<!-- ════ 2Y4U: ПАРАМЕТРЫ МОДЕЛИ + ИЗБРАННОЕ БЕЗ РАЗМЕРА ════ -->
+<script>
+(function () {
+  /* ── Параметры модели на фото ──
+     На карточках в аккордеоне стоят прочерки («Рост модели: — см.»).
+     Заказчица: у всех мужских — 188 см, размер XL/L. Меняем ТОЛЬКО прочерки:
+     если на какой-то карточке вписать свои цифры, скрипт их не тронет. */
+  var HEIGHT = '188';
+  var SIZE = 'XL/L';
+
+  function fillModel() {
+    var src = document.querySelector('.t2y-acc-source');
+    if (!src || src.getAttribute('data-crumb-parent') !== 'Мужское') return;
+    document.querySelectorAll('.t2y-acc-source p, .product-popup-accordion p')
+      .forEach(function (p) {
+        var t = (p.textContent || '').replace(/\s+/g, ' ').trim();
+        if (/^Рост модели: — см\.?$/.test(t)) p.textContent = 'Рост модели: ' + HEIGHT + ' см.';
+        else if (/^На модели размер: —\.?$/.test(t)) p.textContent = 'На модели размер: ' + SIZE + '.';
+      });
+  }
+
+  /* ── Избранное: без строки «Размер» ──
+     Tilda при добавлении в избранное сама берёт первый размер (S) и
+     показывает его. Прячем строку «Размер: …», цвет и артикул остаются. */
+  function cleanWishlist() {
+    document.querySelectorAll('.t1002__product-title__option > div').forEach(function (d) {
+      if (/^\s*Размер\s*:/.test(d.textContent || '')) d.style.display = 'none';
+    });
+  }
+
+  function tick() { fillModel(); cleanWishlist(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  [600, 1500, 3000].forEach(function (t) { setTimeout(tick, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    requestAnimationFrame(function () { tick(); busy = false; });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: параметры модели + избранное ════ -->
+<!-- ════ 2Y4U: ОКНО ПРО COOKIE ════
+     Показывается один раз. Выбор хранится в cookie t2y_cc на год:
+     «all» — принял все, «nec» — только необходимые.
+     На будущее (Метрика): ставить её, только если window.t2yCookieOK() === true. -->
+<style>
+.t2y-cc {
+  position: fixed; inset: 0; z-index: 2147483000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; box-sizing: border-box;
+  background: rgba(0, 0, 0, .45);
+}
+.t2y-cc__box {
+  width: 100%; max-width: 420px; box-sizing: border-box;
+  padding: 28px 24px 24px; background: #ffffff; color: #000000;
+}
+.t2y-cc__title {
+  font-family: 'Tenor Sans', 'Tenor', Arial, sans-serif;
+  font-size: 20px; font-weight: 400; line-height: 1.3;
+  margin: 0 0 12px;
+}
+.t2y-cc__text {
+  font-family: 'Raleway', Arial, sans-serif;
+  font-size: 14px; font-weight: 300; line-height: 1.6; color: #333333;
+  margin: 0 0 22px;
+}
+.t2y-cc__text a {
+  color: #000000 !important; text-decoration: none !important;
+  border-bottom: 1px solid #bbbbbb;
+}
+.t2y-cc__btn {
+  display: block; width: 100%; box-sizing: border-box;
+  padding: 15px 20px; margin: 0 0 10px;
+  font-family: 'Raleway', Arial, sans-serif; font-size: 15px; font-weight: 600;
+  border: 1px solid #000000; border-radius: 0; cursor: pointer;
+  background: #000000; color: #ffffff;
+  -webkit-appearance: none; appearance: none;
+}
+.t2y-cc__btn_ghost { background: #ffffff; color: #000000; margin-bottom: 0; }
+.t2y-cc__btn:hover { opacity: .85; }
+</style>
+
+<script>
+(function () {
+  var POLICY_URL = '/politika-obrabotki-persdannyh';
+
+  function read() {
+    var m = document.cookie.match(/(?:^|;\s*)t2y_cc=(all|nec)/);
+    return m ? m[1] : null;
+  }
+  window.t2yCookieOK = function () { return read() === 'all'; };
+
+  function save(v) {
+    document.cookie = 't2y_cc=' + v + '; max-age=31536000; path=/; SameSite=Lax';
+    try { document.dispatchEvent(new CustomEvent('t2y:cookie', { detail: v })); } catch (e) {}
+  }
+
+  function show() {
+    if (read() || document.querySelector('.t2y-cc')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 't2y-cc';
+    wrap.setAttribute('role', 'dialog');
+    wrap.setAttribute('aria-modal', 'true');
+    wrap.setAttribute('aria-labelledby', 't2y-cc-title');
+    wrap.innerHTML =
+      '<div class="t2y-cc__box">' +
+        '<p class="t2y-cc__title" id="t2y-cc-title">Файлы cookie</p>' +
+        '<p class="t2y-cc__text">Мы используем cookie, чтобы сайт работал, ' +
+          'и для анализа посещаемости. Подробнее — в <a href="' + POLICY_URL + '">' +
+          'политике обработки персональных данных</a>.</p>' +
+        '<button type="button" class="t2y-cc__btn" data-v="all">Принять</button>' +
+        '<button type="button" class="t2y-cc__btn t2y-cc__btn_ghost" data-v="nec">Только необходимые</button>' +
+      '</div>';
+    wrap.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-v]');
+      if (!b) return;
+      save(b.getAttribute('data-v'));
+      wrap.remove();
+    });
+    document.body.appendChild(wrap);
+  }
+
+  /* небольшая пауза, чтобы окно не мешало первой отрисовке страницы */
+  function start() { setTimeout(show, 700); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+<!-- ════ конец: окно про cookie ════ -->
+<!-- ════ 2Y4U: ССЫЛКИ В ГАЛОЧКАХ СОГЛАСИЯ (корзина и формы) ════
+     В «Лейбле» галочки Tilda ссылку не пропускает — показывает код буквами.
+     Поэтому в лейбле пишем простой текст, а нужные слова делает ссылкой этот
+     скрипт. Если в лейбле остался код <a …> — он уберёт теги сам.
+     Новая галочка со ссылкой — добавить строку в LINKS.
+     Форма «Контактов» (27.10, заказчица): под кнопкой «Отправить» мелко —
+     «Нажимая «Отправить», вы соглашаетесь с политикой…» и с новой строки
+     пустая галочка «Соглашаюсь с получением информационных материалов».
+     Галочка уходит в заявку тем же полем, что в корзине
+     (soglasie_reklama_24_10_2026). Другая форма — номер её блока в FORMS. -->
+<style>
+.t-checkbox__control a.t2y-consent-link {
+  color: inherit !important;
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
+/* под кнопкой формы: согласие с политикой и галочка рассылки */
+.t2y-legal { margin-top: 14px; font-family: 'Raleway', Arial, sans-serif; font-size: 12px; line-height: 1.45; color: #777777; text-align: left; }
+.t2y-legal a { color: inherit !important; text-decoration: underline !important; text-underline-offset: 2px; }
+.t2y-legal__cb { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; cursor: pointer; }
+.t2y-legal__cb input { flex: 0 0 auto; width: 14px; height: 14px; margin: 1px 0 0; accent-color: #111111; cursor: pointer; }
+</style>
+<script>
+(function () {
+  /* фраза в тексте галочки → страница */
+  var LINKS = [
+    { phrase: 'рекламную информацию', url: '/soglasie' },
+    { phrase: 'политикой обработки персональных данных', url: '/politika-obrabotki-persdannyh' }
+  ];
+
+  function linkify() {
+    document.querySelectorAll('.t-checkbox__control > span').forEach(function (span) {
+      if (span.querySelector('a.t2y-consent-link')) return;
+      var text = (span.textContent || '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+      var hit = null, at = -1;
+      LINKS.forEach(function (l) {
+        var i = text.indexOf(l.phrase);
+        if (i >= 0 && !hit) { hit = l; at = i; }
+      });
+      if (!hit) {
+        if (text !== span.textContent) span.textContent = text;
+        return;
+      }
+      var a = document.createElement('a');
+      a.className = 't2y-consent-link';
+      a.href = hit.url;
+      a.target = '_blank';  /* в новой вкладке — корзина и форма не теряются */
+      a.rel = 'noopener';
+      a.textContent = hit.phrase;
+      span.textContent = '';
+      span.appendChild(document.createTextNode(text.slice(0, at)));
+      span.appendChild(a);
+      span.appendChild(document.createTextNode(text.slice(at + hit.phrase.length)));
+    });
+  }
+
+  /* формы, под кнопкой которых нужны согласия (номер блока — «Block id») */
+  var FORMS = ['rec208537002'];   // «Контакты»
+  function legal() {
+    FORMS.forEach(function (id) {
+      var form = document.querySelector('#' + id + ' form');
+      var btn = form && form.querySelector('.t-form__submit');
+      if (!btn || form.querySelector('.t2y-legal')) return;
+      var box = document.createElement('div');
+      box.className = 't2y-legal';
+      box.innerHTML =
+        '<div>Нажимая «Отправить», вы соглашаетесь с <a href="/politika-obrabotki-persdannyh" target="_blank" rel="noopener">политикой обработки персональных данных</a></div>' +
+        '<label class="t2y-legal__cb"><input type="checkbox" name="soglasie_reklama_24_10_2026" value="yes">' +
+        '<span>Соглашаюсь с получением <a href="/soglasie" target="_blank" rel="noopener">информационных материалов</a></span></label>';
+      btn.parentNode.insertBefore(box, btn.nextSibling);
+    });
+  }
+
+  function run() { linkify(); legal(); }
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  [800, 2000, 4000].forEach(function (t) { setTimeout(run, t); });
+})();
+</script>
+<!-- ════ конец: ссылки в галочках согласия ════ -->
+<!-- ════ 2Y4U: ШАПКА — меню из 5 пунктов, белая шапка на телефоне, ЛК скрыт ════
+     Zero-блок шапки rec2498768581, мобильное меню rec2501340841,
+     выпадающие списки «Мужское» rec2501315011 и «Женское» rec2501320681.
+     Кнопки ищем по ссылке (#formanpopup, #forwomenpopup, /merch, /aboutus,
+     /vatanym), а не по номеру. На ПК у кнопок анимация, Tilda оборачивает
+     ссылку в лишний слой — поэтому :has(a[…]), а не :has(> a[…]).
+     «Контакты» в шапке НЕ нужны — они в подвале; в списке заказчицы
+     это пункт бургер-меню. -->
+<style>
+/* 1. Личный кабинет пока скрыт — заказчица: «откроем, когда там появится
+      контент». Вернуть: удалить этот пункт и пункт 2. */
+#rec2498768581 .tn-elem[data-elem-id="1777829659859000008"] { display: none !important; }
+#rec2501340841 .t450__list_item:has(a[href^="/members"]) { display: none !important; }
+
+/* 2. ПК: поиск, избранное, корзина — на место значка кабинета,
+      чтобы справа не осталось дырки */
+@media screen and (min-width: 1200px) {
+  #rec2498768581 .tn-elem[data-elem-id="1777829674577000010"] { left: calc(50% - 600px + 1096px) !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1777829642192000006"] { left: calc(50% - 600px + 1129px) !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1777829627863000004"] { left: calc(50% - 600px + 1163px) !important; }
+}
+
+/* 3. Планшеты и узкие ноутбуки (480–1199 px). В Zero-блоке для этих ширин
+      нет своей раскладки, элементы стоят по координатам ПК — значки поиска,
+      избранного и корзины уезжали за правый край. Прижимаем их к краю. */
+@media screen and (min-width: 480px) and (max-width: 1199px) {
+  #rec2498768581 .tn-elem[data-elem-id="1777829674577000010"] { left: auto !important; right: 88px !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1777829642192000006"] { left: auto !important; right: 55px !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1777829627863000004"] { left: auto !important; right: 22px !important; }
+}
+
+/* 4. Меню «Мужское / Женское / Ватаным / Мерч / О нас» — по центру шапки
+      (заказчица 25.10: 5 пунктов; 27.10: «Ватаным» третьим). «О нас» и
+      «Ватаным» — копии кнопки «Мерч» в Zero-блоке со ссылками /aboutus и
+      /vatanym; место и ширину им задаёт этот код, двигать их в редакторе не нужно.
+      Расчёт в единицах сетки Zero-блока (Tilda сама масштабирует под экран):
+      текст кнопок 65 / 65 / 60 / 38 / 40 px, текст по центру кнопки
+      (ширина кнопок 100 / 99 / 94 / 94 / 94). Между текстами 43 px, как было;
+      на 641–959 px — 20 px, иначе пять пунктов не влезают между логотипом
+      и значками. «Мужское» и «Женское» на прежних местах — списки под ними
+      не двигаются.
+      Пока «Ватаным» в шапке нет — работает прежняя раскладка из трёх пунктов
+      (на ПК — как в редакторе, на 641–1199 px — по центру вплотную), меню
+      не съезжает, если код вставлен раньше кнопок. */
+@media screen and (min-width: 641px) and (max-width: 1199px) {
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 147px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 47px) !important; }
+  #rec2498768581 .tn-elem:has(a[href="/merch"])          { left: calc(50% + 52px) !important; }
+}
+@media screen and (min-width: 641px) {
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"]),
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"]) { top: 1px !important; width: 94px !important; }
+}
+@media screen and (min-width: 960px) {
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 237.55px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 128.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% - 20.85px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% + 71.15px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 153.15px) !important; }
+}
+@media screen and (min-width: 641px) and (max-width: 959px) {
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#formanpopup"])   { left: calc(50% - 179.05px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="#forwomenpopup"]) { left: calc(50% - 93.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/vatanym"])       { left: calc(50% - 8.35px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href="/merch"])          { left: calc(50% + 60.65px) !important; }
+  #rec2498768581:has(a[href$="/vatanym"]) .tn-elem:has(a[href$="/aboutus"])       { left: calc(50% + 119.65px) !important; }
+}
+
+/* 4б. Всплывающие списки «Мужское» и «Женское» — отдельные Zero-блоки,
+       по месту стояли ровно под кнопками. Кнопки в п. 4 сдвинуты —
+       двигаем пункты списков на столько же (фон списка не трогаем).
+       Сдвиг = новое место кнопки − старое (442 и 551), в единицах сетки.
+       Три пункта: 960–1199 px: 333 − 442, 433 − 551; 641–959: 173 − 442,
+       273 − 551. Пять пунктов: от 1200 px: 362.45 − 442, 471.15 − 551;
+       960–1199: 242.45 − 442, 351.15 − 551; 641–959: 140.95 − 442,
+       226.65 − 551. */
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -109px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -118px !important; }
+}
+@media screen and (min-width: 641px) and (max-width: 959px) {
+  #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -269px !important; }
+  #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -278px !important; }
+}
+@media screen and (min-width: 1200px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -79.55px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -79.85px !important; }
+}
+@media screen and (min-width: 960px) and (max-width: 1199px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -199.55px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -199.85px !important; }
+}
+@media screen and (min-width: 641px) and (max-width: 959px) {
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501315011 .tn-elem[data-elem-type="text"] { margin-left: -301.05px !important; }
+  body:has(#rec2498768581 a[href$="/vatanym"]) #rec2501320681 .tn-elem[data-elem-type="text"] { margin-left: -324.35px !important; }
+}
+
+/* 4в. Порядок пунктов в списке «Мужское» на ПК — как в мобильном меню
+       (бургере): его задаёт скрипт п. 8 ниже. */
+
+/* 5. До 640 px — мобильное меню (бургер): текстовые кнопки прячем;
+      на 480–640 px логотип сдвигаем вправо от бургера, как на телефоне */
+@media screen and (max-width: 640px) {
+  #rec2498768581 .tn-elem:has(a[href$="/aboutus"]),
+  #rec2498768581 .tn-elem:has(a[href$="/vatanym"]) { display: none !important; }
+}
+@media screen and (min-width: 480px) and (max-width: 640px) {
+  #rec2498768581 .tn-elem:has(a[href="#formanpopup"]),
+  #rec2498768581 .tn-elem:has(a[href="#forwomenpopup"]),
+  #rec2498768581 .tn-elem:has(a[href="/merch"]) { display: none !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1778509606390000002"] { left: 49px !important; }
+}
+
+/* 6. Телефоны и планшеты (до 1199 px): шапка всегда белая (просьба
+      заказчицы 25.10: «то белая, то окрашивается от модулей»).
+      В Zero-блоке фон шапки — два слоя: белый проявляется только после
+      прокрутки на 100–600 px, а матовый (белый 15 % + размытие) стоит
+      всегда — сквозь него просвечивали фото и тёмные блоки. Даём шапке
+      плотный белый фон, матовый слой убираем. ПК (от 1200 px) — тоже белая
+      (заказчица 27.10: «шапка должна быть обычной белой и не принимать на себя
+      цвет остальной страницы» — при прокрутке белый слой Tilda проявлялся
+      постепенно, и сквозь шапку просвечивал каталог). Исключение — страница
+      начинается с крупного фото во всю ширину (обложка «О бренде»): там
+      шапка прозрачная поверх фото, как задумано. Класс ставит скрипт п. 7. */
+@media screen and (max-width: 1199px) {
+  #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
+  #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
+  /* к п. 7: слайдер на весь экран (главная на телефоне) встал под шапку —
+     он короче на её высоту, подпись и «Больше» остаются на первом экране */
+  .t2y-fs .t994__width-wrapper, .t2y-fs .t994__slidecontainer,
+  .t2y-fs .t994__item, .t2y-fs .t994__item-wrapper { height: var(--t2y-fs-h) !important; }
+}
+@media screen and (min-width: 1200px) {
+  html.t2y-hdr-white #rec2498768581 .t396__artboard { background-color: #ffffff !important; }
+  html.t2y-hdr-white #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
+}
+</style>
+<script>
+(function () {
+  // 7. К п. 6: шапка висит поверх страницы. Если страница начинается с фото
+  //    (главная на телефоне), белая шапка закрыла бы его верх — сдвигаем
+  //    первый блок вниз на высоту шапки (она разная: 50–78 px по ширине).
+  //    Слайдер на весь экран при этом становится короче на ту же высоту.
+  //    Короткую полоску-отступ сверху (белая полоса на «О бренде» на телефоне)
+  //    не трогаем — она для того и стоит.
+  //    ПК (от 1200 px) ничего не сдвигаем: там содержимое и так ниже шапки.
+  //    Только решаем, какой быть шапке: белой (класс t2y-hdr-white) или
+  //    прозрачной — если страница начинается с крупного фото во всю ширину.
+  var MEDIA = 'img, video, iframe, .t-bgimg, .t-cover__carrier, [data-original], [data-content-cover-bg]';
+  var moved = null, fsLock = null;
+
+  // первый блок страницы, если у него фото под шапкой; иначе null.
+  // shift — сколько добавить сверху, чтобы блок встал ровно под шапку
+  function photoBlock(hh) {
+    var recs = document.querySelectorAll('#allrecords .t-rec');
+    for (var i = 0; i < recs.length; i++) {
+      var r = recs[i];
+      if (r.closest('header, footer') || r.offsetHeight < 5) continue;  // шапка, подвал, коды, скрытые
+      var rt = r.getBoundingClientRect().top;
+      // место блока без нашего сдвига (его не снимаем — страница не дёргается)
+      var top = rt + window.pageYOffset - (r === moved ? parseFloat(r.style.marginTop) || 0 : 0);
+      if (top >= hh || r.offsetHeight < 2 * hh) return null;   // уже ниже шапки / полоска-отступ
+      var m = r.querySelectorAll(MEDIA);
+      for (var j = 0; j < m.length; j++) {
+        var b = m[j].getBoundingClientRect();
+        if (b.width && b.height && top + (b.top - rt) < hh) return { rec: r, shift: Math.round(hh - top), media: b };
+      }
+      return null;
+    }
+    return null;
+  }
+
+  var watched = false;
+  function fit() {
+    var art = document.querySelector('#rec2498768581 .t396__artboard');
+    // высоту шапки Tilda пересчитывает сама и позже нас — следим за ней
+    if (art && !watched && window.ResizeObserver) { watched = true; new ResizeObserver(later).observe(art); }
+    var desk = window.innerWidth >= 1200;
+    var hh = art ? art.offsetHeight : 0;
+    var p = hh ? photoBlock(hh) : null;
+    if (desk) {
+      // крупное фото — шире 60 % экрана прямо под шапкой
+      var big = !!(p && p.media.width >= 0.6 * window.innerWidth);
+      document.documentElement.classList.toggle('t2y-hdr-white', !big);
+      p = null;
+    } else {
+      document.documentElement.classList.remove('t2y-hdr-white');
+    }
+    if (moved && (!p || p.rec !== moved)) {
+      moved.style.marginTop = ''; moved.classList.remove('t2y-fs'); moved = null;
+    }
+    if (!p) return;
+    var r = p.rec;
+    if (r.style.marginTop !== p.shift + 'px') r.style.marginTop = p.shift + 'px';
+    // слайдер Tilda на весь экран: высоту ему пишет сама Tilda (по высоте экрана) —
+    // берём её и уменьшаем на сдвиг (CSS в п. 6)
+    var w = r.querySelector('.t994__width-wrapper'), H = w ? parseFloat(w.style.height) || 0 : 0;
+    if (H >= window.innerHeight - 2) r.classList.add('t2y-fs');
+    if (H && r.classList.contains('t2y-fs')) {
+      // в Safari при прокрутке сворачивается панель браузера и меняется высота
+      // экрана — Tilda тут же меняет высоту слайдера, и всё под ним ездит
+      // (заказчица 27.10: «стало всё двигаться»). Высоту берём при открытии
+      // страницы и меняем только при смене ширины (поворот телефона)
+      if (!fsLock || fsLock.w !== window.innerWidth) fsLock = { w: window.innerWidth, h: H };
+      r.style.setProperty('--t2y-fs-h', (fsLock.h - p.shift) + 'px');
+    }
+    // блок может вырасти позже (слайдер Tilda запускается не сразу) — пересчитать
+    if (window.ResizeObserver && !r.t2yWatch) { r.t2yWatch = true; new ResizeObserver(later).observe(r); }
+    moved = r;
+  }
+
+  var t;
+  function later() { clearTimeout(t); t = setTimeout(fit, 150); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fit);
+  else fit();
+  window.addEventListener('load', fit);
+  [600, 2000].forEach(function (ms) { setTimeout(fit, ms); });
+  window.addEventListener('resize', later);
+  window.addEventListener('orientationchange', later);
+})();
+
+(function () {
+  // 8. Список «Мужское» на ПК (Zero-блок) — в том же порядке, что раздел
+  //    «Мужское» в мобильном меню (бургере). Порядок меняется в одном месте —
+  //    в бургере (Контент меню), список на ПК подстраивается сам, двигать
+  //    пункты в Zero-блоке не нужно. Пункт, которого нет в бургере, — в конце.
+  //    Для «Женского» — добавить ['#rec2501320681', '/women/'] в LISTS.
+  var LISTS = [['#rec2501315011', '/men/']];
+  var TOP = 58, STEP = 27;   // место первого пункта и шаг, в единицах сетки Zero-блока
+
+  function path(h) {
+    try { return new URL(h, location.href).pathname.replace(/\/+$/, ''); } catch (e) { return ''; }
+  }
+
+  // Места пишем правилами CSS с !important: Tilda сама проставляет пунктам
+  // top прямо в style (при запуске Zero-блока) и перетёрла бы значения в style.
+  function sync() {
+    var burger = [];
+    document.querySelectorAll('#rec2501340841 a[href]').forEach(function (a) {
+      var p = path(a.getAttribute('href'));
+      if (burger.indexOf(p) < 0) burger.push(p);
+    });
+    var css = '';
+    LISTS.forEach(function (L) {
+      var rec = document.querySelector(L[0]);
+      if (!rec) return;
+      var items = [];
+      rec.querySelectorAll('.tn-elem[data-elem-type="text"]').forEach(function (e) {
+        var a = e.querySelector('a[href]');
+        if (!a) return;
+        var i = burger.indexOf(path(a.getAttribute('href')));
+        var top = parseFloat(e.getAttribute('data-field-top-value')) || 0;
+        items.push({ id: e.getAttribute('data-elem-id'), key: i < 0 ? 1000 + top : i });
+      });
+      if (!items.length) return;
+      items.sort(function (a, b) { return a.key - b.key; });
+      items.forEach(function (x, k) {
+        // высота у всех одна: у копии пункта она бывает другой, и текст съезжает вниз
+        css += L[0] + ' .tn-elem[data-elem-id="' + x.id + '"] { top: ' + (TOP + k * STEP) + 'px !important; height: 28px !important; }\n';
+      });
+      // белый фон списка — под число пунктов (последний пункт + 5 px снизу)
+      var bg = rec.querySelector('.tn-elem[data-elem-type="shape"]');
+      if (bg) css += L[0] + ' .tn-elem[data-elem-id="' + bg.getAttribute('data-elem-id') + '"] { height: ' +
+                     ((items.length - 1) * STEP + 33) + 'px !important; }\n';
+    });
+    var st = document.getElementById('t2y-menu-order');
+    if (!st) { st = document.createElement('style'); st.id = 't2y-menu-order'; document.head.appendChild(st); }
+    st.textContent = '@media screen and (min-width: 641px) {\n' + css + '}';
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sync);
+  else sync();
+})();
+</script>
+<!-- ════ конец: шапка ════ -->
+<!-- ════ 2Y4U: ШАПКА — «Мужское» / «Женское»: наведение раскрывает меню,
+     клик ведёт в каталог /men и /women.  Версия 3, 25.10.2026 ════
+     У кнопки Zero Block одна ссылка — #formanpopup / #forwomenpopup
+     (всплывающее меню). Скрипт перехватывает КЛИК и ведёт в каталог,
+     наведение не трогает — меню раскрывается как раньше.
+
+     ВЕРСИЯ 3: вторая смотрела только координаты клика и уводила в каталог,
+     даже когда поверх шапки открыта корзина (поиск, избранное) — клик
+     проходил «сквозь» окно. Теперь сначала проверяем, что под курсором
+     видна сама шапка. Если сверху другое окно — клик достаётся ему:
+     корзина просто закрывается, как при любом клике мимо неё.
+
+     Только для мыши. На телефонах и планшетах тап раскрывает меню, как было,
+     поэтому «Всё мужское» / «Всё женское» в бургер-меню удалять НЕЛЬЗЯ.
+     Ctrl/Cmd + клик — каталог в новой вкладке.
+
+     Версия 2 стояла в HEAD — тот блок из HEAD УДАЛИТЬ: он срабатывает
+     раньше этого и уводит сквозь корзину по-прежнему. -->
+<script>
+(function () {
+  // хук всплывающего меню → куда вести по клику
+  var MAP = {
+    '#formanpopup':   '/men',
+    '#forwomenpopup': '/women'
+  };
+  var HEADER = '#rec2498768581';   // Zero Block шапки
+  // Что может лежать поверх слова, и клик всё равно наш: сама шапка и
+  // выпадающие списки «Мужское» / «Женское» — их край заходит на слово.
+  var OWN = HEADER + ', #rec2501314481, #rec2501320251';
+
+  if (!window.matchMedia ||
+      !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  // Какой пункт шапки под точкой (x, y) — по прямоугольнику ссылки:
+  // край выпадающего списка может лежать поверх самого слова.
+  function hit(x, y) {
+    for (var hook in MAP) {
+      var links = document.querySelectorAll(HEADER + ' a[href="' + hook + '"]');
+      for (var i = 0; i < links.length; i++) {
+        var r = links[i].getBoundingClientRect();
+        if (r.width > 0 && r.height > 0 &&
+            x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+          return MAP[hook];
+        }
+      }
+    }
+    return null;
+  }
+
+  // window + фаза перехвата — самая ранняя точка, куда приходит клик.
+  window.addEventListener('click', function (e) {
+    if (e.button !== 0) return;
+    var url = hit(e.clientX, e.clientY);
+    if (!url) return;
+
+    // Сверху открыто другое окно (корзина, поиск, избранное) — клик его.
+    var top = document.elementFromPoint(e.clientX, e.clientY);
+    if (!top || !top.closest(OWN)) return;
+    // Сверху другая ссылка (пункт выпадающего списка) — пусть работает она.
+    var a = top.closest('a');
+    if (a && !MAP[a.getAttribute('href')]) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (e.ctrlKey || e.metaKey || e.shiftKey) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
+  }, true);
+})();
+</script>
+<!-- ════ конец: клик по «Мужское» / «Женское» ════ -->
+<!-- ════ 2Y4U: ТАБЛИЦА РАЗМЕРОВ — текст под таблицей (25.10.2026) ════
+     Окно «таблица размеров» строит скрипт в HEAD (.t2y-size-modal).
+     Этот скрипт дописывает под таблицу текст заказчицы и убирает служебную
+     строку «Значения примерные — заменить на реальные в коде», которую
+     видели покупатели. Текст меняется прямо здесь, в INFO. -->
+<style>
+.t2y-size-note { display: none !important; }
+.t2y-size-info {
+  margin: 22px 0 0; text-align: left;
+  font-family: 'Raleway', Arial, sans-serif; font-weight: 300;
+  font-size: 14px; line-height: 1.55; color: #333333;
+}
+.t2y-size-info p { margin: 0 0 12px; }
+.t2y-size-info b { font-weight: 600; color: #111111; }
+.t2y-size-info h4 {
+  font-family: 'Tenor Sans', Arial, sans-serif; font-weight: 400;
+  font-size: 16px; color: #111111; margin: 20px 0 10px;
+}
+.t2y-size-info ol { margin: 0 0 14px; padding-left: 20px; }
+.t2y-size-info ol > li { margin: 0 0 10px; }
+.t2y-size-info ul { margin: 4px 0 0; padding-left: 18px; list-style: disc; }
+.t2y-size-info ul li { margin: 0 0 4px; }
+@media screen and (max-width: 640px) {
+  .t2y-size-info { font-size: 13px; }
+}
+/* Текст длинный, окно прокручивается — крестик не должен уезжать вверх.
+   top отрицательный: «липкий» отсчёт идёт от внутреннего отступа окна (40 px) */
+.t2y-size-close {
+  position: sticky !important; top: -30px; float: right; z-index: 2;
+  margin: -30px -12px -32px 0; background: #ffffff !important; border-radius: 50%;
+}
+</style>
+<script>
+(function () {
+  var INFO =
+    '<p>Базовое исполнение наших костюмов рассчитано на рост 183 см и стандартное телосложение. Также предусмотрена стандартная посадка по фигуре. Размерный ряд от 46 до 56 (российский размер, размерная сетка по ГОСТу, где размер равен половине обхвата груди). Брюки прямые (не зауженные и не широкие). Мы делаем их чуть удлиненными, чтобы вы могли подогнуть исходя из длины ваших ног и обуви, с которой будете носить брюки.</p>' +
+    '<p>В базовом исполнении на груди слева есть вышивка логотипа прописным шрифтом нитками в тон ткани.</p>' +
+    '<p>Вы можете заказать пошив костюма с альтернативными опциями. Для этого, пожалуйста, укажите нужные изменения в разделе «Пожелания». Цена костюма для вас не изменится.</p>' +
+    '<h4>Опции</h4>' +
+    '<ol>' +
+      '<li><b>Рост (см):</b> 165–170, 171–175, 176–179, 185–189, 190–194, 194–199</li>' +
+      '<li><b>Размер:</b> 56–70</li>' +
+      '<li><b>Вид телосложения:</b><ul>' +
+        '<li>спортивный (широкий плечевой пояс, узкие бедра, увеличенный обхват ног);</li>' +
+        '<li>плюс (увеличенный объем в области живота, бедер, бицепса, запястья).</li></ul></li>' +
+      '<li><b>Посадка:</b><ul>' +
+        '<li>свободная / удлиненная;</li>' +
+        '<li>прилегающая (по фигуре, с маленькими прибавками).</li></ul></li>' +
+      '<li><b>Персонализация:</b><ul>' +
+        '<li>костюм без лого / другой вышивки;</li>' +
+        '<li>вышивка логотипа / инициалов на груди или внутри на мешковине кармана, вместо стандартного лого или в дополнение.</li></ul></li>' +
+    '</ol>' +
+    '<p>Вы можете заказать определенное сочетание модели, цвета и вышивки костюма, если эта модель и этот цвет есть в базовой коллекции, но нет нужного вам сочетания.</p>' +
+    '<p>Также мы можем учесть ваши пожелания по особой упаковке, доставке костюмов.</p>';
+
+  function addInfo() {
+    document.querySelectorAll('.t2y-size-modal').forEach(function (m) {
+      if (m.querySelector('.t2y-size-info')) return;
+      var box = document.createElement('div');
+      box.className = 't2y-size-info';
+      box.innerHTML = INFO;
+      var table = m.querySelector('.t2y-size-table');
+      if (table) table.parentNode.insertBefore(box, table.nextSibling);
+      else m.appendChild(box);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', addInfo);
+  window.addEventListener('load', addInfo);
+  [500, 1500, 3000].forEach(function (t) { setTimeout(addInfo, t); });
+  // окно могут построить и по первому нажатию на «таблица размеров»
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.t2y-size-link')) setTimeout(addInfo, 0);
+  }, true);
+})();
+</script>
+<!-- ════ конец: таблица размеров — текст ════ -->
+<!-- ════ 2Y4U: КАРТОЧКА — «Возможно, вам понравится» из каталога (25.10.2026) ════
+     На страницах товаров (/p/…) два блока каталога — «Рекомендации стилиста»
+     и «Возможно, вам понравится» — показывали «ERROR: Category is not found».
+     • «Возможно, вам понравится» заполняем сами из каталога «Мужское»:
+       сначала вещи ТОГО ЖЕ ЦВЕТА (костюм к олимпийке, брюки, пиджак для
+       тройки, другие модели), потом футболки и жилеты, потом — из того же
+       раздела. Новые товары каталога подтягиваются сами.
+       Цвет — по слову в названии (Volcano, Ocean, Space, Phantom, Milky way,
+       Ironman), иначе по варианту «Цвет» (без слова «Синий» = Space).
+     • «Рекомендации стилиста» скрыты, пока не добавим коллажи.
+     Плитки — как в каталоге; на телефоне листаются пальцем, на ПК — стрелками. -->
+<script>
+  // помечаем страницу товара сразу, до отрисовки: блоки каталога на ней
+  // прячем, пока не заполним, — иначе мелькнёт «ERROR»
+  if (/^\/p\//.test(location.pathname)) document.documentElement.classList.add('t2y-pdp');
+</script>
+<style>
+.t2y-pdp .t-rec[data-record-type="786"] { display: none !important; }
+.t2y-pdp .t-rec[data-record-type="786"].t2y-rel-ready { display: block !important; }
+.t2y-rel-ready .t-store { display: none !important; }
+
+.t2y-rel { max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: relative; }
+.t2y-rel__row {
+  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.t2y-rel__row::-webkit-scrollbar { display: none; }
+/* как плитки каталога (27.10): без серой подложки и скруглений, подпись по центру */
+.t2y-rel__card {
+  flex: 0 0 calc((100% - 60px) / 4); scroll-snap-align: start; overflow: hidden;
+  text-decoration: none !important; color: #000000 !important;
+}
+.t2y-rel__img { position: relative; padding-bottom: 133.3333%; background: #ffffff; overflow: hidden; }
+.t2y-rel__img img {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block; transition: opacity .3s ease;
+}
+.t2y-rel__img img + img { opacity: 0; }
+@media (hover: hover) { .t2y-rel__card:hover .t2y-rel__img img + img { opacity: 1; } }
+.t2y-rel__txt { padding: 20px 6px 0; text-align: center; }
+.t2y-rel__name, .t2y-rel__price { font-family: 'Tenor', 'Tenor Sans', Arial, sans-serif; }
+.t2y-rel__name { font-size: 18px; line-height: 1.2; font-weight: 400; }
+.t2y-rel__price { font-size: 18px; line-height: 1.35; font-weight: 300; margin-top: 12px; }
+/* стрелки — только на ПК и только если есть что листать */
+.t2y-rel__nav {
+  position: absolute; top: 0; z-index: 2; width: 44px; height: 44px; margin-top: -22px;
+  border: none; border-radius: 50%; background: #ffffff; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .12); display: none;
+  align-items: center; justify-content: center; padding: 0;
+}
+.t2y-rel__nav svg { width: 18px; height: 18px; }
+.t2y-rel__nav_prev { left: 0; }
+.t2y-rel__nav_next { right: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .t2y-rel_scroll .t2y-rel__nav { display: flex; }
+  .t2y-rel_start .t2y-rel__nav_prev, .t2y-rel_end .t2y-rel__nav_next { display: none; }
+}
+@media screen and (max-width: 959px) {
+  .t2y-rel__row { gap: 10px; }
+  .t2y-rel__card { flex-basis: calc((100% - 10px) / 2); }
+  .t2y-rel__name, .t2y-rel__price { font-size: 14px; }
+}
+@media screen and (max-width: 640px) {
+  /* две плитки и краешек третьей — видно, что ряд листается */
+  .t2y-rel__card { flex-basis: calc((100% - 10px) / 2.2); }
+}
+</style>
+<script>
+(function () {
+  if (!/^\/p\//.test(location.pathname)) return;
+
+  var PARTS = ['364366089229'];   // каталог «Мужское»; добавить «Женское», когда появятся товары
+  var MAX = 8;
+  var API = 'https://store.tildaapi.com/api/getproductslist/?getoptions=true&slice=1&size=100&storepartuid=';
+  var WORDS = [['volcano', 'volcano'], ['ocean', 'ocean'], ['space', 'space'], ['phantom', 'phantom'],
+               ['milky', 'milky'], ['ironman', 'grey'], ['winter tale', 'space']];
+  var VALUES = { 'коричневый': 'volcano', 'чёрный': 'phantom', 'черный': 'phantom', 'белый': 'milky',
+                 'молочный': 'milky', 'серый': 'grey', 'синий': 'space', 'зелёный': 'green',
+                 'зеленый': 'green', 'бежевый': 'beige' };
+
+  function color(p) {
+    var t = (p.title || '').toLowerCase();
+    for (var i = 0; i < WORDS.length; i++) if (t.indexOf(WORDS[i][0]) >= 0) return WORDS[i][1];
+    var ed = p.editions || [];
+    for (var j = 0; j < ed.length; j++) {
+      var v = VALUES[String(ed[j]['Цвет'] || '').toLowerCase().trim()];
+      if (v) return v;
+    }
+    return '';
+  }
+  function kind(p) {
+    var t = (p.title || '').toLowerCase();
+    if (/костюм|комплект/.test(t)) return 'suit';
+    if (/брюки|шорты/.test(t)) return 'bottom';
+    if (/пиджак|френч|жакет/.test(t)) return 'blazer';
+    if (/футболк|лонгслив|жилет/.test(t)) return 'basic';
+    return 'top';
+  }
+  function path(u) {
+    try { u = decodeURI(new URL(u, location.href).pathname); } catch (e) { u = String(u || ''); }
+    return u.replace(/\/+$/, '').toLowerCase();
+  }
+  // разделы товара каталог отдаёт строкой вида «[364366089229,184306918613]»
+  function parts(p) { return String(p.partuids || '').match(/\d+/g) || []; }
+
+  function pick(all, cur) {
+    var c = color(cur), k = kind(cur), here = path(cur.url), out = [], seen = {};
+    // тестовые копии карточек («ТЕСТ» в названии, test в артикуле или адресе, 28.10) —
+    // только в каталоге, сюда не берём: иначе рядом с вещью показалась бы она же
+    var others = all.filter(function (p) {
+      return p.url && path(p.url) !== here && !/test|тест/i.test((p.sku || '') + ' ' + p.url + ' ' + (p.title || ''));
+    });
+    function add(list) {
+      list.forEach(function (p) { if (out.length < MAX && !seen[p.uid]) { seen[p.uid] = 1; out.push(p); } });
+    }
+    var same = others.filter(function (p) { return c && color(p) === c; });
+    add(same.filter(function (p) { return kind(p) !== k; }));   // другие вещи этого цвета
+    add(same.filter(function (p) { return kind(p) === k; }));   // другие модели этого цвета
+    add(others.filter(function (p) { return kind(p) === 'basic'; }));   // футболки, жилеты
+    var sub = parts(cur).filter(function (id) { return PARTS.indexOf(id) < 0; });
+    add(others.filter(function (p) {                            // добираем из того же раздела
+      return parts(p).some(function (id) { return sub.indexOf(id) >= 0; });
+    }));
+    return out;
+  }
+
+  function img(u, w) {
+    var m = String(u || '').match(/^https:\/\/static\.tildacdn\.com\/([^\/]+)\/(.+)$/);
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/resize/' + w + 'x/-/format/webp/' + m[2] : u;
+  }
+  function price(p) {
+    var n = Math.round(parseFloat(p.price));
+    return isNaN(n) || !n ? '' : n.toLocaleString('ru-RU') + ' р.';
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch];
+    });
+  }
+
+  function load() {
+    var KEY = 't2y_cat_v1';
+    try {
+      var c = JSON.parse(sessionStorage.getItem(KEY) || 'null');
+      if (c && Date.now() - c.t < 10 * 60 * 1000) return Promise.resolve(c.list);
+    } catch (e) {}
+    return Promise.all(PARTS.map(function (id) {
+      return fetch(API + id + '&c=' + Date.now()).then(function (r) { return r.json(); })
+        .then(function (d) { return d.products || []; });
+    })).then(function (lists) {
+      var list = [].concat.apply([], lists);
+      try { sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), list: list })); } catch (e) {}
+      return list;
+    });
+  }
+
+  function arrows(box, row) {
+    var svg = function (d) {
+      return '<svg viewBox="0 0 18 18" fill="none"><path d="' + d + '" stroke="#111" stroke-width="1.5"/></svg>';
+    };
+    var prev = document.createElement('button'), next = document.createElement('button');
+    prev.type = next.type = 'button';
+    prev.className = 't2y-rel__nav t2y-rel__nav_prev'; prev.setAttribute('aria-label', 'Назад');
+    next.className = 't2y-rel__nav t2y-rel__nav_next'; next.setAttribute('aria-label', 'Вперёд');
+    prev.innerHTML = svg('M11 3L5 9l6 6'); next.innerHTML = svg('M7 3l6 6-6 6');
+    box.appendChild(prev); box.appendChild(next);
+    prev.onclick = function () { row.scrollBy({ left: -row.clientWidth, behavior: 'smooth' }); };
+    next.onclick = function () { row.scrollBy({ left: row.clientWidth, behavior: 'smooth' }); };
+    function state() {
+      var top = row.querySelector('.t2y-rel__img') || row.firstElementChild;
+      if (top) prev.style.top = next.style.top = (top.offsetHeight / 2) + 'px';
+      box.classList.toggle('t2y-rel_scroll', row.scrollWidth > row.clientWidth + 2);
+      box.classList.toggle('t2y-rel_start', row.scrollLeft < 4);
+      box.classList.toggle('t2y-rel_end', row.scrollLeft + row.clientWidth > row.scrollWidth - 4);
+    }
+    row.addEventListener('scroll', state);
+    window.addEventListener('resize', state);
+    state(); setTimeout(state, 600);
+  }
+  window.t2yArrows = arrows;   // стрелки нужны и ряду коллажей (часть 11)
+  window.t2yCatalog = load;    // каталог нужен и квадратикам цветов (часть 12)
+
+  function render(rec, items) {
+    var html = '<div class="t2y-rel__row">';
+    items.forEach(function (p) {
+      var g = [];
+      try { g = JSON.parse(p.gallery || '[]'); } catch (e) {}
+      var a = g[0] && g[0].img, b = g[1] && g[1].img;
+      html += '<a class="t2y-rel__card" href="' + esc(p.url) + '">' +
+        '<div class="t2y-rel__img">' +
+          (a ? '<img alt="' + esc(p.title) + '" src="' + img(a, 600) + '" data-orig="' + esc(a) + '">' : '') +
+          (b ? '<img alt="' + esc(p.title) + ' — фото 2" src="' + img(b, 600) + '" data-orig="' + esc(b) + '">' : '') +
+        '</div><div class="t2y-rel__txt"><div class="t2y-rel__name">' + esc(p.title) + '</div>' +
+        '<div class="t2y-rel__price">' + price(p) + '</div></div></a>';
+    });
+    var box = document.createElement('div');
+    box.className = 't2y-rel';
+    box.innerHTML = html + '</div>';
+    box.querySelectorAll('img').forEach(function (im) {
+      im.onerror = function () { var o = im.getAttribute('data-orig'); if (o && im.src !== o) im.src = o; };
+    });
+    var head = rec.querySelector('.js-block-header');
+    if (head && head.parentNode) head.parentNode.insertBefore(box, head.nextSibling);
+    else rec.appendChild(box);
+    rec.classList.add('t2y-rel-ready');
+    arrows(box, box.querySelector('.t2y-rel__row'));
+  }
+
+  function run() {
+    var rec = null;
+    document.querySelectorAll('.t-rec[data-record-type="786"]').forEach(function (r) {
+      var t = (r.querySelector('.js-block-header-title') || {}).textContent || '';
+      if (/понрав/i.test(t)) rec = r;
+    });
+    if (!rec || rec.querySelector('.t2y-rel')) return;
+    load().then(function (all) {
+      var here = path(location.pathname);
+      var cur = all.filter(function (p) { return p.url && path(p.url) === here; })[0];
+      if (!cur || rec.querySelector('.t2y-rel')) return;
+      var items = pick(all, cur);
+      if (items.length) render(rec, items);
+    }).catch(function () {});
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+<!-- ════ конец: «Возможно, вам понравится» ════ -->
+<!-- ════ 2Y4U: КАРТОЧКА — «Рекомендации стилиста»: фото на моделях и коллажи (25–28.10.2026) ════
+     Картинки, без открытия и ссылок (просьба заказчицы). Каждая стоит в
+     карточках того цвета и модели костюма, что на ней. Сначала — наши
+     генерации на моделях (28.10: «все качественные имиджевые фото… из серии —
+     одну лучшую, можно несколько из разных серий»), потом коллажи.
+     Коллажи загружены на служебную страницу /kollazhi (галерея), фото на
+     моделях — те, что уже стоят на сайте; здесь — их адреса.
+     Встаёт в блок «Рекомендации стилиста» на странице товара; у товара без
+     картинок блок остаётся скрытым (см. часть 10).
+     Новая картинка: загрузить в галерею на /kollazhi → адрес в C → ключ в CARDS. -->
+<style>
+.t2y-sty { max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; position: relative; }
+.t2y-sty__row {
+  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.t2y-sty__row::-webkit-scrollbar { display: none; }
+.t2y-sty__item {
+  flex: 0 0 calc((100% - 40px) / 3); scroll-snap-align: start;
+  overflow: hidden; background: #fafafa;   /* углы острые, как у плиток товаров (27.10) */
+}
+.t2y-sty__item img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+@media screen and (max-width: 959px) {
+  .t2y-sty__row { gap: 10px; }
+  .t2y-sty__item { flex-basis: calc((100% - 10px) / 2); }
+}
+@media screen and (max-width: 640px) {
+  /* коллаж крупно, чтобы были видны вещи, и краешек следующего */
+  .t2y-sty__item { flex-basis: 82%; }
+}
+</style>
+<script>
+(function () {
+  if (!/^\/p\//.test(location.pathname)) return;
+
+  var CDN = 'https://static.tildacdn.com/';
+  var C = {
+    volcano1: 'tila3337-3064-4662-b032-663233613139/IMG_9466_1.JPEG',
+    volcano2: 'tila3839-3866-4435-b437-336162623532/IMG_9468_1.JPEG',
+    volcano3: 'tila6430-3963-4566-b235-656564666633/IMG_9467_1.JPEG',
+    volcanoD1: 'tila3065-6534-4533-a561-333061343334/IMG_3116_3.JPEG',
+    volcanoD2: 'tila6334-6563-4364-b338-316665653462/IMG_0150.JPG',
+    ocean1: 'tila3535-3965-4631-b130-653435626530/IMG_4218.JPG',
+    oceanD1: 'tila3733-3431-4637-b564-386637353631/IMG_3121_3.JPEG',
+    spaceD1: 'tila3862-3662-4932-a161-353235383137/IMG_9469_1.JPEG',
+    spaceD2: 'tila3237-6432-4630-b363-363966656439/IMG_9511.JPEG',
+    spaceD3: 'tila6662-6635-4361-b663-633432653031/IMG_9512.JPEG',
+    spaceD4: 'tila6364-3533-4336-b663-623936646236/IMG_9513.JPEG',
+    space1: 'tila3861-3063-4035-a432-353639373031/IMG_9509.JPEG',
+    space2: 'tila3339-3930-4231-b465-356435303964/IMG_9510.JPEG',
+    space3: 'tila6537-6366-4662-a633-333935323665/IMG_0129.JPG',
+    phantom1: 'tila3330-3937-4533-b365-636434306465/IMG_3118_1.JPEG',
+    // фото на моделях (наши генерации, 28.10): по одному из разных серий.
+    // vs — Volcano стойка, vd — Volcano «Дикаприо», ss/sd — Space стойка/«Дикаприо»,
+    // fr — френч, wt — Winter tale, vr — Ватаным с белыми рукавами
+    f_vs1: 'tila6634-3330-4437-b533-336439383263/IMG_4346.jpg',
+    f_vs2: 'tild6536-6536-4531-b665-636633646161/IMG_6999.JPG',
+    f_vs3: 'tild6436-3462-4462-b961-303437363361/photo_2026-04-06_19-.jpg',
+    f_vs4: 'tild3835-3266-4364-a539-373632633762/378b3826-2ef8-4307-a.jpg',
+    f_vd1: 'tild3239-3938-4430-b966-616132633434/IMG_4273.JPG',
+    f_ss1: 'tila3337-3938-4664-b738-323361316237/IMG_4211.JPG',
+    f_ss2: 'tild6361-3465-4138-b433-323236643331/photo_2026-04-06_19-.jpg',
+    f_sd1: 'tild3937-3330-4733-a231-353031323634/hf_20260422_090319_6.jpeg',
+    f_sd2: 'tild6339-6563-4430-b461-623731376562/photo_2026-04-06_19-.jpg',
+    f_fr1: 'tila3836-3137-4936-a365-656564343332/IMG_4057.JPG',
+    f_fr2: 'tild3030-3863-4864-a634-343363306232/photo_2026-04-06_19-.jpg',
+    f_wt1: 'tila3135-6131-4230-a135-643039643632/IMG_4208.JPG',
+    f_vr1: 'tild6134-3364-4964-a665-636639323037/hf_20260429_163501_c.jpeg'
+  };
+  // страница товара → сначала фото на моделях, потом коллажи (по порядку показа).
+  // «D» — олимпийка с воротничком («Дикаприо»), без «D» — со стойкой.
+  var CARDS = {
+    '/p/olimpiyka-hlopkovaya-volcano-korichnevyy': ['f_vs1', 'f_vs2', 'f_vs3', 'f_vs4', 'volcano1', 'volcano2', 'volcano3'],
+    '/p/olimpiyka-klassicheskaya-volcano-korichnevyy': ['f_vd1', 'volcanoD1', 'volcanoD2'],
+    '/p/olimpiyka-hlopkovaya-ocean-siniy': ['ocean1'],
+    '/p/olimpiyka-klassicheskaya-ocean-siniy': ['oceanD1'],
+    '/p/olimpiyka-klassicheskaya-space-siniy': ['f_sd1', 'f_sd2', 'spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
+    '/p/kostyum-shelk-vatanym': ['spaceD1', 'spaceD2', 'spaceD3', 'spaceD4'],
+    '/p/olimpiyka-hlopkovaya-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/tolstovka-hlopkovaya-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/bryuki-sportivnye-siniy': ['f_ss1', 'f_ss2', 'space1', 'space2', 'space3'],
+    '/p/kostyum-hlopkovyy-winter-tale-siniy': ['f_wt1', 'space3', 'space1', 'space2'],
+    '/p/olimpiyka-hlopkovaya-chernyy': ['phantom1'],
+    '/p/french-hlopkovyy-siniy': ['f_fr1', 'f_fr2'],
+    '/p/olimpiyka-s-printom-vatanym-siniy': ['f_vr1'],
+    '/p/kostyum-vatanym-print': ['f_vr1']
+  };
+
+  // уменьшенная копия с CDN Tilda; если не загрузится — оригинал
+  function small(path) {
+    var i = path.indexOf('/');
+    return 'https://optim.tildacdn.com/' + path.slice(0, i) + '/-/resize/800x/-/format/webp/' + path.slice(i + 1);
+  }
+
+  function run() {
+    var list = CARDS[location.pathname.replace(/\/+$/, '').toLowerCase()];
+    if (!list || !list.length) return;
+    var rec = null;
+    document.querySelectorAll('.t-rec[data-record-type="786"]').forEach(function (r) {
+      var t = (r.querySelector('.js-block-header-title') || {}).textContent || '';
+      if (/стилист/i.test(t)) rec = r;
+    });
+    if (!rec || rec.querySelector('.t2y-sty')) return;
+
+    var html = '<div class="t2y-sty__row">';
+    list.forEach(function (key) {
+      if (!C[key]) return;
+      var alt = key.indexOf('f_') === 0 ? 'Образ на модели 2young4U' : 'Образ от стилиста 2young4U';
+      html += '<div class="t2y-sty__item"><img alt="' + alt + '" loading="lazy" src="' +
+              small(C[key]) + '" data-orig="' + CDN + C[key] + '"></div>';
+    });
+    var box = document.createElement('div');
+    box.className = 't2y-sty';
+    box.innerHTML = html + '</div>';
+    box.querySelectorAll('img').forEach(function (im) {
+      im.onerror = function () { var o = im.getAttribute('data-orig'); if (o && im.src !== o) im.src = o; };
+    });
+    var head = rec.querySelector('.js-block-header');
+    if (head && head.parentNode) head.parentNode.insertBefore(box, head.nextSibling);
+    else rec.appendChild(box);
+    rec.classList.add('t2y-rel-ready');   // показать блок (часть 10 прячет его до заполнения)
+    if (window.t2yArrows) window.t2yArrows(box, box.querySelector('.t2y-sty__row'));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+<!-- ════ конец: «Рекомендации стилиста» ════ -->
+<!-- ════ 2Y4U: КАРТОЧКА — другие цвета той же модели (26.10.2026) ════
+     Каждый цвет — отдельный товар со своей страницей, поэтому в строке «Цвет»
+     Tilda показывает один квадратик. Код рисует там квадратики всех цветов
+     модели: текущий — в рамке, остальные ведут на свои страницы. Фото —
+     первое фото каждого товара (каталог грузит часть 10). Вариант «Цвет»
+     для корзины не трогаем — штатный квадратик только спрятан.
+
+     MODELS — только ОДИНАКОВЫЕ вещи, разные цветом (сверено 26.10 по фото,
+     описаниям и ценам). Порядок в списке = порядок квадратиков.
+     Новый цвет — строка в свою модель: ['адрес-из-/p/', 'Название цвета'].
+     НЕ одна модель, хоть и похожие названия:
+       «Олимпийка хлопковая» синяя (/p/olimpiyka-hlopkovaya-siniy) — рукава-реглан;
+       «Олимпийка с принтом Ватаным» синяя — отложной воротник, белые рукава. -->
+<style>
+/* штатный квадратик прячем (у HEAD своё правило display: flex !important — перебиваем точнее) */
+.js-product-edition-option.t2y-colors-on .t-product__option-variants.t-product__option-variants_custom { display: none !important; }
+/* квадратики — как штатные в HEAD: серая рамка, у текущего чёрная */
+.t2y-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+.t2y-colors__item {
+  display: block; width: 56px; height: 56px; box-sizing: border-box; overflow: hidden;
+  border: 1px solid #e5e5e5; transition: border-color .2s ease;
+}
+a.t2y-colors__item:hover { border-color: #999999; }
+.t2y-colors__item_active { border-color: #111111; }
+.t2y-colors__img {
+  display: block; width: 100%; height: 100%;
+  background: #f2f2f2 center / cover no-repeat;
+}
+/* «Цвет: Volcano» — своя строка-заголовок; штатную прячем, но не трогаем:
+   из её текста Tilda берёт название опции для корзины.
+   Размер шрифта — как у заголовков опций в HEAD (16 px). */
+.js-product-edition-option.t2y-colors-on .js-product-edition-option-name { display: none !important; }
+.t2y-colors__title { font-size: 16px !important; line-height: 1.3 !important; }
+.t2y-colors__name { color: #777777; }
+</style>
+<script>
+(function () {
+  if (!/^\/p\//.test(location.pathname)) return;
+
+  var MODELS = [
+    // Олимпийка хлопковая — воротник-стойка, карманы на молниях
+    [['olimpiyka-hlopkovaya-chernyy', 'Чёрный'],
+     ['olimpiyka-hlopkovaya-ocean-siniy', 'Ocean'],
+     ['olimpiyka-hlopkovaya-volcano-korichnevyy', 'Volcano']],
+    // Олимпийка классическая — отложной воротник («Дикаприо»)
+    [['olimpiyka-klassicheskaya-ocean-siniy', 'Ocean'],
+     ['olimpiyka-klassicheskaya-space-siniy', 'Space'],
+     ['olimpiyka-klassicheskaya-volcano-korichnevyy', 'Volcano']],
+    // Олимпийка с принтом Ватаным — стойка, герб на груди, символы на спине
+    [['olimpiyka-vatanym', 'Молочный'],
+     ['olimpiyka-s-printom-vatanym-chernyy', 'Чёрный']]
+  ];
+
+  function slug(u) { return String(u || '').split(/[?#]/)[0].replace(/\/+$/, '').split('/').pop().toLowerCase(); }
+  var here = slug(location.pathname), model = null;
+  MODELS.forEach(function (m) { m.forEach(function (c) { if (c[0] === here) model = m; }); });
+  if (!model || !window.t2yCatalog) return;
+
+  // квадратик 120×120 с CDN Tilda — как у штатного
+  function thumb(u) {
+    var m = /^https:\/\/static\.tildacdn\.com\/([^/]+)\/([^/?#]+)$/.exec(u || '');
+    return m ? 'https://optim.tildacdn.com/' + m[1] + '/-/resize/120x120/-/format/webp/' + m[2] : u;
+  }
+
+  var colors = null;   // [адрес, название, фото] — те цвета, что есть в каталоге
+
+  function draw() {
+    if (!colors) return;
+    document.querySelectorAll('.js-product-edition-option[data-edition-option-id="Цвет"]').forEach(function (opt) {
+      if (opt.querySelector('.t2y-colors')) return;
+      var html = '', name = '';
+      colors.forEach(function (c) {
+        var img = '<span class="t2y-colors__img" style="background-image:url(\'' + c[2] + '\')"></span>';
+        if (c[0] === here) {
+          name = c[1];
+          html += '<span class="t2y-colors__item t2y-colors__item_active" title="' + c[1] + '" aria-current="true">' + img + '</span>';
+        } else {
+          html += '<a class="t2y-colors__item" href="/p/' + c[0] + '" title="' + c[1] + '" aria-label="Цвет ' + c[1] + '">' + img + '</a>';
+        }
+      });
+      var box = document.createElement('div');
+      box.className = 't2y-colors';
+      box.innerHTML = html;
+      opt.appendChild(box);
+      opt.classList.add('t2y-colors-on');
+      var title = opt.querySelector('.js-product-edition-option-name');
+      if (title && name && !opt.querySelector('.t2y-colors__title')) {
+        var t2 = title.cloneNode(false);   // те же классы оформления, но без js- класса Tilda
+        t2.classList.remove('js-product-edition-option-name');
+        t2.classList.add('t2y-colors__title');
+        t2.textContent = title.textContent.trim();
+        t2.insertAdjacentHTML('beforeend', '<span class="t2y-colors__name">: ' + name + '</span>');
+        title.parentNode.insertBefore(t2, title);
+      }
+    });
+  }
+
+  window.t2yCatalog().then(function (list) {
+    var photo = {};
+    list.forEach(function (p) {
+      var g = p.gallery;
+      try { if (typeof g === 'string') g = JSON.parse(g); } catch (e) { g = null; }
+      if (g && g[0] && g[0].img) photo[slug(p.url)] = g[0].img;
+    });
+    // у своего товара фото на месте всегда: если в каталоге его нет — штатный квадратик
+    if (!photo[here]) {
+      var own = document.querySelector('.js-product-edition-option[data-edition-option-id="Цвет"] .t-product__option-checkmark[data-original]');
+      if (own) photo[here] = own.getAttribute('data-original');
+    }
+    var list2 = model.filter(function (c) { return photo[c[0]]; })
+                     .map(function (c) { return [c[0], c[1], thumb(photo[c[0]])]; });
+    if (list2.length < 2) return;   // других цветов в продаже нет — оставляем как есть
+    colors = list2;
+    draw();
+    // строку «Цвет» Tilda строит сама и может перестроить — дорисовываем
+    [600, 1500, 3000].forEach(function (ms) { setTimeout(draw, ms); });
+    if (window.MutationObserver) {
+      var t;
+      new MutationObserver(function () { clearTimeout(t); t = setTimeout(draw, 100); })
+        .observe(document.body, { childList: true, subtree: true });
+    }
+  }).catch(function () {});
+})();
+</script>
+<!-- ════ конец: другие цвета ════ -->
+<!-- ════ 2Y4U: ПОДПИСИ К КАРТИНКАМ (alt) — 26.10.2026 ════
+     alt — невидимая подпись картинки. Её читают поисковики (по ней фото
+     находят в Яндекс и Google Картинках), программы для незрячих, и браузер
+     показывает её, если фото не загрузилось. В блоках Tilda alt почти везде
+     пустой — код вписывает его по смыслу:
+       значки шапки — «Поиск», «Избранное», «Корзина», «Меню», логотип — «2YOUNG4U»;
+       фото товара — «Олимпийка хлопковая 2young4U, цвет чёрный — фото 2»;
+       слайд с подписью — его подпись; галерея — заголовок своего раздела
+       (или отдельного блока-заголовка над ней), иначе — название страницы.
+     Несколько разных фото с одной подписью в одном блоке — «— фото 1, 2, 3…».
+     Подписи, вписанные в самой Tilda, код не трогает: свою можно поставить
+     в любой момент (Контент блока → картинка → «SEO: alt-текст»). -->
+<script>
+(function () {
+  var BRAND = '2young4U';
+  // значки Zero-блока шапки — по ссылке; у избранного и корзины ссылки нет — по номеру элемента
+  var ICON_IDS = { '1777829642192000006': 'Избранное', '1777829627863000004': 'Корзина' };
+  var ICONS = [
+    [/^(https?:\/\/(www\.)?2young4u\.ru)?\/?$/i, '2YOUNG4U'],
+    [/^#searchpopup/, 'Поиск'],
+    [/^#registerpopup|^\/members/, 'Личный кабинет'],
+    [/^#mobilemenupopup/, 'Меню'],
+    [/^#order/, 'Корзина'],
+    [/^#showfavorites/, 'Избранное']
+  ];
+
+  // невидимые буквы: из них сделаны «пустые» имена служебных товаров-коллажей.
+  // Коды, а не сами символы — Tilda может вырезать такие символы при сохранении блока.
+  var INVISIBLE = new RegExp('[' + String.fromCharCode(0x115f, 0x1160, 0x3164, 0xffa0, 0x200b, 0x200c, 0x200d, 0x2060, 0xfeff) + ']', 'g');
+  function clean(s) {
+    s = String(s || '').replace(INVISIBLE, '').replace(/\s+/g, ' ').replace(/[\s:–—-]+$/, '').trim();
+    return s.length > 90 ? s.slice(0, 90).replace(/\s+\S*$/, '') : s;
+  }
+  function textOf(root, sel) { var e = root && root.querySelector(sel); return e ? clean(e.textContent) : ''; }
+  // одно и то же фото в слайдере повторяется (копии слайдов, миниатюры) — узнаём его по папке на CDN
+  function key(im) {
+    var u = im.getAttribute('data-original') || im.getAttribute('src') || '';
+    var m = /\/((?:tild|stor)[0-9a-f]{4}(?:-[0-9a-f]+){4})\//.exec(u);
+    return m ? m[1] : u.split(/[?#]/)[0];
+  }
+
+  function pageName() { return clean(document.title.split(/\s[—–|-]\s/)[0]) || BRAND; }
+
+  // товар: «Олимпийка хлопковая 2young4U, цвет чёрный» — у разных цветов
+  // одной модели названия часто одинаковые, цвет берём из варианта «Цвет»
+  function productName(prod) {
+    var n = textOf(prod, '.js-product-name');
+    if (!n) return '';
+    var sel = prod.querySelector('.js-product-edition-option[data-edition-option-id="Цвет"] select');
+    var c = sel ? clean(sel.value || (sel.options[0] && sel.options[0].value)).toLowerCase() : '';
+    return n + ' ' + BRAND + (c ? ', цвет ' + c : '');
+  }
+
+  var sections;   // заголовки разделов — один раз за проход
+  function sectionName(rec) {
+    if (!rec) return '';
+    if (rec.id in sections) return sections[rec.id];
+    var t = textOf(rec, '.js-block-header-title, .t-section__title');
+    // заголовок часто стоит отдельным блоком прямо над галереей
+    for (var r = rec.previousElementSibling, i = 0; !t && r && i < 6; r = r.previousElementSibling, i++) {
+      if (!r.classList.contains('t-rec') || !r.offsetHeight) continue;
+      t = textOf(r, '.t795__title, .js-block-header-title, .t-section__title');
+      break;
+    }
+    return (sections[rec.id] = t);
+  }
+
+  // null — не значок; '' — значок или линия без смысла, подпись не нужна
+  function iconAlt(im) {
+    var el = im.closest('.tn-elem');
+    if (!el) return null;
+    var id = el.getAttribute('data-elem-id');
+    if (ICON_IDS[id]) return ICON_IDS[id];
+    var a = im.closest('a'), href = a ? a.getAttribute('href') || '' : '';
+    for (var i = 0; href && i < ICONS.length; i++) if (ICONS[i][0].test(href)) return ICONS[i][1];
+    return /\.svg($|\?)/i.test(im.getAttribute('data-original') || im.getAttribute('src') || '') ? '' : null;
+  }
+
+  function photoBase(im) {
+    // увеличенное фото Tilda строит вне блоков — это фото товара страницы
+    var prod = im.closest('.js-product') || (!im.closest('.t-rec') && document.querySelector('.js-product-single'));
+    var t = prod ? productName(prod) : '';
+    if (t) return t;
+    var item = im.closest('[class*="__item"]');
+    if (item) t = textOf(item, '[class*="__title"]');
+    var a = !t && im.closest('a');
+    if (a) t = textOf(a, '.js-store-prod-name, .js-product-name, [class*="__name"], [class*="__title"]') ||
+               clean(a.getAttribute('aria-label') || a.getAttribute('title'));
+    t = t || sectionName(im.closest('.t-rec')) || pageName();
+    return /2young4u/i.test(t) ? t : t + ' ' + BRAND;
+  }
+
+  function run() {
+    sections = {};
+    var todo = [], groups = [];
+    // сначала всё читаем, потом пишем — чтобы браузер не пересчитывал страницу на каждой картинке
+    document.querySelectorAll('img').forEach(function (im) {
+      var own = im.getAttribute('alt');
+      if (own && own.trim() && !im.hasAttribute('data-t2y-alt')) return;   // подпись из Tilda
+      if (/mc\.yandex|top-fwz1|vk\.com\/rtrg|facebook\.com\/tr/.test(im.getAttribute('src') || '')) return;
+      var icon = iconAlt(im);
+      if (icon !== null) { if (icon) todo.push({ im: im, alt: icon }); return; }
+      var x = { im: im, base: photoBase(im), g: im.closest('.js-product, .t-rec') || document.body, k: key(im) };
+      for (var i = 0; i < groups.length && !x.grp; i++) if (groups[i].g === x.g && groups[i].base === x.base) x.grp = groups[i];
+      if (!x.grp) groups.push(x.grp = { g: x.g, base: x.base, keys: [] });
+      if (x.grp.keys.indexOf(x.k) < 0) x.grp.keys.push(x.k);
+      todo.push(x);
+    });
+    todo.forEach(function (x) {
+      var v = x.alt || (x.base + (x.grp.keys.length > 1 ? ' — фото ' + (x.grp.keys.indexOf(x.k) + 1) : ''));
+      if (x.im.getAttribute('alt') !== v) x.im.setAttribute('alt', v);
+      if (!x.im.hasAttribute('data-t2y-alt')) x.im.setAttribute('data-t2y-alt', '');
+    });
+  }
+
+  // слайдеры, поиск и увеличение фото Tilda достраивает позже — проходим ещё раз
+  var pending = false;
+  function later() { if (pending) return; pending = true; setTimeout(function () { pending = false; run(); }, 300); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+  [1500, 4000, 8000].forEach(function (ms) { setTimeout(run, ms); });
+  if (window.MutationObserver) new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: подписи к картинкам ════ -->
+<!-- ════ 2Y4U: ФОН КАРТОЧЕК ТОВАРОВ — проба цвета и единого кадра (27.10.2026) ════
+     Заказчица 27.10, день: «первые три костюма в разделе «Костюмы» — фон
+     карточки цвет номер 1, оставшиеся 2 костюма — цвет номер 3. Посмотрим их
+     в общей массе, на разных страницах». Цвета — из товаров «Выбор фона»:
+     №1 #F0ECEB (тёплый светло-серый), №3 #F7F7F7 (почти белый).
+     27.10, вечер: фон — только под фото, углы острые (как у Givenchy);
+     вещи на фоне — единым кадром: костюмы самые крупные (с воздухом), брюки
+     меньше, олимпийки ещё меньше, сверху и снизу поровну; олимпийку — тоже
+     на фон (посадили толстовку и, чтобы видно было все три размера, брюки).
+
+     Фото товаров сняты на белом — белое «перекрашивается» в цвет фона
+     (наложение «умножение»), сама вещь почти не меняется. Кадр: код по
+     маленькой копии фото находит, где на нём вещь, и ставит её по центру —
+     высотой в долю фото по виду вещи (KADR). Фото не на белом (на модели) —
+     как есть. Где: каталог и разделы, «Новая коллекция» на главной,
+     «Ватаным», «Возможно, вам понравится» на карточках.
+
+     28.10: Winter tale крупнее (89 %), чёрная олимпийка Ватаным — на фон №2
+     #EBEBEB и 80 %, копия «Олимпийки классической Space» — на фон №4 #F5F4EF
+     без изменения масштаба.
+
+     Свой цвет товару — строка в BG: 'адрес-из-/p/': '#цвет' (кадр подстроится
+     сам) или ['#цвет', размер] — свой размер вещи (доля высоты фото, 0 — как
+     на фото). Убрать пробу — стереть строки (или весь этот кусок). -->
+<style>
+/* фон — только под фото, углы острые */
+.t2y-bg .t-catalog__card__imgwrapper,
+.t2y-bg .t-store__card__imgwrapper,
+.t2y-bg .t2y-rel__img { background-color: var(--t2y-bg) !important; border-radius: 0 !important; }
+/* фото на белом — белое становится цветом фона */
+.t2y-bg .t-catalog__card__bgimg.js-product-img,
+.t2y-bg .t-store__card__bgimg.js-product-img,
+.t2y-bg .t2y-rel__img img:first-child,
+.t2y-bg .t2y-kadr { mix-blend-mode: multiply; }
+/* единый кадр: размер и место вещи считает код */
+.t2y-kadr { background-size: var(--t2y-bs) !important; background-position: var(--t2y-bp) !important; }
+img.t2y-kadr {
+  left: var(--t2y-l) !important; top: var(--t2y-t) !important; width: var(--t2y-w) !important;
+  height: auto !important; max-width: none !important; object-fit: fill !important;
+}
+/* пока кадр считается (до 1,5 с) — фото не показываем, чтобы не прыгало */
+.t2y-kadr-wait .js-product-img, .t2y-kadr-wait .t2y-rel__img img { opacity: 0 !important; }
+</style>
+<script>
+(function () {
+  // адрес из /p/ → цвет или [цвет, размер]: размер — доля высоты фото вместо
+  // обычной по виду вещи (KADR); 0 — вещь как на фото, без кадра
+  var BG = {
+    // «Костюмы»: первые три — цвет №1
+    'kostyum-shelk-vatanym':               '#F0ECEB',
+    'kostyum-povsednevnyy-vatanym':        '#F0ECEB',
+    'kostyum-vatanym-print':               '#F0ECEB',
+    // оставшиеся два — цвет №3; Winter tale — «увеличиваем примерно до полосок» (28.10)
+    'kostyum-sportivnyy-vatanym':          '#F7F7F7',
+    'kostyum-hlopkovyy-winter-tale-siniy': ['#F7F7F7', 0.89],
+    // олимпийка (толстовка на молнии) и брюки — цвет №1
+    'tolstovka-hlopkovaya-siniy':          '#F0ECEB',
+    'bryuki-sportivnye-siniy':             '#F0ECEB',
+    // 28.10: чёрная олимпийка Ватаным — на фон №2, «уменьшаем примерно так»
+    'olimpiyka-s-printom-vatanym-chernyy': ['#EBEBEB', 0.80],
+    // 28.10: копия «Олимпийки классической Space» (в названии «ТЕСТ») — на фон №4,
+    // «масштаб не меняем». Строки для копий: 'адрес оригинала тест'
+    'olimpiyka-klassicheskaya-space-siniy тест': ['#F5F4EF', 0]
+  };
+  // высота вещи — доля высоты фото (по названию или адресу товара);
+  // ширина — не больше 84% фото, чтобы и по бокам оставался воздух
+  var KADR = [
+    [/костюм|kostyum/i, 0.80],
+    [/брюки|шорты|bryuki|shorty/i, 0.70],
+    [/олимпийк|толстовк|френч|худи|свитшот|бомбер|куртк|жилет|рубашк|футболк|джемпер|кардиган|olimpiyka|tolstovka|french/i, 0.56]
+  ];
+  var ALL = false;   // true — единый кадр и у карточек без фона
+
+  function slug(u) { return String(u || '').split(/[?#]/)[0].replace(/\/+$/, '').split('/').pop().toLowerCase(); }
+  function txt(el) { return el ? (el.textContent || '').replace(/\s+/g, ' ').trim() : ''; }
+
+  // где вещь на фото: [слева, сверху, справа, снизу] в долях фото + высота/ширина
+  // фото; 0 — фото не на белом. Для фото на фоне 27.10 уже посчитано (кадр сразу,
+  // без ожидания); новые фото код посчитает сам и запомнит в браузере
+  var CACHE = {
+    '60c8c5dc5dde496d8f4cacba0e177b3b.webp': [0.356, 0.1, 0.644, 0.9, 1],
+    '1ed6fff036d26b78c9683b6f5dbb130b.webp': [0.35, 0.1, 0.65, 0.9, 1],
+    'de2c9a4faca9a05c241c02100a6b4369.webp': [0.363, 0.1, 0.638, 0.9, 1],
+    '5a0abf6d4d860c3f71b7605093a27c45.webp': [0.363, 0.1, 0.638, 0.9, 1],
+    '01bdacf3e9237c1457aed455f3d69d7b.webp': [0.275, 0.014, 0.725, 0.981, 1.333],
+    'f22d8dbafb0cde00091a9d44924de437.webp': [0.05, 0.033, 0.95, 0.962, 1.333],
+    'd116875c9460bdf51725c5b90ad903cc.webp': [0.231, 0.023, 0.756, 0.972, 1.333],
+    'eda0860955d19fb99fa435e41b7dc139.webp': [0.019, 0.014, 0.981, 0.986, 1.333],
+    '38504558d60ef88e4fdfc7c87ab738e4.webp': 0,
+    // фото при наведении: на модели или срезаны — без кадра
+    '4f8e70836f040726e45c79d102a18941.webp': 0, '3a65d8dcfd7e7682a2466fe3b7483184.webp': 0,
+    'f1256deee02ec8ae37a2261590cec8cd.webp': 0, 'b845f1d1571711bbfa9cb31a5a20de63.webp': 0,
+    '9b631e71e859c7552d28ef7ef3ea804f.webp': 0, '1de5a70e537a2297f7e6083e5bb3fa86.webp': 0
+  }, waiting = {};
+  try {
+    var saved = JSON.parse(localStorage.getItem('t2y-kadr') || '{}') || {};
+    for (var s in saved) if (saved.hasOwnProperty(s)) CACHE[s] = saved[s];
+  } catch (e) {}
+  function thumb(u) {
+    var m = /^https?:\/\/static\.tildacdn\.[a-z]+\/([^/]+)\/([^/?#]+)$/.exec(u);
+    return m ? 'https://thb.tildacdn.com/' + m[1] + '/-/resize/100x/' + m[2] : u;
+  }
+  function measure(u, done) {
+    var k = slug(u);
+    if (CACHE.hasOwnProperty(k)) return done(CACHE[k]);
+    if (waiting[k]) return waiting[k].push(done);
+    waiting[k] = [done];
+    var im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload = function () { finish(k, bounds(im)); };
+    im.onerror = function () { finish(k, null); };
+    im.src = thumb(u);
+  }
+  function finish(k, r) {
+    if (r !== null) {
+      CACHE[k] = r;
+      try { localStorage.setItem('t2y-kadr', JSON.stringify(CACHE)); } catch (e) {}
+    }
+    var list = waiting[k];
+    delete waiting[k];
+    list.forEach(function (f) { f(r); });
+  }
+  function bounds(im) {
+    try {
+      var w = im.naturalWidth, h = im.naturalHeight, cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      var cx = cv.getContext('2d');
+      cx.drawImage(im, 0, 0);
+      var d = cx.getImageData(0, 0, w, h).data;
+      var white = function (p) { return d[p * 4] >= 247 && d[p * 4 + 1] >= 247 && d[p * 4 + 2] >= 247; };
+      if (!(white(0) && white(w - 1) && white((h - 1) * w) && white(h * w - 1))) return 0;
+      var rows = new Uint16Array(h), cols = new Uint16Array(w), x, y, i;
+      for (y = 0; y < h; y++) for (x = 0; x < w; x++) {
+        i = (y * w + x) * 4;
+        if (Math.min(d[i], d[i + 1], d[i + 2]) < 236) { rows[y]++; cols[x]++; }
+      }
+      var first = function (a) { for (var j = 0; j < a.length; j++) if (a[j] >= 2) return j; return -1; };
+      var last = function (a) { for (var j = a.length - 1; j >= 0; j--) if (a[j] >= 2) return j + 1; return -1; };
+      var x0 = first(cols), x1 = last(cols), y0 = first(rows), y1 = last(rows);
+      // вещь упирается в край фото (срезана) — при уменьшении срез стал бы виден: не трогаем
+      if (x0 <= 0 || y0 <= 0 || x1 >= w || y1 >= h) return 0;
+      var r3 = function (v) { return Math.round(v * 1000) / 1000; };
+      return [r3(x0 / w), r3(y0 / h), r3(x1 / w), r3(y1 / h), r3(h / w)];
+    } catch (e) { return null; }   // фото не отдалось для чтения — без кадра
+  }
+
+  // ставим вещь: высота — f от высоты фото, по центру. Фото-фон Tilda —
+  // размером и позицией фона; наши <img> — шириной и отступами
+  function pc(v) { return Math.round(v * 10000) / 100 + '%'; }
+  // пропорция плитки (высота/ширина) — одна на блок: меряем один раз, без лишних пересчётов страницы
+  var ASPECT = {};
+  function aspect(box, key) {
+    if (!ASPECT[key]) {
+      if (!box.offsetWidth) return 4 / 3;
+      ASPECT[key] = box.offsetHeight / box.offsetWidth;
+    }
+    return ASPECT[key];
+  }
+  function place(el, r, f) {
+    var img = el.tagName === 'IMG', box = img ? el.parentNode : el;
+    var c = aspect(box, img ? 'rel' : el.parentNode.className);
+    var pw = r[2] - r[0], ph = r[3] - r[1], a = r[4];
+    var R = Math.min(f * c / (ph * a), 0.84 / pw);   // ширина фото в долях ширины плитки
+    // фото ровно в ширину или высоту плитки — позицию в % не задать: чуть меньше
+    if (!img && Math.abs(1 - R) < 0.01) R *= 0.985;
+    if (!img && Math.abs(c - a * R) < 0.01) R *= 0.985;
+    var left = 0.5 - (r[0] + r[2]) / 2 * R, top = c / 2 - (r[1] + r[3]) / 2 * a * R;
+    if (img) {
+      el.style.setProperty('--t2y-w', pc(R));
+      el.style.setProperty('--t2y-l', pc(left));
+      el.style.setProperty('--t2y-t', pc(top / c));
+    } else {
+      el.style.setProperty('--t2y-bs', pc(R) + ' auto');
+      el.style.setProperty('--t2y-bp', pc(left / (1 - R)) + ' ' + pc(top / (c - a * R)));
+    }
+    el.classList.add('t2y-kadr');
+  }
+
+  function frame(c, href, size) {
+    if (size === 0) { c.t2yKadr = true; return; }   // как на фото
+    var t = href + ' ' + txt(c.querySelector('.t-catalog__card__title, .t-store__card__title, .t2y-rel__name'));
+    var f = size || 0;
+    for (var i = 0; i < KADR.length && !f; i++) if (KADR[i][0].test(t)) f = KADR[i][1];
+    if (!f) return;
+    var els = [].slice.call(c.querySelectorAll('.js-product-img, .t-catalog__card__bgimg_second, .t-store__card__bgimg_second, .t2y-rel__img img'))
+      .filter(function (el) { return el.getAttribute('data-original') || el.getAttribute('data-orig'); });
+    if (!els.length) return;   // фото ещё не подставлены — попробуем при следующей проверке
+    c.t2yKadr = true;
+    // главное фото прячем, пока не посчитан его кадр; фото при наведении — не ждём
+    var main = function (el) { return el.classList.contains('js-product-img') || (el.tagName === 'IMG' && !el.previousElementSibling); };
+    var left = els.filter(main).length;
+    c.classList.add('t2y-kadr-wait');
+    var show = function () { c.classList.remove('t2y-kadr-wait'); };
+    var timer = setTimeout(show, 1500);
+    if (!left) { clearTimeout(timer); show(); }
+    els.forEach(function (el) {
+      measure(el.getAttribute('data-original') || el.getAttribute('data-orig'), function (r) {
+        if (r) place(el, r, f);
+        if (main(el) && --left === 0) { clearTimeout(timer); show(); }
+      });
+    });
+  }
+
+  function paint() {
+    document.querySelectorAll('.t-catalog__card, .t-store__card, .t2y-rel__card').forEach(function (c) {
+      if (c.t2yKadr) return;
+      var a = c.matches('a[href]') ? c : c.querySelector('a[href*="/p/"]') || c.querySelector('a[href]:not([href^="#"])');
+      var href = a ? slug(a.getAttribute('href')) : '';
+      // тестовые копии («ТЕСТ» в названии, 28.10) ведут на страницу оригинала —
+      // фон и кадр оригинала им не даём; свои — строкой 'адрес оригинала тест'
+      var name = txt(c.querySelector('.t-catalog__card__title, .t-store__card__title, .t2y-rel__name'));
+      var v = BG[/тест|test/i.test(name) ? href.replace(/-test\d*$/, '') + ' тест' : href];
+      var col = v && (typeof v === 'string' ? v : v[0]);
+      var size = v && typeof v !== 'string' ? v[1] : undefined;
+      if (col && !c.classList.contains('t2y-bg')) {
+        c.style.setProperty('--t2y-bg', col);
+        c.classList.add('t2y-bg');
+      }
+      if (col || (ALL && href)) frame(c, href, size);
+    });
+  }
+
+  // каталоги Tilda и «Возможно, вам понравится» появляются позже — красим по мере появления
+  var pending = false;
+  function later() { if (pending) return; pending = true; setTimeout(function () { pending = false; paint(); }, 250); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paint); else paint();
+  window.addEventListener('load', paint);
+  [1500, 4000, 8000].forEach(function (ms) { setTimeout(paint, ms); });
+  if (window.MutationObserver) new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+<!-- ════ конец: фон карточек ════ -->
+<!-- ════ 2Y4U: БУРГЕР-МЕНЮ — значки соцсетей как в подвале (28.10.2026) ════
+     Заказчица: «иконки надо сделать такие же 3 как в подвале. Надпись «Мы в
+     соцсетях» убираем». Значки Tilda в меню прячем, ставим наши — Telegram,
+     Instagram, MAX тонкой линией в кружке, как в подвале. Ссылки те же, что в
+     подвале (pages/podval.html): поменялась ссылка — поменять в обоих местах. -->
+<style>
+#rec2501340841 .t450__right_descr { display: none !important; }
+#rec2501340841 .t450__right_social_links .t-sociallinks { display: none !important; }
+.t2y-bsoc { display: flex; gap: 14px; }
+.t2y-bsoc a {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+  width: 32px; height: 32px; border-radius: 50%; background: transparent;
+  border: 1px solid #8c8c8c; color: #bdbdbd; text-decoration: none !important;
+}
+.t2y-bsoc a:hover { border-color: #ffffff; color: #ffffff; }
+.t2y-bsoc svg { display: block; }
+.t2y-bsoc__max { font: 600 8.5px/1 'Raleway', Arial, sans-serif; letter-spacing: .03em; color: currentColor; }
+</style>
+<script>
+(function () {
+  var LINKS = [
+    ['Telegram', 'https://t.me/tooyoung4U',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M21 4 3 11l6 2.3M21 4l-3 16-6.8-5M21 4 9 13.3m0 0V19l2.6-3.7"/></svg>'],
+    ['Instagram', 'https://www.instagram.com/2young4u_official',
+     '<svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r=".9" fill="currentColor" stroke="none"/></svg>'],
+    ['MAX', 'https://max.ru/join/vz8ZX6vwSj2GKv31UmPe0LekHr_JbgvXK8X9rOGWpcI',
+     '<span class="t2y-bsoc__max">MAX</span>']
+  ];
+  function run() {
+    var box = document.querySelector('#rec2501340841 .t450__right_social_links');
+    if (!box || box.querySelector('.t2y-bsoc')) return;
+    var w = document.createElement('div');
+    w.className = 't2y-bsoc';
+    LINKS.forEach(function (l) {
+      var a = document.createElement('a');
+      a.href = l[1]; a.target = '_blank'; a.rel = 'noopener';
+      a.setAttribute('aria-label', l[0]);
+      a.innerHTML = l[2];
+      w.appendChild(a);
+    });
+    box.appendChild(w);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  window.addEventListener('load', run);
+})();
+</script>
+<!-- ════ конец: значки в бургере ════ -->

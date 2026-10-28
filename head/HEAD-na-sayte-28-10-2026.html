@@ -1,0 +1,1390 @@
+<!-- ════ 2Y4U: КОД HEAD — КАК СЕЙЧАС НА САЙТЕ (снято с сайта 28.10.2026) ════
+     Настройки сайта → Ещё → HTML-код для вставки в HEAD (между nominify).
+     Предел Tilda — 64 КБ; сейчас ~60 КБ, поэтому новый общий код кладём в
+     «Шапку 1.1» (SHAPKA-T123.html), а не сюда.
+     Это точная копия с сайта: часть кусков (корзина и сердечко в шапке,
+     типографика, таблица размеров, ряд «купить + сердечко») есть только здесь —
+     в старых файлах репозитория их нет. Менять HEAD — от этого файла. -->
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     2young4u.ru — ВЕСЬ ОБЩИЙ КОД ДЛЯ ВСТАВКИ ВНУТРЬ HEAD (один блок на весь сайт).
+     Вставлять целиком в: Настройки сайта → HTML-код для вставки внутрь HEAD.
+
+     Версия от 13.09.2026. Что изменено по сравнению с предыдущей:
+       1. Обрезка галереи переведена с жёсткого #rec2463616301 на класс
+          html.t2y-card-page — иначе на КАЖДОЙ склонированной карточке
+          возвращалась бы горизонтальная прокрутка (у копии свой rec-id).
+       2. Секция мобильных отступов переписана с несуществующего .t780__wrapper
+          на прямые селекторы с повторёнными классами (специфичность 0,3,0),
+          иначе правила Tilda её перебивают.
+       3. Убрано правило #registerpopup — фейковый попап логина удалён с сайта.
+
+     Тексты аккордеонов и категория для крошек — у КАЖДОГО товара отдельным
+     блоком на его странице (.t2y-acc-source), сюда НЕ входят.
+     ═══════════════════════════════════════════════════════════════════════════ --> <!-- ══════════ ШАПКА — КОРЗИНА ══════════ --> <style>
+/* Прячем плавающую корзину Tilda — вместо неё работает иконка в шапке */
+.t706__carticon { display: none !important; }
+
+/* Красный счётчик на иконке-сумке в шапке */
+.my-cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: none;              /* показывается из JS, когда в корзине есть товары */
+  align-items: center;
+  justify-content: center;
+  background: #e02d2d;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 5;
+}
+</style> <script>
+(function () {
+  // Ищем иконку-сумку в шапке по СТАБИЛЬНОМУ src (id tuwidget меняется при публикации)
+  var BAG_SEL = 'img[src*="tild6131-6365-4831-a632-303931386531"]';
+
+  function getHost(bag) {
+    return bag.closest('.tn-atom') || bag.parentElement;
+  }
+
+  // 1) Клик по сумке в шапке открывает корзину Tilda
+  function bindClick() {
+    var bag = document.querySelector(BAG_SEL);
+    var cart = document.querySelector('.t706__carticon');
+    if (!bag || !cart) return;
+    var clickable = bag.closest('a') || getHost(bag) || bag;
+    if (!clickable || clickable.dataset.cartBound) return;
+    clickable.dataset.cartBound = '1';
+    clickable.style.cursor = 'pointer';
+    clickable.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      cart.click(); // открываем родную корзину Tilda
+    });
+  }
+
+  // Считаем количество товаров в корзине надёжно — из объекта Tilda tcart
+  function getCartCount() {
+    try {
+      if (window.tcart && Array.isArray(window.tcart.products)) {
+        var total = 0;
+        window.tcart.products.forEach(function (p) {
+          total += (parseInt(p.quantity, 10) || 1);
+        });
+        return total;
+      }
+    } catch (e) {}
+    // запасной вариант — из счётчика родной корзины
+    var src = document.querySelector('.t706__carticoncount');
+    return src ? parseInt((src.textContent || '').trim(), 10) : 0;
+  }
+
+  // 2) Переносим счётчик товаров на иконку в шапке
+  function syncBadge() {
+    var bag = document.querySelector(BAG_SEL);
+    if (!bag) return;
+    var host = getHost(bag);
+    if (!host) return;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+
+    var n = getCartCount();
+    var badge = host.querySelector('.my-cart-badge');
+
+    if (!n || isNaN(n)) {
+      if (badge) badge.style.display = 'none';
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'my-cart-badge';
+      host.appendChild(badge);
+    }
+    badge.textContent = n;
+    badge.style.display = 'flex';
+  }
+
+  function tick() { bindClick(); syncBadge(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  setInterval(tick, 1000); // следим за изменением количества товаров
+})();
+</script> <!-- ══════════ ШАПКА — ИЗБРАННОЕ (сердечко + счётчик) ══════════ --> <style>
+/* Прячем плавающее сердечко Tilda — вместо него работает сердечко в шапке */
+.t1002__wishlisticon,
+.t1002__wishlisticon-wrapper { display: none !important; }
+
+/* Красный счётчик на сердечке в шапке — ровно как у корзины */
+.my-wish-badge {
+  position: absolute;
+  top: -6px;                   /* базовое значение; JS выравнивает по счётчику корзины */
+  right: -8px;
+  display: none;               /* показывается из JS, когда в избранном есть товары */
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  align-items: center;
+  justify-content: center;
+  background: #e02d2d;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 5;
+}
+</style> <script>
+(function () {
+  // Сердечко в шапке — по СТАБИЛЬНОМУ src (id tuwidget меняется при публикации).
+  var HEART_SEL = 'img[src*="tild6537-3366-4237-b630-646531353861"]';
+  // Сумка-корзина в шапке — эталон, по которому ровняем счётчик избранного
+  var BAG_SEL   = 'img[src*="tild6131-6365-4831-a632-303931386531"]';
+
+  function getHost(el) { return el.closest('.tn-atom') || el.parentElement; }
+
+  // Триггер открытия избранного Tilda (плавающее сердечко)
+  function wishTrigger() {
+    return document.querySelector('.t1002__wishlisticon-wrapper')
+        || document.querySelector('.t1002__wishlisticon')
+        || document.querySelector('.t1002__wishlisticon-img');
+  }
+
+  // 1) Клик по сердечку в шапке открывает избранное (во ВСЕХ копиях)
+  function bindClick() {
+    if (!wishTrigger()) return;
+    document.querySelectorAll(HEART_SEL).forEach(function (heart) {
+      var clickable = heart.closest('a') || getHost(heart) || heart;
+      if (!clickable || clickable.dataset.wishBound) return;
+      clickable.dataset.wishBound = '1';
+      clickable.style.cursor = 'pointer';
+      clickable.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var t = wishTrigger();
+        if (t) t.click();
+      });
+    });
+  }
+
+  // 2) Считаем товары в избранном
+  function getWishCount() {
+    var icon = document.querySelector('.t1002__wishlisticon-img');
+    if (!icon) return 0;
+    var wrap = icon.closest('.t1002__wishlisticon-wrapper')
+            || icon.closest('.t1002__wishlisticon')
+            || icon.parentElement;
+    if (!wrap) return 0;
+    var digits = (wrap.textContent || '').replace(/\D+/g, '');
+    return parseInt(digits, 10) || 0;
+  }
+
+  // Выравниваем счётчик избранного ПО ВЫСОТЕ со счётчиком корзины.
+  // Причина: иконка-сердечко стоит выше иконки-сумки, поэтому счётчик с тем же
+  // CSS top:-6 уезжает вверх. Считаем реальную разницу верхних краёв на экране.
+  function alignBadge(heartHost, badge) {
+    var bag = document.querySelector(BAG_SEL);
+    if (!bag) return;                         // нет эталона — оставляем CSS top:-6
+    var bagHost = getHost(bag);
+    if (!bagHost) return;
+
+    var heartRect = heartHost.getBoundingClientRect();
+    var bagRect   = bagHost.getBoundingClientRect();
+    if (!heartRect.height || !bagRect.height) return;
+
+    // Локальный масштаб хоста (screen px → local px), чтобы победить zoom шапки.
+    var scale = heartRect.height / (heartHost.offsetHeight || heartRect.height);
+    if (!scale || !isFinite(scale)) scale = 1;
+
+    var deltaScreen = bagRect.top - heartRect.top;
+    var deltaLocal  = deltaScreen / scale;
+
+    badge.style.top = Math.round(-6 + deltaLocal) + 'px';
+  }
+
+  // 3) Переносим счётчик на КАЖДУЮ копию сердечка и ровняем по корзине
+  function syncBadge() {
+    var n = getWishCount();
+    document.querySelectorAll(HEART_SEL).forEach(function (heart) {
+      var host = getHost(heart);
+      if (!host) return;
+      if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+
+      var badge = host.querySelector('.my-wish-badge');
+      if (!n) { if (badge) badge.style.display = 'none'; return; }
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'my-wish-badge';
+        host.appendChild(badge);
+      }
+      badge.textContent = n;
+      badge.style.display = 'flex';
+      alignBadge(host, badge);
+    });
+  }
+
+  function tick() { bindClick(); syncBadge(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  window.addEventListener('resize', syncBadge);
+  setInterval(tick, 1000);
+})();
+</script> <!-- ══════════ ШАПКА — ПРОФИЛЬ / ЛИЧНЫЙ КАБИНЕТ ══════════ --> <!-- Человечек в шапке открывает кабинет Tilda, плавающую кнопку прячем.
+     На мобильном человечек убран из шапки; кабинет открывает штатный человечек
+     (user.svg) внизу бургер-меню (T450). --> <style>
+/* Прячем плавающую кнопку профиля Tilda (кружок-человечек справа сверху). */
+.tlk-open-userbar-btn { display: none !important; }
+
+/* МОБИЛЬНЫЙ: прячем человечка из верхней строки шапки. */
+@media screen and (max-width: 640px) {
+  .t2y-hide-mobile { display: none !important; }
+}
+</style> <script>
+(function () {
+  var LINK_SEL = 'a[href="#registerpopup"]';
+  var ICON_SEL = 'img[src*="tild3332"]';
+  // Штатный человечек внизу бургер-меню T450.
+  var MENU_BTN_SEL = '.t450 .t-btntext__icon[style*="user.svg"]';
+
+  function getHost(el) { return el.closest('a') || el.closest('.tn-atom') || el.parentElement; }
+
+  // Открыть настоящий личный кабинет Tilda.
+  function openCabinet() {
+    var btn = document.querySelector('.tlk-open-userbar-btn .tlk-userbar__user-image')
+           || document.querySelector('.tlk-open-userbar-btn')
+           || document.querySelector('.tlk-userbar__user-image');
+    if (btn) { btn.click(); return; }
+    window.location.href = '/members/';
+  }
+
+  // Закрыть бургер-меню, чтобы кабинет не открылся под ним.
+  function closeMenu() {
+    var close = document.querySelector(
+      '.t450 .t-menu__close-wrapper, .t450 .t-menu__close, .t450__close, .t-menuwrapper__close'
+    );
+    if (close) close.click();
+  }
+
+  // 1) Человечек в шапке (desktop) открывает кабинет.
+  function collectHeaderTriggers() {
+    var set = [];
+    document.querySelectorAll(LINK_SEL).forEach(function (a) { set.push(a); });
+    document.querySelectorAll(ICON_SEL).forEach(function (img) {
+      var host = getHost(img);
+      if (host) set.push(host);
+    });
+    return set;
+  }
+
+  function bindHeader() {
+    collectHeaderTriggers().forEach(function (el) {
+      if (!el || el.dataset.profBound) return;
+      el.dataset.profBound = '1';
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openCabinet();
+      }, true);
+    });
+  }
+
+  // 2) МОБИЛЬНЫЙ: прячем человечка в верхней строке шапки.
+  function hideHeaderIconOnMobile() {
+    document.querySelectorAll(ICON_SEL).forEach(function (img) {
+      var elem = img.closest('.tn-elem') || getHost(img);
+      if (elem) elem.classList.add('t2y-hide-mobile');
+    });
+  }
+
+  // 3) МОБИЛЬНЫЙ: человечек внизу меню T450 открывает кабинет.
+  function bindMenuProfile() {
+    document.querySelectorAll(MENU_BTN_SEL).forEach(function (icon) {
+      var btn = icon.closest('.t-btntext') || icon.parentElement;
+      if (!btn || btn.dataset.profMenuBound) return;
+      btn.dataset.profMenuBound = '1';
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeMenu();
+        setTimeout(openCabinet, 150);
+      }, true);
+    });
+  }
+
+  function tick() {
+    bindHeader();
+    hideHeaderIconOnMobile();
+    bindMenuProfile();
+  }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  setInterval(tick, 1000);
+})();
+</script> <!-- ══════════ КАРТОЧКА — КНОПКА ИЗБРАННОГО ══════════ --> <style>
+/* Ряд: кнопка покупки + сердечко в одну линию */
+.t780__btn-wrapper.t1002__btns-wrapper,
+.t760__btn-wrapper.t1002__btns-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  gap: 12px !important;
+}
+
+/* Кнопка "В корзину" занимает всё свободное место */
+.t780__btn-wrapper.t1002__btns-wrapper .t-btn,
+.t760__btn-wrapper.t1002__btns-wrapper .t760__btn {
+  flex: 1 1 auto !important;
+}
+
+/* Само сердечко — всегда видимо, аккуратный круг */
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+
+  flex: 0 0 52px !important;
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+
+  position: static !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 1px solid #E5E5E5 !important;
+  border-radius: 50% !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  overflow: visible !important;
+  cursor: pointer !important;
+  transition: border-color .2s ease, transform .2s ease !important;
+}
+
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn:hover,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn:hover {
+  border-color: #111 !important;
+  transform: scale(1.06) !important;
+}
+
+/* Прячем стандартную иконку Тильды и ставим свою */
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn svg,
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn img,
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn span,
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn div,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn svg,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn img,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn span,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn div {
+  display: none !important;
+}
+
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::before,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::before {
+  content: "" !important;
+  display: block !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  background-image: url("https://static.tildacdn.com/tild6437-6661-4338-a631-383333346133/like.svg") !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: contain !important;
+}
+
+/* Активное состояние (товар в избранном) */
+.t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn.t1002__addBtn_active::before,
+.t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn.t1002__addBtn_active::before {
+  background-image: url("https://static.tildacdn.com/tild3237-3562-4534-a531-643133613132/like2.svg") !important;
+}
+
+/* --- Мобильные: "Избранное" — отдельной кнопкой во всю ширину под "В корзину" --- */
+@media screen and (max-width: 640px) {
+  .t780__btn-wrapper.t1002__btns-wrapper,
+  .t760__btn-wrapper.t1002__btns-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn,
+  .t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn {
+    order: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 52px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #fff !important;
+    border: 1px solid #111 !important;
+    border-radius: 8px !important;     /* 0 — прямые углы, 30px — "таблетка" */
+    box-sizing: border-box !important;
+    font-size: 0 !important;
+  }
+
+  .t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::before,
+  .t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::before {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    margin: 0 !important;
+  }
+
+  .t780__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::after,
+  .t760__btn-wrapper.t1002__btns-wrapper .t1002__addBtn::after {
+    content: "В избранное" !important;
+    display: inline-block !important;
+    font-family: "Tenor Sans", sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    letter-spacing: 0.02em !important;
+    color: #111 !important;
+  }
+}
+</style> <!-- ══════════ КАРТОЧКА — ТАБЛИЦА РАЗМЕРОВ + РАМКА ЦВЕТА ══════════ --> <style>
+/* === Строка "Размер" + ссылка "таблица размеров" ===
+   ВАЖНО: ссылка лежит РЯДОМ с названием опции, а НЕ внутри него —
+   иначе Tilda пишет в корзину "Размертаблица размеров". */
+.t2y-size-row {
+  display: flex !important;
+  align-items: baseline !important;
+  justify-content: space-between !important;
+  /* ширину задаёт JS */
+}
+
+.t2y-size-link {
+  color: #999999;
+  font-size: 15px;
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: "Tenor Sans", sans-serif;
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+.t2y-size-link:hover { color: #111111; }
+
+/* Крупнее заголовки опций "Размер" / "Цвет" */
+.js-product-edition-option-name {
+  font-size: 16px !important;
+  line-height: 1.3 !important;
+}
+
+/* Буквы размеров всегда заглавные (XXl -> XXL) */
+.t-product__option-item .t-product__option-title {
+  text-transform: uppercase !important;
+}
+
+/* === Цвет: убираем ДВОЙНУЮ рамку у образца === */
+.t-product__option-item_image {
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid #E5E5E5 !important;
+  overflow: hidden !important;
+}
+.t-product__option-item_image.t-product__option-item_active {
+  border: 1px solid #111111 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* строго внутри _image, чтобы НЕ задеть квадраты размеров */
+.t-product__option-item_image .t-product__option-checkmark,
+.t-product__option-item_image .t-product__option-checkmark_image {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* === Всплывающее окно "Таблица размеров" === */
+.t2y-size-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 1000000;
+  padding: 20px;
+}
+.t2y-size-overlay.is-open { display: flex; }
+.t2y-size-modal {
+  position: relative;
+  background: #fff;
+  max-width: 640px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  padding: 44px 32px 36px;
+  border-radius: 10px;
+  font-family: "Tenor Sans", sans-serif;
+  color: #111111;
+  box-sizing: border-box;
+}
+.t2y-size-close {
+  position: absolute; top: 14px; right: 18px;
+  width: 32px; height: 32px;
+  font-size: 26px; line-height: 1; color: #111;
+  background: none; border: none; cursor: pointer;
+}
+.t2y-size-modal h3 {
+  text-align: center; font-size: 20px; font-weight: 400;
+  letter-spacing: .05em; margin: 0 0 24px;
+}
+.t2y-size-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.t2y-size-table th, .t2y-size-table td {
+  padding: 12px 8px; text-align: center;
+  border-bottom: 1px solid #eeeeee;
+}
+.t2y-size-table th { font-weight: 400; color: #999999; }
+.t2y-size-note { margin-top: 20px; font-size: 12px; color: #999; text-align: center; line-height: 1.5; }
+
+/* === Аккордеоны "Параметры модели" для карточки КАТАЛОГА === */
+.t2y-model-accordion {
+  width: 100%;
+  margin: 0 0 20px;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+  font-family: "Tenor Sans", sans-serif;
+}
+.t2y-model-accordion summary {
+  padding: 18px 0; color: #111; font-size: 16px; line-height: 1.3;
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.t2y-model-accordion summary::-webkit-details-marker { display: none; }
+.t2y-model-accordion summary::after { content: "+"; font-size: 20px; line-height: 1; color: #111; margin-left: 16px; }
+.t2y-model-accordion details[open] summary::after { content: "–"; }
+.t2y-model-accordion__content { padding: 0 0 20px; font-size: 14px; line-height: 1.55; color: #111; }
+.t2y-model-accordion__content p { margin: 0 0 8px; }
+.t2y-model-accordion__content p:last-child { margin-bottom: 0; }
+
+.product-popup-accordion { margin-bottom: 0 !important; }
+.product-popup-accordion + .t2y-model-accordion,
+.t2y-model-accordion + .t2y-model-accordion {
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+</style> <script>
+(function () {
+  /* ---------- ТАБЛИЦА РАЗМЕРОВ ----------
+     ⬇️ ЗАМЕНИТЬ ЦИФРЫ НА РЕАЛЬНЫЕ ЗАМЕРЫ (сейчас примерные) */
+  var SIZE_MODAL_HTML =
+    '<div class="t2y-size-overlay" id="t2ySizeOverlay">' +
+      '<div class="t2y-size-modal">' +
+        '<button class="t2y-size-close" aria-label="Закрыть">&times;</button>' +
+        '<h3>ТАБЛИЦА РАЗМЕРОВ</h3>' +
+        '<table class="t2y-size-table">' +
+          '<thead><tr>' +
+            '<th>Размер</th><th>RU</th><th>Обхват груди, см</th><th>Обхват талии, см</th><th>Длина, см</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+            '<tr><td>S</td><td>46</td><td>96</td><td>84</td><td>66</td></tr>' +
+            '<tr><td>M</td><td>48</td><td>100</td><td>88</td><td>68</td></tr>' +
+            '<tr><td>L</td><td>50</td><td>104</td><td>92</td><td>70</td></tr>' +
+            '<tr><td>XL</td><td>52</td><td>108</td><td>96</td><td>72</td></tr>' +
+            '<tr><td>2XL</td><td>54</td><td>112</td><td>100</td><td>74</td></tr>' +
+            '<tr><td>3XL</td><td>56</td><td>116</td><td>104</td><td>76</td></tr>' +
+          '</tbody>' +
+        '</table>' +
+        '<p class="t2y-size-note">Замеры указаны для изделия. Значения примерные — заменить на реальные в коде.</p>' +
+      '</div>' +
+    '</div>';
+
+  function initSizeChart() {
+    if (!document.getElementById('t2ySizeOverlay')) {
+      document.body.insertAdjacentHTML('beforeend', SIZE_MODAL_HTML);
+      var overlay = document.getElementById('t2ySizeOverlay');
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay || e.target.classList.contains('t2y-size-close')) {
+          overlay.classList.remove('is-open');
+        }
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') overlay.classList.remove('is-open');
+      });
+    }
+    // ищем заголовок опции "Размер" и вешаем ссылку
+    var titles = document.querySelectorAll('[class*="option-title"]');
+    titles.forEach(function (t) {
+      var txt = (t.textContent || '').trim().toLowerCase();
+      if (txt.indexOf('размер') !== 0) return;
+
+      var row = t.parentElement;
+      if (!row || !row.classList.contains('t2y-size-row')) {
+        row = document.createElement('div');
+        row.className = 't2y-size-row';
+        t.parentNode.insertBefore(row, t);
+        row.appendChild(t);              // переносим имя "Размер" внутрь обёртки
+        var link = document.createElement('span');
+        link.className = 't2y-size-link';
+        link.textContent = 'таблица размеров';
+        link.addEventListener('click', function () {
+          document.getElementById('t2ySizeOverlay').classList.add('is-open');
+        });
+        row.appendChild(link);           // ссылка — отдельным элементом рядом с именем
+      }
+
+      // МОБИЛЬНЫЙ: строка на всю ширину — ссылка уходит к правому краю.
+      if (window.innerWidth <= 640) {
+        row.style.setProperty('width', '100%', 'important');
+        return;
+      }
+      // ДЕСКТОП: ширина строки = до правого края последнего квадратика (XXL)
+      var scope = row.parentElement;
+      var boxes = scope ? scope.querySelectorAll('.t-product__option-item') : [];
+      if (boxes.length) {
+        var last = boxes[boxes.length - 1];
+        var w = last.getBoundingClientRect().right - row.getBoundingClientRect().left;
+        if (w > 40) row.style.setProperty('width', Math.round(w) + 'px', 'important');
+      }
+    });
+  }
+
+  function tick() { initSizeChart(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  window.addEventListener('resize', tick);
+  setInterval(tick, 800);
+})();
+</script> <!-- ══════════ КАРТОЧКА — МОБИЛЬНЫЕ ОТСТУПЫ ══════════ --> <!-- Единый вертикальный ритм на телефоне + образец цвета влево. Только ≤640px.
+
+     ⚠️ ПЕРЕПИСАНО 13.09.2026. Раньше все правила были вложены в .t780__wrapper —
+     а такого класса на карточке НЕТ, поэтому секция не работала вовсе.
+     Теперь селекторы прямые, а класс ПОВТОРЁН ТРИЖДЫ (специфичность 0,3,0):
+     одиночного класса не хватает, внутренние правила Tilda его перебивают.
+     Классы .t780__* есть только в мобильной вёрстке карточки, так что отказ от
+     обёртки ничего лишнего не задевает. --> <style>
+@media screen and (max-width: 640px) {
+  :root {
+    --card-gap: 16px;       /* крупный отступ: цена→«Размер», между группами опций, до аккордеонов */
+    --price-top-gap: 12px;  /* отступ ОПИСАНИЕ→ЦЕНА */
+    --opt-gap: 12px;        /* малый отступ: заголовок опции → квадратики */
+  }
+
+  /* --- Прячем ПУСТОЙ блок описания, из-за него верхний отступ у цены был больше --- */
+  .t780__descr.t780__descr.t780__descr.js-store-prod-text {
+    display: none !important;
+    margin: 0 !important;
+  }
+
+  /* --- Описание → Цена (одинаковый отступ сверху и снизу цены) --- */
+  .t780__descr.t780__descr.t780__descr,
+  .t780__title_small.t780__title_small.t780__title_small { margin-bottom: 0 !important; }
+
+  .t780__price-wrapper.t780__price-wrapper.t780__price-wrapper {
+    margin-top: var(--price-top-gap) !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+  .t780__price.t780__price.t780__price {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* --- Группы опций «Размер»/«Цвет»: единый крупный отступ сверху --- */
+  .t-product__option.t-product__option.t-product__option {
+    margin-top: var(--card-gap) !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* --- ТОЛЬКО заголовок опции → квадратики: малый отступ.
+         Целимся в .js-product-edition-option-name, а НЕ в .t-product__option-title,
+         т.к. последний висит ещё и на буквах M/L/XL внутри квадратов. --- */
+  .js-product-edition-option-name.js-product-edition-option-name.js-product-edition-option-name {
+    margin: 0 0 var(--opt-gap) 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .t-product__option-variants.t-product__option-variants.t-product__option-variants {
+    margin: 0 !important;
+  }
+
+  /* --- Буквы внутри квадратов: без лишних отступов --- */
+  .t-product__option-item .t-product__option-title.t-product__option-title {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* --- Образец ЦВЕТА к левому краю (по одной линии с квадратами размеров) --- */
+  .t-product__option-variants_image.t-product__option-variants_image.t-product__option-variants_image {
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+  .t-product__option-variants_image .t-product__option-item_image.t-product__option-item_image {
+    margin-left: 0 !important;
+  }
+
+  /* --- Первый аккордеон: тот же крупный отступ сверху.
+         ТРИ класса — чтобы перебить правило ниже по файлу (0,2,0), которое иначе
+         выигрывает как более позднее при равной специфичности. --- */
+  .product-popup-accordion.product-popup-accordion.product-popup-accordion[data-acc-i="0"] {
+    margin-top: var(--card-gap) !important;
+  }
+}
+</style> <!-- ══════════ КАРТОЧКА — ПОРЯДОК БЛОКОВ (описание + аккордеоны) ══════════ --> <!-- По ТЗ: Цена → [В корзину] → описание ОТКРЫТОЕ → аккордеоны СКРЫТЫЕ.
+     Тексты аккордеонов лежат на странице товара в блоке .t2y-acc-source.
+     Одинаково на ПК (t760) и на телефоне (t780). --> <style>
+/* Источник текстов на странице — скрыт, его читает движок */
+.t2y-acc-source { display: none !important; }
+
+/* Описание, перенесённое под кнопку.
+   ЧЕТЫРЕ класса подряд — не опечатка: в секции мобильных отступов есть правило
+   .t780__descr x3 (специфичность 0,3,0). Меньшему числу классов оно выигрывает,
+   и описание прилипает к кнопке. */
+.t2y-descr-moved.t2y-descr-moved.t2y-descr-moved.t2y-descr-moved {
+  margin-top: 24px !important;
+  margin-bottom: 0 !important;
+}
+@media screen and (max-width: 640px) {
+  .t2y-descr-moved.t2y-descr-moved.t2y-descr-moved.t2y-descr-moved {
+    margin-top: 20px !important;
+  }
+}
+
+/* Оформление аккордеонов */
+.product-popup-accordion {
+  width: 100%;
+  margin: 0;
+  border-top: 1px solid #E5E5E5;
+  border-bottom: 1px solid #E5E5E5;
+  font-family: "Tenor Sans", sans-serif;
+}
+.product-popup-accordion + .product-popup-accordion { border-top: none; }
+/* Первый аккордеон отделяем от описания (на телефоне перебивается правилом выше) */
+.product-popup-accordion[data-acc-i="0"] { margin-top: 24px; }
+
+.product-popup-accordion details { width: 100%; }
+.product-popup-accordion summary {
+  padding: 18px 0;
+  color: #111111;
+  font-family: "Tenor Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1.3;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.product-popup-accordion summary::-webkit-details-marker { display: none; }
+.product-popup-accordion summary::after {
+  content: "+"; font-size: 20px; line-height: 1; color: #111111; margin-left: 16px;
+}
+.product-popup-accordion details[open] summary::after { content: "–"; }
+.product-popup-accordion__content {
+  padding: 0 0 20px 0;
+  color: #111111;
+  font-family: "Tenor Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.product-popup-accordion__content p { margin: 0 0 10px 0; }
+.product-popup-accordion__content p:last-child { margin-bottom: 0; }
+
+.t780__title_small.t-descr.t-descr_xs {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  line-height: 1.2 !important;
+}
+</style> <script>
+(function () {
+  var BTN_SEL   = '.t780__btn-wrapper, .t760__btn-wrapper';
+  var DESCR_SEL = '.t780__descr, .t760__descr';
+
+  function txt(el) { return (el.textContent || '').replace(/ /g, ' ').trim(); }
+
+  /* ---------- 1. ОПИСАНИЕ → под кнопку «В корзину» ---------- */
+  function moveDescr() {
+    document.querySelectorAll(DESCR_SEL).forEach(function (descr) {
+      if (descr.classList.contains('js-store-prod-text')) return;
+      if (!txt(descr)) return;
+
+      var wrap = descr.closest('.t780, .t760') || descr.parentElement;
+      if (!wrap) return;
+      var btnWrap = wrap.querySelector(BTN_SEL);
+      if (!btnWrap) return;
+
+      if (btnWrap.nextElementSibling === descr) return;
+
+      btnWrap.after(descr);
+      descr.classList.add('t2y-descr-moved');
+    });
+  }
+
+  /* ---------- 2. АККОРДЕОНЫ → после описания ---------- */
+  function readItems() {
+    var src = document.querySelector('.t2y-acc-source');
+    if (!src) return [];
+    var out = [];
+    Array.prototype.forEach.call(src.children, function (el) {
+      var title = el.getAttribute('data-title');
+      if (!title) return;
+      out.push({ title: title, html: el.innerHTML });
+    });
+    return out;
+  }
+
+  function makeAcc(title, html, i) {
+    var d = document.createElement('div');
+    d.className = 'product-popup-accordion';
+    d.setAttribute('data-acc-i', String(i));
+    d.innerHTML =
+      '<details><summary>' + title + '</summary>' +
+      '<div class="product-popup-accordion__content">' + html + '</div></details>';
+    return d;
+  }
+
+  function build() {
+    var items = readItems();
+    if (!items.length) return;
+
+    document.querySelectorAll(BTN_SEL).forEach(function (btnWrap) {
+      var parent = btnWrap.parentNode;
+      if (!parent) return;
+
+      var anchor = btnWrap;
+      var next = btnWrap.nextElementSibling;
+      if (next && next.classList && next.classList.contains('t2y-descr-moved')) {
+        anchor = next;
+      }
+
+      var ok = true, node = anchor.nextElementSibling;
+      for (var i = 0; i < items.length; i++) {
+        if (!node || !node.classList ||
+            !node.classList.contains('product-popup-accordion') ||
+            node.getAttribute('data-acc-i') !== String(i)) { ok = false; break; }
+        node = node.nextElementSibling;
+      }
+      if (ok) return;
+
+      parent.querySelectorAll('.product-popup-accordion[data-acc-i]')
+            .forEach(function (a) { a.remove(); });
+
+      var ref = anchor.nextSibling;
+      items.forEach(function (it, i) {
+        parent.insertBefore(makeAcc(it.title, it.html, i), ref);
+      });
+    });
+  }
+
+  function tick() { moveDescr(); build(); }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    tick();
+    document.body.addEventListener('click', function (e) {
+      if (e.target.closest('.product-popup-accordion')) return;
+      [100, 400].forEach(function (t) { setTimeout(tick, t); });
+    });
+  });
+  window.addEventListener('load', tick);
+  [300, 800, 1500, 2500].forEach(function (t) { setTimeout(tick, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    setTimeout(function () { tick(); busy = false; }, 120);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script> <!-- ══════════ КАТАЛОГ — ПЕРЕКРАСКА ПОПАПА ══════════ --> <style>
+/* === Типографика: всё в Tenor Sans === */
+.t-catalog__prod-popup__name,
+.t-catalog__prod-popup__sku,
+.t-catalog__prod-popup__price-wrapper,
+.t-catalog__prod-popup__price-item,
+.t-catalog__prod-popup__text,
+.t-catalog__prod-popup__btn,
+.t-catalog__prod-popup .t-btnflex__text {
+  font-family: "Tenor Sans", Arial, sans-serif !important;
+}
+
+/* Название товара */
+.t-catalog__prod-popup__name {
+  font-size: 24px !important;
+  line-height: 1.25 !important;
+  color: #111 !important;
+}
+
+/* Артикул — серый, мелкий */
+.t-catalog__prod-popup__sku {
+  color: #999999 !important;
+  font-size: 13px !important;
+  margin-top: 6px !important;
+}
+
+/* Цена */
+.t-catalog__prod-popup__price-item,
+.t-catalog__prod-popup__price-value,
+.t-catalog__prod-popup__price-currency {
+  font-size: 22px !important;
+  color: #111 !important;
+}
+.t-catalog__prod-popup__price-wrapper { margin: 14px 0 18px !important; }
+
+/* Кнопка покупки: чёрная, во всю ширину, прямые углы */
+.t-catalog__prod-popup__btn-wrapper { width: 100% !important; }
+.t-catalog__prod-popup__btn {
+  width: 100% !important;
+  border-radius: 0 !important;
+  background-color: #000 !important;
+  color: #fff !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  font-size: 15px !important;
+  letter-spacing: .03em !important;
+}
+
+/* Описание под кнопкой */
+.t-catalog__prod-popup__text {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #111 !important;
+  margin-top: 24px !important;
+}
+</style> <script>
+(function () {
+  /* 1) BUY NOW -> В корзину (подстраховка; лучше поменять в настройках каталога → Кнопки) */
+  function fixBuyText() {
+    document.querySelectorAll('.js-catalog-prod-popup-buy-btn-txt').forEach(function (el) {
+      if (/buy\s*now/i.test(el.textContent || '')) el.textContent = 'В корзину';
+    });
+  }
+
+  /* 2) Аккордеоны "Уход" + "Параметры модели" в карточке каталога. */
+  var CARE_HTML =
+    '<details>' +
+      '<summary>Рекомендации по уходу</summary>' +
+      '<div class="t2y-model-accordion__content">' +
+        '<p>Стирать при температуре до 30°C на бережном режиме.</p>' +
+        '<p>Использовать мягкие средства для цветных или деликатных тканей.</p>' +
+        '<p>Не отбеливать и не использовать агрессивные пятновыводители.</p>' +
+        '<p>Сушить в расправленном виде вдали от прямых солнечных лучей и источников тепла.</p>' +
+      '</div>' +
+    '</details>';
+
+  var MODEL_HTML =
+    '<details>' +
+      '<summary>Параметры модели на фото</summary>' +
+      '<div class="t2y-model-accordion__content">' +
+        '<p>Рост модели: 186 см.</p>' +
+        '<p>На модели размер: M.</p>' +
+      '</div>' +
+    '</details>';
+
+  function makeAcc(html, extraClass) {
+    var d = document.createElement('div');
+    d.className = 't2y-model-accordion ' + extraClass;
+    d.innerHTML = html;
+    return d;
+  }
+
+  function initCatalogAccordions() {
+    document.querySelectorAll('.t-catalog__prod-popup__info').forEach(function (info) {
+      var btnWrap = info.querySelector('.t-catalog__prod-popup__btn-wrapper');
+      if (!btnWrap) return;
+      if (!info.querySelector('.t2y-cat-care')) {
+        btnWrap.parentNode.insertBefore(makeAcc(CARE_HTML, 't2y-cat-care'), btnWrap);
+      }
+      if (!info.querySelector('.t2y-cat-model')) {
+        btnWrap.parentNode.insertBefore(makeAcc(MODEL_HTML, 't2y-cat-model'), btnWrap);
+      }
+    });
+  }
+
+  function tick() { fixBuyText(); initCatalogAccordions(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  setInterval(tick, 800);
+})();
+</script> <!-- ══════════ КАРТОЧКА — ОТКРЕПЛЕНИЕ ШАПКИ + СВАЙП ГАЛЕРЕИ ══════════ --> <style>
+/* Открепляем шапку на карточке (только моб.) */
+@media screen and (max-width: 640px) {
+  html.t2y-card-page .t396__artboard[data-artboard-pos="fixed"] {
+    position: absolute !important;
+    top: 0 !important;
+  }
+}
+</style> <script>
+(function () {
+  // Класс t2y-card-page — опора для всех правил, касающихся страниц товара.
+  // Ставится по наличию блока карточки, поэтому работает на ЛЮБОЙ копии карточки.
+  function markCardPage() {
+    if (document.querySelector('.t780, .t760')) {
+      document.documentElement.classList.add('t2y-card-page');
+    }
+  }
+
+  function fixGallerySwipe() {
+    if (window.innerWidth > 640) return;
+    document.querySelectorAll('.js-product-img').forEach(function (img) {
+      var slider = img.closest('.t-slds');
+      if (!slider || slider.dataset.t2ySwipeFix) return;
+      slider.dataset.t2ySwipeFix = '1';
+      slider.style.touchAction = 'pan-y';
+      var wrap = slider.querySelector('.t-slds__items-wrapper');
+      if (wrap) wrap.style.touchAction = 'pan-y';
+    });
+  }
+
+  function tick() { markCardPage(); fixGallerySwipe(); }
+
+  document.addEventListener('DOMContentLoaded', tick);
+  window.addEventListener('load', tick);
+  window.addEventListener('resize', fixGallerySwipe);
+  setInterval(tick, 1000);
+})();
+</script> <!-- ══════════ ХЛЕБНЫЕ КРОШКИ НА КАРТОЧКЕ ТОВАРА ══════════ --> <!-- Категория берётся из data-атрибутов блока .t2y-acc-source на странице товара:
+       data-crumb-parent / data-crumb-parent-url / data-crumb-name / data-crumb-url
+     Название товара скрипт читает со страницы сам — прописывать не надо.
+     CRUMB_MAP ниже — запасной способ задать категорию по адресу страницы,
+     если когда-нибудь понадобится переопределить крошки, не трогая саму страницу. --> <style>
+.t2y-crumbs {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  float: none;
+  clear: both;
+  text-align: left;
+  font-family: "Tenor Sans", sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #999999;
+  margin: 0 0 14px 0;
+  cursor: default;
+}
+.t2y-crumbs a {
+  color: #999999;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color .2s ease;
+}
+.t2y-crumbs a:hover { color: #111111; }
+.t2y-crumbs .t2y-crumbs__sep {
+  margin: 0 7px;
+  color: #cccccc;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.t2y-crumbs .t2y-crumbs__cur { color: #111111; }
+
+@media screen and (max-width: 640px) {
+  .t2y-crumbs {
+    font-size: 14px;
+    margin: 0 0 10px 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+</style> <script>
+(function () {
+  var CRUMB_MAP = {};
+
+  var TITLE_SEL = '.t780__title, .t760__title';
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function crumb(name, url) {
+    if (!name) return null;
+    return url ? '<a href="' + esc(url) + '">' + esc(name) + '</a>'
+               : '<span>' + esc(name) + '</span>';
+  }
+
+  function getCrumbData() {
+    var src = document.querySelector('.t2y-acc-source');
+    if (src && (src.getAttribute('data-crumb-parent') || src.getAttribute('data-crumb-name'))) {
+      return [
+        src.getAttribute('data-crumb-parent'),
+        src.getAttribute('data-crumb-parent-url'),
+        src.getAttribute('data-crumb-name'),
+        src.getAttribute('data-crumb-url')
+      ];
+    }
+    var path = location.pathname.replace(/\/+$/, '');
+    return CRUMB_MAP[path] || null;
+  }
+
+  function build() {
+    var data = getCrumbData();
+    if (!data) return;
+
+    var titles = document.querySelectorAll(TITLE_SEL);
+    if (!titles.length) return;
+
+    var prod = '';
+    Array.prototype.some.call(titles, function (t) {
+      var v = (t.textContent || '').replace(/ /g, ' ').trim();
+      if (v) { prod = v; return true; }
+      return false;
+    });
+
+    var parts = ['<a href="/">Главная</a>'];
+    [crumb(data[0], data[1]), crumb(data[2], data[3])].forEach(function (c) {
+      if (c) parts.push(c);
+    });
+    if (prod) parts.push('<span class="t2y-crumbs__cur">' + esc(prod) + '</span>');
+    var html = parts.join('<span class="t2y-crumbs__sep">/</span>');
+
+    titles.forEach(function (title) {
+      /* Если родитель названия — flex/grid, вставленный блок стал бы вторым
+         СТОЛБЦОМ и сжался в узкую полоску с переносом по буквам.
+         Поэтому поднимаемся до ближайшего предка в обычном потоке. */
+      var anchor = title;
+      var parent = anchor.parentNode;
+      for (var i = 0; i < 3 && parent && parent.nodeType === 1; i++) {
+        var d = window.getComputedStyle(parent).display;
+        if (d !== 'flex' && d !== 'inline-flex' && d !== 'grid' && d !== 'inline-grid') break;
+        anchor = parent;
+        parent = anchor.parentNode;
+      }
+      if (!parent || parent.nodeType !== 1) return;
+
+      var prev = anchor.previousElementSibling;
+      if (prev && prev.classList && prev.classList.contains('t2y-crumbs')) return;
+
+      /* Именно div, а не nav: на nav Tilda даёт строчное поведение. */
+      var nav = document.createElement('div');
+      nav.className = 't2y-crumbs';
+      nav.setAttribute('role', 'navigation');
+      nav.setAttribute('aria-label', 'Хлебные крошки');
+      nav.innerHTML = html;
+
+      parent.insertBefore(nav, anchor);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', build);
+  window.addEventListener('load', build);
+  [400, 1000, 2000].forEach(function (t) { setTimeout(build, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    setTimeout(function () { build(); busy = false; }, 150);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script> <!-- ══════════ ОБРЕЗКА ТОГО, ЧТО ТОРЧИТ ЗА ЭКРАН (телефон) ══════════ --> <!-- 1) Галерея товара: лента слайдера раскладывает кадры в строку (было right=2554
+        при экране 402px) и сама не обрезается.
+        ⚠️ Привязка по КЛАССУ html.t2y-card-page, а НЕ по #rec… — у склонированной
+        карточки будет свой rec-id, и правило по id перестало бы работать,
+        вернув горизонтальную прокрутку на каждом новом товаре.
+        ⚠️ Клипуем именно .t-slds, а НЕ блок целиком: ST210 держит колонку с ценой
+        на position:sticky, а overflow:hidden на любом предке убивает sticky.
+     2) Шапка: у пунктов «Женское» и «Мерч» нет мобильных координат, они стоят
+        по десктопным за краем экрана. Пока шапка fixed — прокрутки нет (fixed не
+        расширяет область прокрутки), но на карточке мы её открепляем.
+        Это ЗАПЛАТКА. Правильное лечение — спрятать эти пункты в Zero-блоке шапки
+        на брейкпоинтах 320 и 480, после чего блок про #rec2498768581 убрать. --> <style>
+@media screen and (max-width: 640px) {
+  html.t2y-card-page .t-slds {
+    overflow: hidden !important;
+    max-width: 100% !important;
+  }
+  #rec2498768581,
+  #rec2498768581 .t396__artboard {
+    overflow: hidden !important;
+    max-width: 100% !important;
+  }
+}
+</style> <script>
+(function () {
+  var ROW = '.t2y-size-row';
+
+  function fix(row) {
+    if (window.innerWidth <= 640) {
+      if (row.style.width !== '100%') {
+        row.style.setProperty('width', '100%', 'important');
+      }
+      return;
+    }
+    var scope = row.parentElement;
+    var boxes = scope ? scope.querySelectorAll('.t-product__option-item') : [];
+    if (!boxes.length) return;
+
+    var left = row.getBoundingClientRect().left;
+    var right = 0;
+    Array.prototype.forEach.call(boxes, function (b) {
+      var r = b.getBoundingClientRect().right;
+      if (r > right) right = r;
+    });
+
+    var w = Math.round(right - left);
+    if (w < 40) return;
+    if (row.style.width !== w + 'px') {
+      row.style.setProperty('width', w + 'px', 'important');
+    }
+  }
+
+  function run() {
+    document.querySelectorAll(ROW).forEach(function (row) {
+      fix(row);
+      if (row.dataset.t2ySizeWatch) return;
+      row.dataset.t2ySizeWatch = '1';
+      new MutationObserver(function () { fix(row); })
+        .observe(row, { attributes: true, attributeFilter: ['style'] });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  window.addEventListener('resize', run);
+  [400, 1000, 2000, 3000].forEach(function (t) { setTimeout(run, t); });
+
+  var busy = false;
+  new MutationObserver(function () {
+    if (busy) return;
+    busy = true;
+    setTimeout(function () { run(); busy = false; }, 250);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script> <!-- БУРГЕР НА МОБИЛЬНОЙ — ПОДЛОЖКА ТОЛЬКО НА СТРАНИЦАХ КАРТОЧЕК.
+     Добавлено 13.10.2026, переделано в тот же день.
+
+     ПРОБЛЕМА: на страницах карточек мы открепили шапку (чтобы она не
+     закрывала хлебные крошки), но бургер остался position: fixed. Три
+     полоски повисли поверх содержимого без фона — на карточке товара
+     легли прямо на строку «Параметры модели на фото».
+
+     ЛЕЧЕНИЕ: не откреплять (меню под рукой — это правильно), а подложить
+     под бургер белый кружок с мягкой тенью.
+
+     ЧТО ИСПРАВЛЕНО В ЭТОЙ ВЕРСИИ (две ошибки первой):
+
+     1. КРУЖОК ПРОМАХИВАЛСЯ. Первый вариант задавал бургеру свои
+        width/height — но полоски внутри позиционированы от его
+        собственной коробки, и смена размера их сдвигала. Теперь круг
+        рисуется отдельным слоем (::before) позади полосок и центрируется
+        по бургеру сам. Размеры бургера не трогаются вообще.
+
+     2. КРУЖОК ВЫЛЕЗАЛ ВЕЗДЕ. На остальных страницах шапка прикреплена
+        и подложка там не нужна — она лезла на логотип. Теперь скрипт
+        вешает на <html> класс t2y-card-page, и стили действуют только
+        при нём.
+
+     КУДА: Настройки сайта → HTML-код внутрь HEAD, в самый конец.
+     Старую версию этого блока, если уже вставлена, — удалить целиком. --> <script>
+/* Помечаем страницы карточек товара. Скрипт лежит в HEAD и отрабатывает
+   до отрисовки, так что подложка не успевает мигнуть на чужих страницах.
+
+   Два шаблона адреса:
+     /p/…        — наши собственные страницы карточек
+     /tproduct/… — стандартная страница Tilda (если у товара не прописан
+                   URL, витрина ведёт туда; на всякий случай ловим и её) */
+(function () {
+  var p = location.pathname;
+  if (p.indexOf('/p/') === 0 || p.indexOf('/tproduct/') !== -1) {
+    document.documentElement.className += ' t2y-card-page';
+  }
+})();
+</script> <style>
+@media screen and (max-width: 960px) {
+
+  /* Бургер становится точкой отсчёта для подложки.
+     overflow: visible — чтобы круг мог выйти за его границы.
+
+     isolation: isolate — ключевая строка. Она создаёт у бургера
+     собственный слой, и тогда z-index: -1 у подложки уводит её назад,
+     но не дальше самого бургера. Благодаря этому полоски остаются
+     сверху БЕЗ вмешательства в их стили — а это важно: у Tilda они
+     позиционированы абсолютно, и любая правка их позиционирования
+     ломает расстояния между ними. */
+  html.t2y-card-page .t-menuburger,
+  html.t2y-card-page .t450__burger_container,
+  html.t2y-card-page .t450__burger_wrapper,
+  html.t2y-card-page .tmenu-mobile__burger,
+  html.t2y-card-page .t-menuburger__wrapper {
+    position: relative !important;
+    overflow: visible !important;
+    isolation: isolate !important;
+    z-index: 900 !important;
+  }
+
+  /* САМА ПОДЛОЖКА. Отдельный слой, центрируется по бургеру через
+     left/top 50% + transform — поэтому промахнуться не может,
+     каким бы ни был размер самого бургера. */
+  html.t2y-card-page .t-menuburger::before,
+  html.t2y-card-page .t450__burger_container::before,
+  html.t2y-card-page .tmenu-mobile__burger::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .14) !important;
+    z-index: -1 !important;            /* позади полосок, см. isolation выше */
+    pointer-events: none !important;   /* клик проходит на бургер */
+  }
+
+  /* ⚠️ ПОЛОСКИ НЕ ТРОГАЕМ. Первая версия ставила им position: relative,
+     чтобы поднять над подложкой, — и расстояния между ними разъехались:
+     у Tilda они position: absolute с заданными отступами сверху.
+     Теперь они лежат выше подложки сами, благодаря isolation: isolate. */
+
+  /* Когда меню открыто, подложка не нужна: бургер превращается в крестик
+     поверх тёмной шторки, и белый кружок там выглядит заплаткой. */
+  html.t2y-card-page .t-menuburger_opened::before,
+  html.t2y-card-page .t450__burger_container_opened::before {
+    opacity: 0 !important;
+  }
+}
+</style> <style>
+/* Таблица размеров на телефоне. Пять колонок × шесть строк в узком окне
+   начинают налезать друг на друга, поэтому ужимаем отступы и шрифт,
+   а если всё равно не влезает — таблица листается вбок ВНУТРИ окна,
+   не ломая вёрстку страницы. */
+@media screen and (max-width: 640px) {
+  .t2y-size-modal { padding: 40px 16px 28px !important; }
+
+  .t2y-size-table { font-size: 13px !important; }
+  .t2y-size-table th,
+  .t2y-size-table td { padding: 10px 4px !important; }
+
+  /* Колонку с буквой размера не ужимаем — по ней человек ищет свою строку */
+  .t2y-size-table td:first-child { font-weight: 600 !important; }
+
+  .t2y-size-modal table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+}
+</style>
