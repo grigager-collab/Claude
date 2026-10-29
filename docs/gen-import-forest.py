@@ -30,9 +30,10 @@ RAW = "https://raw.githubusercontent.com/grigager-collab/Claude/%s/images/forest
 HERE = os.path.dirname(os.path.abspath(__file__))
 IMG = os.path.join(HERE, "..", "images", "forest")
 
-# В таблице Кристины размеры M, L, XL, XXL. На сайте пишем 2XL (как у всех товаров).
-SIZES = ["M", "L", "XL", "2XL"]
-QTY = 5                       # «Остаток на складе 2YOUNG4U» из таблицы
+# Единая сетка сайта S–3XL (решение 08.10.2026), как у всех товаров.
+# В таблице Кристины только M, L, XL, XXL — S и 3XL добавлены по просьбе Григория 29.10.
+SIZES = ["S", "M", "L", "XL", "2XL", "3XL"]
+QTY = 5                       # «Остаток на складе 2YOUNG4U» из таблицы, всем размерам
 COLOR = "Зелёный"
 HEX = "#4a6741"               # тот же зелёный, что уже есть в каталоге
 SOSTAV = "75% хлопок, 20% полиэстер, 5% эластан"
