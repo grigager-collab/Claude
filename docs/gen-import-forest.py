@@ -14,10 +14,15 @@
     docs/import-forest-zelenyy.csv  — файл импорта в каталог Tilda
     docs/bloki-forest.html          — тексты аккордеонов для страниц /p/…
 
+Описания, состав и параметры модели — с VipAvenue (docs/forest-vipavenue.json,
+снято 29.10.2026 со страницы бренда): Григорий — «если чего-то нет у нас, ориентир
+VipAvenue». Свои тексты в PRODUCTS — запасные, на случай если товара там нет.
+
 Формат CSV — как в gen-import-csv.py (правила в docs/tilda-reference.md, разд. 16).
 ⚠️ ПРИ ИМПОРТЕ: «Группировка вариантов товара» → «Группировать по Parent UID».
 """
 import csv
+import json
 import os
 
 BRANCH = "claude/project-thread-2noe0n"
@@ -109,6 +114,16 @@ HEADER = ["Brand", "SKU", "Mark", "Category", "Title", "Description", "Text", "P
           "Characteristics:Цвет", "Characteristics:Сезон", "Characteristics:Стиль",
           "Characteristics:Капсула", "Weight", "Length", "Width", "Height", "Url"]
 
+# VipAvenue: описание списком через «-», рост/параметры модели, размер RU 52 = XL
+VA = json.load(open(os.path.join(HERE, "forest-vipavenue.json"), encoding="utf-8"))
+MODEL = ["Параметры модели: 187/116/80/88.", "На модели размер: XL (52)."]
+for p in PRODUCTS:
+    va = VA.get(p["sku"])
+    if va and va.get("descr"):
+        p["text"] = [t.strip(" -") for t in va["descr"].split("\n") if t.strip(" -")]
+        if va.get("consist"):
+            p["sostav"] = va["consist"]
+
 CARE = [
     "Стирать при температуре до 30 °C на бережном режиме.",
     "Использовать мягкие средства для цветных тканей.",
@@ -165,7 +180,7 @@ def write_blocks(path):
          "     ЗЕЛЁНАЯ КОЛЛЕКЦИЯ FOREST — тексты для страниц карточек (29.10.2026).",
          "     На странице товара блок «Другое → HTML-код»: выделить всё и вставить",
          "     кусок своего товара (ищи по адресу /p/… в комментарии).",
-         "     «Параметры модели на фото» — прочерки: заменить данными со съёмки.",
+         "     Описания, состав и параметры модели — как на VipAvenue.",
          "     ================================================================ -->"]
     for p in PRODUCTS:
         name, curl = CRUMB[p["cat"]]
@@ -178,10 +193,10 @@ def write_blocks(path):
         L += ["    <p>%s</p>" % esc(t) for t in p["text"]]
         L += ["    <p>Страна производства: Россия.</p>", "  </div>",
               '  <div data-title="Ткань, состав, уход">',
-              "    <p>Состав: %s.</p>" % SOSTAV]
+              "    <p>Состав: %s.</p>" % p.get("sostav", SOSTAV)]
         L += ["    <p>%s</p>" % c for c in CARE]
         L += ["  </div>", '  <div data-title="Параметры модели на фото">',
-              "    <p>Рост модели: — см.</p>", "    <p>На модели размер: —.</p>",
+              "    <p>%s</p>" % MODEL[0], "    <p>%s</p>" % MODEL[1],
               "  </div>", "</div>"]
     open(path, "w", encoding="utf-8").write("\n".join(L) + "\n")
 
