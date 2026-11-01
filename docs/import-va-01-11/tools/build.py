@@ -3,7 +3,7 @@
 Товары VipAvenue → CSV импорта каталога Tilda (2young4u.ru), 01.11.2026.
 
     python3 -I tools/build.py photos <папка_фото>        # первое фото: фон #F4F3EF
-    python3 -I tools/build.py csv <папка_фото> <база_url> <выход.csv>
+    python3 -I tools/build.py csv <папка_фото> <база_url> <выход.csv> [<папка_выровненных> <их_база_url>]
 
 Формат CSV — как в docs/feed-to-tilda.py (правила в docs/tilda-reference.md, п. 16):
 родитель + строка на размер, у родителя пустые Price/Quantity/SKU/Editions,
@@ -199,14 +199,19 @@ def photos(dst):
     print("готово фото:", len(report), "| размеры:", sorted({(r[1], r[2]) for r in report}))
 
 
-def build_csv(dst, base_url, out_csv):
+def build_csv(dst, base_url, out_csv, centr=None, centr_url=None):
     rows = []
     for it in plan():
         f = os.path.join(dst, it["slug"] + ".jpg")
         assert os.path.exists(f), f
+        # фото галереи: выровненное по центру (папка centr, «<адрес>__NN.jpg»), иначе — с VipAvenue
+        gal = []
+        for n, u in enumerate(it["photos"][1:], start=2):
+            c = "%s__%02d.jpg" % (it["slug"], n)
+            gal.append(centr_url.rstrip("/") + "/" + c if centr and os.path.exists(os.path.join(centr, c)) else u)
         par = {k: "" for k in HEADER}
         par.update({"Brand": "2young4u", "Category": it["cat"], "Title": it["name"], "Text": it["text"],
-                    "Photo": " ".join([base_url.rstrip("/") + "/" + it["slug"] + ".jpg"] + it["photos"][1:]),
+                    "Photo": " ".join([base_url.rstrip("/") + "/" + it["slug"] + ".jpg"] + gal),
                     "External ID": it["slug"],
                     "Characteristics:Основной материал": it["mat"], "Characteristics:Подклад": it["lin"],
                     "Characteristics:Цвет": it["col"], "Characteristics:Сезон": it["season"],
@@ -236,4 +241,4 @@ if __name__ == "__main__":
     if sys.argv[1] == "photos":
         photos(sys.argv[2])
     elif sys.argv[1] == "csv":
-        build_csv(sys.argv[2], sys.argv[3], sys.argv[4])
+        build_csv(*sys.argv[2:7])

@@ -36,7 +36,8 @@
       14. Фон карточек: проба цветов на «Костюмах» — №1 у первых трёх, №3 у двух (27.10);
           фон только под фото, углы острые, единый кадр: костюм > брюки > олимпийка;
           на фоне ещё толстовка и брюки (27.10, вечер); свой размер у Winter tale и чёрной
-          олимпийки Ватаным, копия классической Space на фоне (28.10)
+          олимпийки Ватаным, копия классической Space на фоне (28.10); фон #F4F3EF у всех
+          товаров: главное фото во всех карточках и фото на страницах товаров (01.11)
       15. Бургер-меню: значки соцсетей как в подвале, без «Мы в соцсетях» (28.10)
      ════════════════════════════════════════════════════════════════ -->
 
@@ -1438,19 +1439,27 @@ a.t2y-colors__item:hover { border-color: #999999; }
      #EBEBEB и 80 %, копия «Олимпийки классической Space» — на фон №4 #F5F4EF
      без изменения масштаба.
 
+     01.11: фон у всех — #F4F3EF (образец Григория): главное фото на белом
+     во всех карточках и фото на белом на страницах товаров. Наложение —
+     «затемнение»: белое становится цветом фона, а фото, уже снятые на этом
+     фоне (импорт 01.11), и фото на сером не меняются.
+
      Свой цвет товару — строка в BG: 'адрес-из-/p/': '#цвет' (кадр подстроится
      сам) или ['#цвет', размер] — свой размер вещи (доля высоты фото, 0 — как
-     на фото). Убрать пробу — стереть строки (или весь этот кусок). -->
+     на фото). Товары не из BG — на фоне DEF, без кадра. -->
 <style>
 /* фон — только под фото, углы острые */
 .t2y-bg .t-catalog__card__imgwrapper,
 .t2y-bg .t-store__card__imgwrapper,
 .t2y-bg .t2y-rel__img { background-color: var(--t2y-bg) !important; border-radius: 0 !important; }
-/* фото на белом — белое становится цветом фона */
-.t2y-bg .t-catalog__card__bgimg.js-product-img,
-.t2y-bg .t-store__card__bgimg.js-product-img,
+/* фото на белом — белое становится цветом фона; фото при наведении (на модели) — как есть */
+.t2y-bg .t-catalog__card__bgimg.js-product-img:not(.t-catalog__card__bgimg_second),
+.t2y-bg .t-store__card__bgimg.js-product-img:not(.t-store__card__bgimg_second),
 .t2y-bg .t2y-rel__img img:first-child,
-.t2y-bg .t2y-kadr { mix-blend-mode: multiply; }
+.t2y-bg .t2y-kadr { mix-blend-mode: darken; }
+/* страница товара: телефон (слайдер) и ПК (фото столбиком; колонку с текстом не трогаем) */
+.t780 .t-slds__imgwrapper, .t760__floatable:has(> .t760__img) { background-color: #F4F3EF; }
+.t780 .t-slds__bgimg, .t760__img { mix-blend-mode: darken; }
 /* единый кадр: размер и место вещи считает код */
 .t2y-kadr { background-size: var(--t2y-bs) !important; background-position: var(--t2y-bp) !important; }
 img.t2y-kadr {
@@ -1462,24 +1471,26 @@ img.t2y-kadr {
 </style>
 <script>
 (function () {
+  var DEF = '#F4F3EF';   // 01.11: фон главного фото у всех товаров
   // адрес из /p/ → цвет или [цвет, размер]: размер — доля высоты фото вместо
-  // обычной по виду вещи (KADR); 0 — вещь как на фото, без кадра
+  // обычной по виду вещи (KADR); 0 — вещь как на фото, без кадра. Эти товары
+  // ещё и в едином кадре (27–28.10); цвет у всех с 01.11 — DEF
   var BG = {
-    // «Костюмы»: первые три — цвет №1
-    'kostyum-shelk-vatanym':               '#F0ECEB',
-    'kostyum-povsednevnyy-vatanym':        '#F0ECEB',
-    'kostyum-vatanym-print':               '#F0ECEB',
-    // оставшиеся два — цвет №3; Winter tale — «увеличиваем примерно до полосок» (28.10)
-    'kostyum-sportivnyy-vatanym':          '#F7F7F7',
-    'kostyum-hlopkovyy-winter-tale-siniy': ['#F7F7F7', 0.89],
-    // олимпийка (толстовка на молнии) и брюки — цвет №1
-    'tolstovka-hlopkovaya-siniy':          '#F0ECEB',
-    'bryuki-sportivnye-siniy':             '#F0ECEB',
-    // 28.10: чёрная олимпийка Ватаным — на фон №2, «уменьшаем примерно так»
-    'olimpiyka-s-printom-vatanym-chernyy': ['#EBEBEB', 0.80],
-    // 28.10: копия «Олимпийки классической Space» (в названии «ТЕСТ») — на фон №4,
+    // «Костюмы»
+    'kostyum-shelk-vatanym':               DEF,
+    'kostyum-povsednevnyy-vatanym':        DEF,
+    'kostyum-vatanym-print':               DEF,
+    // Winter tale — «увеличиваем примерно до полосок» (28.10)
+    'kostyum-sportivnyy-vatanym':          DEF,
+    'kostyum-hlopkovyy-winter-tale-siniy': [DEF, 0.89],
+    // олимпийка (толстовка на молнии) и брюки
+    'tolstovka-hlopkovaya-siniy':          DEF,
+    'bryuki-sportivnye-siniy':             DEF,
+    // 28.10: чёрная олимпийка Ватаным — «уменьшаем примерно так»
+    'olimpiyka-s-printom-vatanym-chernyy': [DEF, 0.80],
+    // 28.10: копия «Олимпийки классической Space» (в названии «ТЕСТ») —
     // «масштаб не меняем». Строки для копий: 'адрес оригинала тест'
-    'olimpiyka-klassicheskaya-space-siniy тест': ['#F5F4EF', 0]
+    'olimpiyka-klassicheskaya-space-siniy тест': [DEF, 0]
   };
   // высота вещи — доля высоты фото (по названию или адресу товара);
   // ширина — не больше 84% фото, чтобы и по бокам оставался воздух
@@ -1629,13 +1640,13 @@ img.t2y-kadr {
       // фон и кадр оригинала им не даём; свои — строкой 'адрес оригинала тест'
       var name = txt(c.querySelector('.t-catalog__card__title, .t-store__card__title, .t2y-rel__name'));
       var v = BG[/тест|test/i.test(name) ? href.replace(/-test\d*$/, '') + ' тест' : href];
-      var col = v && (typeof v === 'string' ? v : v[0]);
+      var col = (v && (typeof v === 'string' ? v : v[0])) || DEF;
       var size = v && typeof v !== 'string' ? v[1] : undefined;
-      if (col && !c.classList.contains('t2y-bg')) {
+      if (!c.classList.contains('t2y-bg')) {
         c.style.setProperty('--t2y-bg', col);
         c.classList.add('t2y-bg');
       }
-      if (col || (ALL && href)) frame(c, href, size);
+      if (v || (ALL && href)) frame(c, href, size);
     });
   }
 
