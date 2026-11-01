@@ -34,9 +34,6 @@ COLOR_HEX = {"Синий": "#073763", "Белый": "#fffae5", "Чёрный": "
 PRIMARY = {"21260216": "Синий", "21260416": "Коричневый", "21260417": "Коричневый",
            "21260218": "Синий", "21260115": "Синий", "21260114": "Синий",
            "21260314": "Чёрный", "22130310": "Белый", "21090201": "Белый"}
-# у VA «Костюм повседневный Space» и «Костюм с шёлком Ватаным» (уже на сайте) с одним
-# артикулом 21260214 — новому даём свой, чтобы в заказах их не путать
-SKU_FIX = {454044: "21260214-2"}
 # опечатки в текстах VA
 TYPO = {"стрелкрй": "стрелкой", "Cиние": "Синие", "хопковые": "хлопковые"}
 
@@ -145,7 +142,7 @@ def plan():
         slug = base
         if seen[base] > 1 or base in site_slugs:
             slug = base + "-" + slugify(p["article"])
-        out.append(dict(id=p["id"], g=p["_g"], art=SKU_FIX.get(p["id"], p["article"]), name=p["name"].replace("  ", " ").strip(),
+        out.append(dict(id=p["id"], g=p["_g"], art=p["article"], name=p["name"].replace("  ", " ").strip(),
                         col=it["col"], slug=slug, cat=category(p),
                         price="%.2f" % float(p["priceNotDiscount"] or p["price"]),
                         va_price=p["price"], disc=p["discountPercent"],
