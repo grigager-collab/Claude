@@ -1,0 +1,610 @@
+<title>Страницы товаров 2YOUNG4U</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Tenor+Sans&display=swap">
+<style>
+/* Рабочий список: шапка с прогрессом → порядок работы → товары по разделам.
+   Товар раскрывается: слева поля для Tilda с кнопками «Копировать», справа — как тексты встанут на страницу. */
+:root {
+  --bg: #FFFFFF;
+  --panel: #F6F5F1;
+  --photo: #F4F3EF;
+  --ink: #1A1A18;
+  --muted: #6D6B65;
+  --line: #E5E2DA;
+  --accent: #23335A;
+  --accent-ink: #FFFFFF;
+  --ok: #2B7A4B;   --ok-bg: #E5F1E9;
+  --warn: #935600; --warn-bg: #FAEFD9;
+  --bad: #AE3528;  --bad-bg: #FAE8E4;
+  --font-display: "Tenor Sans", "Golos Text", Arial, sans-serif;
+  --font-body: "Golos Text", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131312; --panel: #1C1C1A; --photo: #2A2925; --ink: #ECEBE6; --muted: #A19F98; --line: #312F2B;
+    --accent: #AFC0E8; --accent-ink: #111A2E;
+    --ok: #79C998; --ok-bg: #1A2D21; --warn: #E8B262; --warn-bg: #33260E; --bad: #F18E80; --bad-bg: #3A1D19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131312; --panel: #1C1C1A; --photo: #2A2925; --ink: #ECEBE6; --muted: #A19F98; --line: #312F2B;
+  --accent: #AFC0E8; --accent-ink: #111A2E;
+  --ok: #79C998; --ok-bg: #1A2D21; --warn: #E8B262; --warn-bg: #33260E; --bad: #F18E80; --bad-bg: #3A1D19;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 400 15px/1.5 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 10; background: var(--bg);
+}
+.wrap {
+  max-width: 1100px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 72px;
+}
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+b { font-weight: 600; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button { font: inherit; color: inherit; }
+
+/* ── шапка ── */
+.top { display: grid; gap: 14px; padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-size: 12px; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0; font: 400 36px/1.1 var(--font-display); letter-spacing: .01em; text-wrap: balance; }
+.lead { margin: 0; max-width: 64ch; color: var(--muted); }
+.lead code { color: var(--ink); }
+.progress { display: grid; gap: 10px; margin-top: 6px; }
+.bar { display: flex; height: 6px; background: var(--line); overflow: hidden; border-radius: 1px; }
+.bar span { display: block; height: 100%; width: 0; }
+.bar .b-ok { background: var(--ok); }
+.bar .b-wait { background: var(--warn); }
+.bar .b-issue { background: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.legend b { color: var(--ink); }
+.dot { display: inline-block; width: 8px; height: 8px; margin-right: 7px; vertical-align: 1px; border-radius: 1px; background: var(--line); }
+.dot.ok { background: var(--ok); } .dot.wait { background: var(--warn); } .dot.issue { background: var(--bad); }
+.sync { font-size: 13px; color: var(--muted); min-height: 1.5em; }
+.sync:empty { display: none; }
+
+/* ── порядок работы ── */
+.howto { padding-block: 22px 8px; }
+.howto > details > summary {
+  cursor: pointer; list-style: none; display: flex; align-items: baseline; gap: 10px;
+  font: 400 22px/1.2 var(--font-display);
+}
+.howto > details > summary::-webkit-details-marker { display: none; }
+.howto > details > summary::after { content: "свернуть"; font: 400 13px var(--font-body); color: var(--muted); }
+.howto > details:not([open]) > summary::after { content: "показать"; }
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.stage { background: var(--panel); padding: 18px 18px 20px; display: grid; align-content: start; gap: 10px; min-width: 0; }
+.stage h3 { margin: 0; font: 600 13px/1.3 var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
+.stage p { margin: 0; font-size: 14px; }
+.stage ol { margin: 0; padding-left: 20px; display: grid; gap: 7px; font-size: 14px; }
+.stage ol li::marker { color: var(--muted); font-variant-numeric: tabular-nums; }
+.cb { display: inline-block; width: 13px; height: 13px; border: 1.5px solid var(--ink); border-radius: 2px; vertical-align: -1px; margin-right: 6px; position: relative; }
+.cb.on::after { content: ""; position: absolute; left: 3px; top: 0; width: 4px; height: 8px; border: solid var(--ink); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.stage-status { font-size: 13px; padding: 8px 10px; background: var(--bg); color: var(--muted); border-left: 2px solid var(--line); }
+.stage-status.ok { color: var(--ok); border-left-color: var(--ok); }
+.stage-status.issue { color: var(--bad); border-left-color: var(--bad); }
+
+/* ── фильтр ── */
+.tools {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); padding-block: 14px 12px; margin-top: 18px;
+  display: grid; gap: 10px; border-bottom: 1px solid var(--line);
+}
+.tools input {
+  width: 100%; max-width: 420px; padding: 10px 12px; font: inherit; color: var(--ink);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 2px;
+}
+.tools input:focus { border-color: var(--ink); outline: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  border: 1px solid var(--line); background: var(--bg); padding: 6px 11px; border-radius: 2px;
+  font-size: 13px; cursor: pointer; font-variant-numeric: tabular-nums;
+}
+.chip span { color: var(--muted); margin-left: 4px; }
+.chip.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip.on span { color: inherit; opacity: .7; }
+
+/* ── список ── */
+.grp { margin: 30px 0 4px; display: flex; gap: 10px; align-items: baseline; font: 600 12px/1.2 var(--font-body); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.grp span { font-weight: 400; letter-spacing: 0; }
+.item { border-bottom: 1px solid var(--line); scroll-margin-top: 130px; }
+@media (max-width: 560px) { .item { scroll-margin-top: 170px; } }
+.row {
+  width: 100%; display: grid; grid-template-columns: 60px minmax(0, 1fr) auto 18px; gap: 16px; align-items: center;
+  padding: 10px 0; background: none; border: 0; text-align: left; cursor: pointer;
+}
+.th { width: 60px; height: 80px; object-fit: cover; background: var(--photo); display: block; }
+.ttl { display: grid; gap: 3px; min-width: 0; }
+.nm { font: 400 17px/1.25 var(--font-display); }
+.meta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.st {
+  justify-self: end; font-size: 12px; font-weight: 500; padding: 5px 9px; border-radius: 2px; white-space: nowrap;
+  background: var(--panel); color: var(--muted);
+}
+.st.wait { background: var(--warn-bg); color: var(--warn); }
+.st.ok { background: var(--ok-bg); color: var(--ok); }
+.st.issue { background: var(--bad-bg); color: var(--bad); }
+.chev { width: 9px; height: 9px; border: solid var(--muted); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); justify-self: center; margin-top: -4px; }
+.row[aria-expanded="true"] .chev { transform: rotate(-135deg); margin-top: 4px; }
+@media (prefers-reduced-motion: no-preference) { .chev { transition: transform .15s ease; } }
+
+/* ── карточка товара ── */
+.det { padding: 4px 0 26px; }
+.cols { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 34px; }
+.f { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; padding: 12px 0; border-top: 1px solid var(--line); align-items: start; }
+.f:first-child { border-top: 0; }
+.lab { grid-column: 1 / -1; font-size: 12px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.lab .step { color: var(--ink); font-weight: 500; }
+.val { min-width: 0; overflow-wrap: anywhere; }
+.cnt { font-variant-numeric: tabular-nums; }
+.cp {
+  border: 1px solid var(--line); background: var(--bg); padding: 6px 12px; border-radius: 2px;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+}
+.cp:hover { border-color: var(--ink); }
+.cp.big { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); padding: 9px 16px; }
+.cp.done, .cp.big.done { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+.prodbox { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.prodbox img { width: 90px; height: 120px; object-fit: cover; background: var(--photo); flex: none; }
+.prodbox .pn { font: 400 16px/1.3 var(--font-display); }
+.prodbox .pm { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 4px; }
+.code { grid-column: 1 / -1; }
+.code summary { cursor: pointer; font-size: 13px; color: var(--muted); padding-top: 6px; }
+.code pre {
+  margin: 8px 0 0; padding: 12px; background: var(--panel); overflow-x: auto; max-height: 320px;
+  font: 400 12px/1.55 var(--font-mono); white-space: pre;
+}
+.done-row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding-top: 16px; border-top: 1px solid var(--line); }
+.done-row label { display: inline-flex; gap: 9px; align-items: center; font-weight: 500; cursor: pointer; }
+.done-row input { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; }
+.done-row label.off { opacity: .55; cursor: default; }
+.chk { font-size: 13px; color: var(--muted); }
+.chk.ok { color: var(--ok); } .chk.issue { color: var(--bad); }
+.live { font-size: 13px; margin-left: auto; }
+
+.pv { background: var(--panel); padding: 18px 20px 20px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.pv-h { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.crumbs { font-size: 12px; color: var(--muted); }
+.pv-short { border-left: 2px solid var(--accent); padding-left: 12px; }
+.pv-short .cap { display: block; font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+.pv-short p { margin: 0; }
+.acc { border-top: 1px solid var(--line); padding-top: 10px; }
+.acc h4 { margin: 0 0 6px; font: 400 15px/1.3 var(--font-display); }
+.acc p { margin: 0 0 4px; font-size: 14px; max-width: 62ch; }
+
+.empty { padding: 40px 0; color: var(--muted); }
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  background: var(--ink); color: var(--bg); padding: 10px 16px; font-size: 14px; border-radius: 2px;
+}
+
+@media (max-width: 900px) {
+  .stages { grid-template-columns: minmax(0, 1fr); }
+  .cols { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+}
+@media (max-width: 560px) {
+  h1 { font-size: 29px; }
+  .row { grid-template-columns: 48px minmax(0, 1fr) 14px; grid-template-areas: "th ttl chev" "th st chev"; gap: 4px 12px; }
+  .th { grid-area: th; width: 48px; height: 64px; }
+  .ttl { grid-area: ttl; }
+  .st { grid-area: st; justify-self: start; align-self: start; }
+  .chev { grid-area: chev; }
+  .nm { font-size: 16px; }
+  .f { grid-template-columns: minmax(0, 1fr); }
+  .cp { justify-self: start; }
+  .live { margin-left: 0; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">2YOUNG4U · импорт с VipAvenue от 01.11.2026</div>
+    <h1>Страницы товаров</h1>
+    <p class="lead">78 новых товаров: 64 мужских и 14 женских. Каждому нужна своя страница <code>/p/…</code>. Это копия шаблона «Костюм с шёлком Ватаным», в которой привязан этот товар и стоят его тексты.</p>
+    <div class="progress">
+      <div class="bar" aria-hidden="true"><span class="b-ok"></span><span class="b-wait"></span><span class="b-issue"></span></div>
+      <div class="legend">
+        <span><i class="dot ok"></i>Проверено <b id="nOk">0</b></span>
+        <span><i class="dot wait"></i>Сделано, ждёт проверки <b id="nWait">0</b></span>
+        <span><i class="dot issue"></i>Есть замечание <b id="nIssue">0</b></span>
+        <span><i class="dot"></i>Не сделано <b id="nLeft">78</b></span>
+      </div>
+      <div class="sync" id="sync">Загружаю отметки…</div>
+    </div>
+  </header>
+
+  <section class="howto">
+    <details id="howto" open>
+      <summary>Порядок работы</summary>
+      <div class="stages">
+        <div class="stage">
+          <h3>Один раз, до первой страницы</h3>
+          <p>Загрузить короткие описания в каталог, файл <code>import-kratkie-opisaniya.csv</code>. Текст под «В корзину» Tilda берёт из каталога только в момент привязки товара, поэтому сначала импорт, потом страницы.</p>
+          <ol>
+            <li>«Каталог товаров» → «Импорт» → CSV → этот файл.</li>
+            <li>«Группировка вариантов товара» → <b>«Группировать по Parent UID»</b>.</li>
+            <li><span class="cb on"></span>«Обновить только существующие товары и не создавать новые».</li>
+            <li><span class="cb"></span>«Заменить имеющиеся изображения у обновлённых товаров» — <b>не ставить</b>. «Заменить только выбранные табы» — тоже.</li>
+          </ol>
+          <div class="stage-status" id="st-import">Ещё не загружены. После загрузки напиши — проверю.</div>
+        </div>
+        <div class="stage">
+          <h3>На каждый товар, минуты три</h3>
+          <ol>
+            <li>Список страниц → «Костюм с шёлком Ватаным» → «Дублировать».</li>
+            <li>«Настройки» копии. «Главное»: заголовок и адрес страницы. «SEO» → «Настроить отображение в поисковой выдаче»: заголовок и описание; там же снять «Запретить поисковикам индексировать страницу». «Сохранить».</li>
+            <li>«Редактировать». Карточка для ПК (T760) → «Контент» → выбрать товар. То же в карточке для телефона (T780). Одинаковых названий много, сверяйся с фото, ценой и артикулом.</li>
+            <li>Под карточкой — HTML-блок с текстом про шёлковый костюм («…вышитым гербом Татарстана»). «Контент» → стереть весь код → вставить «Блок текстов» → «Сохранить». Второй текстовый блок, про молочную олимпийку, не трогать.</li>
+            <li>«Опубликовать» и отметить здесь «Сделано».</li>
+          </ol>
+        </div>
+        <div class="stage">
+          <h3>Когда страницы готовы</h3>
+          <p>Напиши «проверяй». Открою каждую страницу на сайте и отмечу здесь «Проверено» или замечание. Проверять можно и частями.</p>
+          <p>В конце пришлю файл со ссылками. После него карточки в каталоге будут открывать новые страницы, а не стандартное окно Tilda.</p>
+          <div class="stage-status" id="st-links">Ссылки в каталоге ещё старые.</div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <div class="tools" role="search">
+    <input id="q" type="search" placeholder="Название, цвет или артикул" aria-label="Поиск по товарам" autocomplete="off">
+    <div class="chips" id="chips">
+      <button class="chip on" data-f="all">Все <span id="c-all">78</span></button>
+      <button class="chip" data-f="m">Мужское <span id="c-m">64</span></button>
+      <button class="chip" data-f="w">Женское <span id="c-w">14</span></button>
+      <button class="chip" data-f="left">Не сделаны <span id="c-left">78</span></button>
+      <button class="chip" data-f="wait">Ждут проверки <span id="c-wait">0</span></button>
+      <button class="chip" data-f="issue">Замечания <span id="c-issue">0</span></button>
+    </div>
+  </div>
+
+  <main id="list"></main>
+  <div class="empty" id="empty" hidden>Ничего не нашлось. Попробуйте артикул, например 21260212.</div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="application/json" id="data">/*DATA*/</script>
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('data').textContent);
+  var BY = {};
+  DATA.forEach(function (d) { BY[d.s] = d; });
+  var S = { made: {}, check: {}, meta: {}, f: 'all', q: '' };
+  var db = null, canWrite = null, pending = {};
+  var $ = function (id) { return document.getElementById(id); };
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function rub(v) { var n = Math.round(parseFloat(v)); return isNaN(n) ? '' : n.toLocaleString('ru-RU') + ' ₽'; }
+  function norm(s) { return String(s || '').toLowerCase().replace(/ё/g, 'е'); }
+  function when(iso) {
+    try { return new Date(iso).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }); }
+    catch (e) { return ''; }
+  }
+  function priceLine(d) {
+    return rub(d.pr) + (d.old ? ' (было ' + rub(d.old) + ')' : '');
+  }
+
+  // статус: проверено / замечание / ждёт проверки / не сделано
+  function status(slug) {
+    var m = S.made[slug], c = S.check[slug];
+    var made = !!(m && m.made);
+    if (made && (!c || String(c.at || '') < String(m.at || ''))) return 'wait';
+    if (c && c.state === 'ok') return 'ok';
+    if (c && c.state === 'issue') return 'issue';
+    return made ? 'wait' : 'left';
+  }
+  var ST_TEXT = { left: 'Не сделано', wait: 'Ждёт проверки', ok: 'Проверено', issue: 'Есть замечание' };
+
+  // ── список ──
+  var list = $('list'), rows = {}, groups = [];
+  (function build() {
+    var cur = null, gEl = null, cnt = 0;
+    DATA.forEach(function (d) {
+      var key = d.g + ' · ' + d.sec;
+      if (key !== cur) {
+        if (gEl) gEl.querySelector('span').textContent = cnt;
+        cur = key; cnt = 0;
+        gEl = el('h2', 'grp', key + ' ');
+        gEl.appendChild(el('span', '', ''));
+        gEl._items = [];
+        groups.push(gEl);
+        list.appendChild(gEl);
+      }
+      cnt++;
+      var it = el('article', 'item'); it.id = d.s;
+      var row = el('button', 'row'); row.type = 'button'; row.setAttribute('aria-expanded', 'false');
+      var img = el('img', 'th'); img.src = d.th; img.alt = ''; img.width = 60; img.height = 80; img.loading = 'lazy';
+      var ttl = el('span', 'ttl');
+      ttl.appendChild(el('span', 'nm', d.n));
+      var meta = el('span', 'meta');
+      meta.appendChild(document.createTextNode(d.c + ' · '));
+      meta.appendChild(el('span', 'mono', d.a));
+      meta.appendChild(document.createTextNode(' · ' + priceLine(d)));
+      ttl.appendChild(meta);
+      var st = el('span', 'st', ST_TEXT.left);
+      row.appendChild(img); row.appendChild(ttl); row.appendChild(st); row.appendChild(el('span', 'chev'));
+      var det = el('div', 'det'); det.hidden = true;
+      it.appendChild(row); it.appendChild(det);
+      row.addEventListener('click', function () { toggle(d.s); });
+      list.appendChild(it);
+      gEl._items.push(it);
+      rows[d.s] = { it: it, row: row, st: st, det: det, built: false, text: norm([d.n, d.c, d.a, d.s, d.sec, d.g].join(' ')) };
+    });
+    if (gEl) gEl.querySelector('span').textContent = cnt;
+  })();
+
+  function field(lab, value, copyText, opts) {
+    opts = opts || {};
+    var f = el('div', 'f');
+    var l = el('div', 'lab');
+    if (opts.step) l.appendChild(el('span', 'step', opts.step));
+    l.appendChild(el('span', '', lab));
+    if (opts.count) l.appendChild(el('span', 'cnt', value.length + ' зн.'));
+    f.appendChild(l);
+    var v = el('div', 'val' + (opts.mono ? ' mono' : ''), value);
+    f.appendChild(v);
+    var b = el('button', 'cp', opts.btn || 'Копировать'); b.type = 'button';
+    b.addEventListener('click', function () { copy(b, copyText == null ? value : copyText, v); });
+    f.appendChild(b);
+    return f;
+  }
+
+  function buildDetail(d) {
+    var r = rows[d.s], det = r.det;
+    var cols = el('div', 'cols');
+    var left = el('div', 'fields');
+    left.appendChild(field('Главное → Заголовок', d.pt, null, { step: 'Шаг 2' }));
+    left.appendChild(field('Главное → Адрес страницы', 'p/' + d.s, null, { step: 'Шаг 2', mono: true }));
+    left.appendChild(field('SEO → Заголовок', d.st, null, { step: 'Шаг 2', count: true }));
+    left.appendChild(field('SEO → Описание', d.sd, null, { step: 'Шаг 2', count: true }));
+
+    var pf = el('div', 'f');
+    var pl = el('div', 'lab'); pl.appendChild(el('span', 'step', 'Шаг 3')); pl.appendChild(el('span', '', 'Товар, который привязать в T760 и T780'));
+    pf.appendChild(pl);
+    var box = el('div', 'prodbox');
+    var bi = el('img'); bi.src = d.th; bi.alt = d.n + ', ' + d.c.toLowerCase(); bi.width = 90; bi.height = 120;
+    var bt = el('div');
+    bt.appendChild(el('div', 'pn', d.n));
+    var pm = el('div', 'pm');
+    pm.appendChild(document.createTextNode(d.c + ' · артикул '));
+    pm.appendChild(el('span', 'mono', d.a));
+    pm.appendChild(document.createElement('br'));
+    pm.appendChild(document.createTextNode(priceLine(d) + ' · ' + d.g + ' → ' + d.sec));
+    bt.appendChild(pm);
+    box.appendChild(bi); box.appendChild(bt);
+    pf.appendChild(box);
+    var pb = el('button', 'cp', 'Копировать артикул'); pb.type = 'button';
+    pb.addEventListener('click', function () { copy(pb, d.a, pm); });
+    pf.appendChild(pb);
+    left.appendChild(pf);
+
+    var cf = el('div', 'f');
+    var cl = el('div', 'lab'); cl.appendChild(el('span', 'step', 'Шаг 4')); cl.appendChild(el('span', '', 'Блок текстов: аккордеоны и хлебные крошки'));
+    cf.appendChild(cl);
+    cf.appendChild(el('div', 'val', 'Весь код из HTML-блока стереть и вставить этот.'));
+    var cb = el('button', 'cp big', 'Копировать блок'); cb.type = 'button';
+    var code = el('details', 'code');
+    code.appendChild(el('summary', '', 'Показать код'));
+    var pre = el('pre', '', d.b);
+    code.appendChild(pre);
+    cb.addEventListener('click', function () { copy(cb, d.b, pre, code); });
+    cf.appendChild(cb);
+    cf.appendChild(code);
+    left.appendChild(cf);
+
+    var dr = el('div', 'done-row');
+    var lab = el('label');
+    var box2 = el('input'); box2.type = 'checkbox'; box2.id = 'made-' + d.s;
+    lab.appendChild(box2); lab.appendChild(document.createTextNode('Сделано и опубликовано'));
+    box2.addEventListener('change', function () { setMade(d.s, box2.checked, box2); });
+    dr.appendChild(lab);
+    var chk = el('span', 'chk'); dr.appendChild(chk);
+    var a = el('a', 'live', 'Открыть на сайте ↗'); a.href = 'https://2young4u.ru/p/' + d.s; a.target = '_blank'; a.rel = 'noopener';
+    dr.appendChild(a);
+    left.appendChild(dr);
+    r.box = box2; r.lab = lab; r.chk = chk;
+
+    var pv = el('div', 'pv');
+    pv.appendChild(el('div', 'pv-h', 'Так будет на странице'));
+    var crumbs = el('div', 'crumbs', 'Главная / ' + d.g + ' / ' + d.sec);
+    pv.appendChild(crumbs);
+    var sh = el('div', 'pv-short');
+    sh.appendChild(el('span', 'cap', 'Под кнопкой «В корзину» (придёт из каталога после импорта)'));
+    sh.appendChild(el('p', '', d.sh));
+    pv.appendChild(sh);
+    d.x.forEach(function (sec) {
+      var acc = el('div', 'acc');
+      acc.appendChild(el('h4', '', sec[0]));
+      sec[1].forEach(function (p) { acc.appendChild(el('p', '', p)); });
+      pv.appendChild(acc);
+    });
+
+    cols.appendChild(left); cols.appendChild(pv);
+    det.appendChild(cols);
+    r.built = true;
+    paintRow(d.s);
+  }
+
+  function toggle(slug, forceOpen) {
+    var r = rows[slug]; if (!r) return;
+    var open = forceOpen != null ? forceOpen : r.det.hidden;
+    if (open && !r.built) buildDetail(BY[slug]);
+    r.det.hidden = !open;
+    r.row.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  // ── копирование ──
+  var toastT;
+  function toast(t) {
+    var e = $('toast'); e.textContent = t; e.hidden = false;
+    clearTimeout(toastT); toastT = setTimeout(function () { e.hidden = true; }, 2600);
+  }
+  function selectEl(node, details) {
+    if (details) details.open = true;
+    try { var s = window.getSelection(); s.removeAllRanges(); var rg = document.createRange(); rg.selectNodeContents(node); s.addRange(rg); } catch (e) {}
+  }
+  function copy(btn, text, node, details) {
+    var label = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', label);
+    function ok() {
+      btn.textContent = 'Скопировано'; btn.classList.add('done');
+      clearTimeout(btn._t); btn._t = setTimeout(function () { btn.textContent = label; btn.classList.remove('done'); }, 1600);
+    }
+    function fail() { selectEl(node, details); toast('Текст выделен — нажмите Ctrl+C (на Mac ⌘C)'); }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, fail);
+      else fail();
+    } catch (e) { fail(); }
+  }
+
+  // ── отрисовка статусов ──
+  function paintRow(slug) {
+    var r = rows[slug], s = status(slug);
+    r.st.className = 'st ' + s; r.st.textContent = ST_TEXT[s];
+    r.status = s;
+    if (r.built) {
+      var m = S.made[slug], c = S.check[slug];
+      r.box.checked = !!(m && m.made);
+      var off = !db || canWrite === false;
+      r.box.disabled = off || !!pending[slug];
+      r.lab.className = off ? 'off' : '';
+      if (c && c.state && !(s === 'wait' && m && m.made && String(c.at || '') < String(m.at || ''))) {
+        r.chk.className = 'chk ' + (c.state === 'ok' ? 'ok' : 'issue');
+        r.chk.textContent = (c.state === 'ok' ? 'Проверено на сайте' : 'Замечание: ' + (c.note || 'см. сообщение')) + (c.at ? ', ' + when(c.at) : '');
+      } else if (s === 'wait') {
+        r.chk.className = 'chk'; r.chk.textContent = 'Отмечено ' + (m && m.at ? when(m.at) : '') + ' — жду «проверяй»';
+      } else {
+        r.chk.className = 'chk'; r.chk.textContent = '';
+      }
+    }
+  }
+  function paintMeta() {
+    var a = S.meta['import'], b = S.meta['links'];
+    var ei = $('st-import'), el2 = $('st-links');
+    if (a && a.state) { ei.className = 'stage-status ' + (a.state === 'ok' ? 'ok' : 'issue'); ei.textContent = (a.note || (a.state === 'ok' ? 'Короткие описания в каталоге — проверено' : 'Есть замечание')) + (a.at ? ', ' + when(a.at) : '') + '.'; }
+    if (b && b.state) { el2.className = 'stage-status ' + (b.state === 'ok' ? 'ok' : 'issue'); el2.textContent = (b.note || (b.state === 'ok' ? 'Ссылки на страницы стоят — проверено' : 'Есть замечание')) + (b.at ? ', ' + when(b.at) : '') + '.'; }
+  }
+  function refresh() {
+    var n = { ok: 0, wait: 0, issue: 0, left: 0 };
+    DATA.forEach(function (d) { paintRow(d.s); n[rows[d.s].status]++; });
+    $('nOk').textContent = n.ok; $('nWait').textContent = n.wait; $('nIssue').textContent = n.issue; $('nLeft').textContent = n.left;
+    $('c-left').textContent = n.left; $('c-wait').textContent = n.wait; $('c-issue').textContent = n.issue;
+    var t = DATA.length, bar = document.querySelector('.bar');
+    bar.querySelector('.b-ok').style.width = (100 * n.ok / t) + '%';
+    bar.querySelector('.b-wait').style.width = (100 * n.wait / t) + '%';
+    bar.querySelector('.b-issue').style.width = (100 * n.issue / t) + '%';
+    paintMeta();
+    applyFilter();
+  }
+
+  // ── фильтр и поиск ──
+  function applyFilter() {
+    var q = norm(S.q).trim(), shown = 0;
+    DATA.forEach(function (d) {
+      var r = rows[d.s], ok = true;
+      if (S.f === 'm') ok = d.g === 'Мужское';
+      else if (S.f === 'w') ok = d.g === 'Женское';
+      else if (S.f === 'left' || S.f === 'wait' || S.f === 'issue') ok = r.status === S.f;
+      if (ok && q) ok = q.split(/\s+/).every(function (w) { return r.text.indexOf(w) >= 0; });
+      r.it.hidden = !ok;
+      if (ok) shown++;
+    });
+    groups.forEach(function (g) { g.hidden = !g._items.some(function (it) { return !it.hidden; }); });
+    $('empty').hidden = shown > 0;
+  }
+  $('chips').addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    S.f = b.getAttribute('data-f');
+    Array.prototype.forEach.call(this.children, function (c) { c.classList.toggle('on', c === b); });
+    applyFilter();
+  });
+  $('q').addEventListener('input', function () { S.q = this.value; applyFilter(); });
+
+  // ── «Порядок работы» свёрнут или нет — запоминаем в этом браузере ──
+  var how = $('howto');
+  try { if (localStorage.getItem('pult-howto') === 'closed') how.open = false; } catch (e) {}
+  how.addEventListener('toggle', function () { try { localStorage.setItem('pult-howto', how.open ? 'open' : 'closed'); } catch (e) {} });
+
+  // ── ссылка вида …#адрес-товара открывает его карточку ──
+  function fromHash() {
+    var h = decodeURIComponent((location.hash || '').slice(1));
+    if (h && rows[h]) { toggle(h, true); rows[h].it.scrollIntoView({ block: 'start' }); }
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+
+  // ── отметки: «Сделано» ставит Григорий, «Проверено» и замечания — Claude ──
+  function setSync(t) { $('sync').textContent = t; }
+  function setMade(slug, val, box) {
+    if (!db || pending[slug]) { box.checked = !val; return; }
+    pending[slug] = true; box.disabled = true;
+    db.doc('made/' + slug).set({ made: val, at: new Date().toISOString() }).then(function () {
+      pending[slug] = false; paintRow(slug);
+    }, function (e) {
+      pending[slug] = false; box.checked = !val;
+      if (e && e.code === 'invalid_argument') { canWrite = false; setSync('Отмечать «Сделано» может владелец пульта. Остальным он виден только для просмотра.'); refresh(); }
+      else { toast('Отметка не сохранилась. Попробуйте ещё раз.'); paintRow(slug); }
+    });
+  }
+  refresh();
+
+  (async function connect() {
+    var timer = setTimeout(function () { setSync('Отметки пока не загрузились. Как только связь появится, они встанут сами.'); }, 10000);
+    var d = null;
+    try { d = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch (e) { d = null; }
+    if (!d) {
+      clearTimeout(timer);
+      setSync('Отметки «Сделано» и «Проверено» работают, когда пульт открыт в claude.ai под вашим входом.');
+      refresh();
+      return;
+    }
+    db = d;
+    try {
+      var u = await window.claude.use('user');
+      if (u) { var w = await u.can('data.write'); if (w === false) canWrite = false; }
+    } catch (e) {}
+    if (canWrite === false) setSync('Пульт открыт только для просмотра: отметки видны, ставить их нельзя.');
+    var live = { made: false, check: false, meta: false };
+    function listen(name) {
+      db.collection(name).onSnapshot(function (snap) {
+        var m = {};
+        snap.docs.forEach(function (x) { if (x.exists) m[x.id] = x.data(); });
+        S[name] = m;
+        if (!snap.metadata.fromCache && !live[name]) {
+          live[name] = true;
+          if (live.made && live.check && live.meta) { clearTimeout(timer); if (canWrite !== false) setSync(''); }
+        }
+        refresh();
+      }, function (e) {
+        clearTimeout(timer);
+        setSync('Отметки не загрузились (' + (e && e.code || 'ошибка') + '). Обновите страницу позже.');
+      });
+    }
+    listen('made'); listen('check'); listen('meta');
+  })();
+})();
+</script>
