@@ -19,7 +19,7 @@ def sheet(items, out, title):
     for k, it in enumerate(items):
         im = Image.open(os.path.join(dst, 'foto1', it['slug'] + '.jpg')).convert('RGB'); im.thumbnail((TW, TH))
         x = 12 + (k % cols) * (TW + 12); y = 50 + (k // cols) * (TH + 66); S.paste(im, (x, y))
-        price = int(float(it['price'])); disc = (' (VA −%d%%)' % it['disc']) if it['disc'] else ''
+        price = int(float(it['price'])); disc = (' (−%d%%)' % it['disc']) if it['disc'] else ''
         d.text((x, y + TH + 4), fit(d, it['name'], FB, TW), font=FB, fill=(0, 0, 0))
         d.text((x, y + TH + 22), fit(d, '%s · %s ₽%s' % (it['art'], format(price, ',').replace(',', ' '), disc), F, TW), font=F, fill=(0, 0, 0))
         d.text((x, y + TH + 40), fit(d, sub(it['cat']) + (' · Ватаным' if it['capsule'] else ''), F, TW), font=F, fill=(120, 120, 120))

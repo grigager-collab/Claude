@@ -34,6 +34,8 @@ COLOR_HEX = {"Синий": "#073763", "Белый": "#fffae5", "Чёрный": "
 PRIMARY = {"21260216": "Синий", "21260416": "Коричневый", "21260417": "Коричневый",
            "21260218": "Синий", "21260115": "Синий", "21260114": "Синий",
            "21260314": "Чёрный", "22130310": "Белый", "21090201": "Белый"}
+# свои артикулы вместо VA (Кристина, 01.11): вторые тёмно-синие брюки со стрелкой — коллекция 22
+ART_FIX = {503677: "22270202"}   # на VA «Брюки хлопковые Space» 21260202-2
 # опечатки в текстах VA
 TYPO = {"стрелкрй": "стрелкой", "Cиние": "Синие", "хопковые": "хлопковые"}
 
@@ -139,12 +141,14 @@ def plan():
     out = []
     for it in items:
         p, base = it["p"], it["base"]
+        art = ART_FIX.get(p["id"], p["article"])
         slug = base
         if seen[base] > 1 or base in site_slugs:
-            slug = base + "-" + slugify(p["article"])
-        out.append(dict(id=p["id"], g=p["_g"], art=p["article"], name=p["name"].replace("  ", " ").strip(),
+            slug = base + "-" + slugify(art)
+        out.append(dict(id=p["id"], g=p["_g"], art=art, name=p["name"].replace("  ", " ").strip(),
                         col=it["col"], slug=slug, cat=category(p),
-                        price="%.2f" % float(p["priceNotDiscount"] or p["price"]),
+                        price="%.2f" % float(p["price"]),
+                        old="%.2f" % float(p["priceNotDiscount"]) if p["discountPercent"] else "",
                         va_price=p["price"], disc=p["discountPercent"],
                         text=text_of(p), mat=material(p.get("consist") or ""),
                         lin=lining(p.get("consist") or ""), style=style(p),
@@ -214,7 +218,7 @@ def build_csv(dst, base_url, out_csv):
         for s in SIZES:
             v = {k: "" for k in HEADER}
             v.update({"SKU": it["art"], "Title": "%s - %s - %s" % (it["name"], s, it["col"]),
-                      "Price": it["price"], "Quantity": str(QTY),
+                      "Price": it["price"], "Price Old": it["old"], "Quantity": str(QTY),
                       "Editions": "Размер:%s;Цвет:%s %s" % (s, it["col"], hexv),
                       "External ID": "%s-%s" % (it["slug"], s.lower()), "Parent UID": it["slug"]})
             for d in ("Weight", "Length", "Width", "Height"):
