@@ -229,3 +229,46 @@ A('- снят ли запрет индексации;')
 A('- подписи картинок в коде страниц.')
 open(OUT, 'w', encoding='utf-8').write('\n'.join(L) + '\n')
 print('ok', len(MAIN), len(PROD), n_alt)
+
+# ── данные для пульта (ручная работа) ──
+import base64, io
+from PIL import Image
+items_img = json.load(open('/tmp/claude-0/-home-user-Claude/0735b4a8-104d-56a2-b7c5-8c1310af3459/scratchpad/seo/img/items.json'))
+thumb = {}
+for n, (pg, rec, typ, src) in enumerate(items_img, 1):
+    f = src.rsplit('/', 1)[-1]
+    try:
+        im = Image.open('/tmp/claude-0/-home-user-Claude/0735b4a8-104d-56a2-b7c5-8c1310af3459/scratchpad/seo/img/%02d.bin' % n).convert('RGB')
+        im.thumbnail((150, 150)); b = io.BytesIO(); im.save(b, 'JPEG', quality=72, optimize=True)
+        thumb[(pg, f)] = 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
+    except Exception:
+        pass
+def key(p):
+    return 'home' if p == '/' else p.strip('/').replace('/', '-')
+pages = []
+names = {'/': 'Главная', '/aboutus': 'О бренде', '/vatanym': 'Капсула Ватаным'}
+for p in MAIN:
+    t, d = T[p]
+    g = 'main' if p in ('/', '/aboutus', '/vatanym') else 'catalog'
+    alts = []
+    for page, rec, typ, nm, rows in ALTS:
+        if page == p:
+            for k, (f, a) in enumerate(rows, 1):
+                alts.append(dict(block='%s · %s' % (typ, nm), rec=rec, n=k, file=f, alt=a, th=thumb.get((p, f), '')))
+    pages.append(dict(key=key(p), group=g, url=p, now=ALT[p]['title'], seo=[t, d], index=None, alts=alts))
+for p in ['/shop', '/women/blazers', '/women/sets']:
+    pages.append(dict(key=key(p), group='close', url=p, now=ALT[p]['title'], seo=None, index='add', alts=[],
+                      note={'/shop': 'Старая страница «Каталог», в меню её нет. Если точно не нужна — можно снять с публикации.',
+                            '/women/blazers': 'Женских пиджаков нет, раздел пустой. Пункт «Мягкие пиджаки» убрать из женского меню: бургер и выпадающий список «Женское» на ПК.',
+                            '/women/sets': 'Раздел пустой. Убрать из женского меню, если там есть.'}[p]))
+for p in PROD:
+    t, d = T[p]
+    pages.append(dict(key=key(p), group='product', url=p, now=ALT[p]['title'], seo=[t, d], index='remove', alts=[]))
+hdr = [('1778509606390000002', 'логотип', '2YOUNG4U'), ('1778509841334', 'второй логотип (знак)', '2YOUNG4U'),
+       ('1777824626860000002', 'бургер-меню', 'Меню'), ('1777829674577000010', 'лупа', 'Поиск'),
+       ('1777829642192000006', 'сердечко', 'Избранное'), ('1777829627863000004', 'сумка', 'Корзина'),
+       ('1777829659859000008', 'личный кабинет (скрыт)', 'Личный кабинет')]
+pages.append(dict(key='shapka', group='header', url='Шапка 1.1', now='Шапка 1.1', seo=None, index=None,
+                  alts=[dict(block='Zero-блок · rec2498768581', rec='2498768581', n=k, file='элемент ' + e + ' — ' + w, alt=a, th='') for k, (e, w, a) in enumerate(hdr, 1)]))
+json.dump(pages, open('data.json', 'w', encoding='utf-8'), ensure_ascii=False)
+print('страниц в пульте:', len(pages), '| alt с миниатюрой:', sum(1 for x in pages for a in x['alts'] if a['th']))
