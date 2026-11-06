@@ -23,14 +23,42 @@ assert moved.count('<style') == moved.count('<style>') == 13
 moved = moved.replace('<style>', '<style data-t2y-head>')
 anchor = marker.replace('<script>', '<script id="t2y-head-anchor">', 1)
 
+# Добавлено после публикации 06.11: на /tproduct/ теперь видна страница, а на ней только HEAD (шапки нет).
+TPRODUCT = '''<style>
+/* Список характеристик под описанием товара («Основной материал: …», «Сезон: …», «Коллекция: …»)
+   в попапе каталога и на /tproduct/ не показываем: это свойства для фильтров, «Коллекция» —
+   скрытое. На страницах товаров /p/ такого списка и так нет. */
+.js-catalog-prod-all-charcs,
+.js-store-prod-all-charcs { display: none !important; }
+</style>
+<script>
+/* /tproduct/ — стандартная страница товара Tilda. «Шапки» с нашим кодом на ней нет,
+   поэтому «BUY NOW» → «В корзину» — здесь. */
+(function () {
+  if (location.pathname.indexOf('/tproduct/') === -1) return;
+  function fix() {
+    var l = document.querySelectorAll('.js-catalog-prod-popup-buy-btn-txt, .js-store-prod-popup-buy-btn-txt');
+    for (var i = 0; i < l.length; i++) {
+      if (/buy\s*now/i.test(l[i].textContent)) l[i].textContent = 'В корзину';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', fix);
+  window.addEventListener('load', fix);
+  var n = 0, t = setInterval(function () { fix(); if (++n > 30) clearInterval(t); }, 300);
+})();
+</script>
+'''
+
 NEW_HEAD = '''<!-- ═══ 2young4u.ru — КОД HEAD, 06.11.2026 ═══
-     Здесь только пометка страниц карточек: она должна сработать до отрисовки.
+     Здесь пометка страниц карточек: она должна сработать до отрисовки.
      Весь остальной общий код — в блоке «HTML-код», первом в «Шапке 1.1»
      (в репозитории head/HEAD-v-shapke-T123.html).
      HEAD не раздувать: на страницах /tproduct/ Tilda обрезает его после ~46 тыс. знаков,
      и страница товара открывается пустой.
-     id="t2y-head-anchor" не убирать: к этому месту блок из «Шапки» возвращает свои стили. -->
-''' + anchor + '\n'
+     id="t2y-head-anchor" не убирать: к этому месту блок из «Шапки» возвращает свои стили.
+     Ещё здесь — то, что нужно и на /tproduct/ (там нет шапки): скрыть список
+     характеристик и «BUY NOW» → «В корзину». Якорь — последним. -->
+''' + TPRODUCT + anchor + '\n'
 
 SWATCH = '''
 <!-- ══════════ ЦВЕТ В ПОПАПЕ КАТАЛОГА — КВАДРАТ 56×56 (06.11.2026) ══════════ -->
