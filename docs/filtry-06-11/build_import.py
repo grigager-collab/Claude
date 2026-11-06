@@ -14,6 +14,15 @@ HEAD = (['Brand', 'SKU', 'Mark', 'Category', 'Title', 'Description', 'Text', 'Ph
          'Modifications', 'External ID', 'Parent UID'] + ['Characteristics:' + k for k in CHARS] + ['Weight', 'Length', 'Width', 'Height'])
 n = lambda s: str(s or '').replace(' ', '').replace('\xa0', '')
 colour = lambda v: re.sub(r'\s*#[0-9a-fA-F]{6}$', '', v)
+
+
+def colour_value(p, name):
+    """Цвет варианта так, как он записан в Tilda: «Коричневый #6b4423».
+    API отдаёт у варианта цвет без кода («Коричневый»); если в файле написать так,
+    импорт добавит товару второе значение цвета без кода (так случилось 06.11 у 75 товаров).
+    Берём первое значение из набора опций товара с тем же названием — исходное, с кодом."""
+    vals = next((o['values'] for o in json.loads(p.get('json_options') or '[]') if o.get('title') == 'Цвет'), [])
+    return next((v for v in vals if colour(v) == name), name)
 rows, report = [], []
 for p in sorted(A, key=lambda p: p['title']):
     ext = p['externalid']
@@ -31,7 +40,7 @@ for p in sorted(A, key=lambda p: p['title']):
         v = {h: '' for h in HEAD}
         v.update({'SKU': e['sku'], 'Title': '%s - %s - %s' % (p['title'], e['Размер'], colour(e['Цвет'])), 'Photo': e['img'],
                   'Price': n(e['price']), 'Quantity': n(e['quantity']), 'Price Old': n(e['priceold']),
-                  'Editions': 'Размер:%s;Цвет:%s' % (e['Размер'], e['Цвет']), 'External ID': e['externalid'], 'Parent UID': ext,
+                  'Editions': 'Размер:%s;Цвет:%s' % (e['Размер'], colour_value(p, e['Цвет'])), 'External ID': e['externalid'], 'Parent UID': ext,
                   'Weight': '0', 'Length': '0', 'Width': '0', 'Height': '0'})
         rows.append(v)
     report.append((sku(p), p['title'], cats, t, why))
