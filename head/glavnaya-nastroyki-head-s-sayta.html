@@ -1,0 +1,126 @@
+<!-- Копия с сайта 06.11.2026: код из настроек ГЛАВНОЙ страницы («Настройки» → «HTML-код для HEAD»).
+     Добавлен не Claude этой сессии (в репозитории его не было): шапка прячется при прокрутке вниз
+     и возвращается при прокрутке вверх, прозрачная шапка поверх первого блока, заголовки секций.
+     Действует только на главной. -->
+<!-- Главная: шапка прячется при прокрутке вниз и возвращается при прокрутке вверх (как на dior.com).
+     Шапка общая для всего сайта, поэтому код лежит в настройках ЭТОЙ страницы и больше нигде не действует.
+     Шапка — два независимо закреплённых (position: fixed) элемента, двигаем оба вместе:
+       • артборд Zero-блока #rec2498768581 (логотип, пункты меню, иконки);
+       • кнопка бургера T450 #rec2501340841 (видна до 640px).
+     Сдвиг — transform на самих fixed-элементах: место на странице шапка не занимает, контент не прыгает.
+     Вместе со сдвигом шапка гаснет (opacity 1 → 0) и так же проявляется обратно — один переход на оба свойства.
+     Выпадающие меню «Мужское»/«Женское» (T1093) этим кодом не затрагиваются: они открываются по наведению
+     на ссылки шапки, пока она видна; при открытом меню Tilda блокирует прокрутку, и шапка не прячется. --> <style>
+#rec2498768581 .t396__artboard,
+#rec2501340841 .t450__menu__content {
+  transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+}
+html.t2y-hdr-hidden #rec2498768581 .t396__artboard,
+html.t2y-hdr-hidden #rec2501340841 .t450__menu__content {
+  transform: translateY(calc(-1 * var(--t2y-hdr-shift, 120px)));
+  opacity: 0;
+  pointer-events: none;   /* уезжающая/невидимая шапка не перехватывает клики по контенту */
+}
+@media (prefers-reduced-motion: reduce) {
+  #rec2498768581 .t396__artboard,
+  #rec2501340841 .t450__menu__content { transition: none; }
+}
+
+/* Главная: заголовки секций на десктопе («Выберите у нас», «Конструктор образа», «Женский костюм в деловом стиле»)
+   собирает свой скрипт сайта (HTML-блок «полосы»), там им задан font-weight: 600 — синтетический жирный у Tenor.
+   Приводим к начертанию образца «Костюмы для города» (Tenor Sans Regular). Селектор сильнее исходного .t2y-strip__head. */
+.t2y-strip .t2y-strip__head { font-weight: 400; }
+
+/* Главная: шапка прозрачная и лежит поверх первого блока (общий код шапки делает её белой и сдвигает первый блок
+   под неё — здесь это отменяется только для главной). Прозрачным становится только фон: логотип, пункты меню и
+   иконки — отдельные элементы Zero-блока, их цвет и непрозрачность не меняются. Селекторы сильнее правил шапки. */
+html body #rec2498768581 .t396__artboard.t396__artboard { background-color: transparent !important; box-shadow: none !important; }
+/* два фоновых слоя Zero-блока шапки: белая подложка, проявляющаяся при прокрутке, и матовый слой */
+html body #rec2498768581 .tn-elem[data-elem-id="1777791783249000001"],
+html body #rec2498768581 .tn-elem[data-elem-id="1778446246187000001"] { display: none !important; }
+/* ПК и планшет: первый экран — фото-полоса; её отступ сверху на высоту шапки убираем, размер фото прежний */
+html body .t2y-strip.t2y-strip_hero { padding-top: 0 !important; }
+/* Телефон: первый блок — полноэкранный слайдер. Скрипт шапки опускает его на высоту шапки и на столько же
+   укорачивает; здесь он начинается от верхнего края и снова занимает весь экран */
+@media screen and (max-width: 480px) {
+  html body #rec2271738541 { margin-top: 0 !important; }
+  html body #rec2271738541.t2y-fs .t994__width-wrapper,
+  html body #rec2271738541.t2y-fs .t994__slidecontainer,
+  html body #rec2271738541.t2y-fs .t994__item,
+  html body #rec2271738541.t2y-fs .t994__item-wrapper { height: 100vh !important; height: 100svh !important; }
+}
+</style> <script>
+(function () {
+  var root = document.documentElement;
+  var HIDDEN = 't2y-hdr-hidden';
+  var THRESHOLD = 10;   // px прокрутки в одну сторону, после которых шапка реагирует: мелкие движения пальца её не дёргают
+  var LOCKS = ['t450__body_menushowed', 't-body_popupshowed', 't706__body_cartwinshowed'];  // бургер, выпадающие меню, корзина
+  var headerH = 0, lastY = 0, anchorY = 0, dir = 0, ticking = false;
+
+  function artboard() { return document.querySelector('#rec2498768581 .t396__artboard'); }
+  function burger() { return document.querySelector('#rec2501340841 .t450__menu__content'); }
+
+  // На сколько уезжать: высота шапки, а если бургер ниже её нижнего края — до низа бургера.
+  // offsetHeight и computed top не зависят от transform, поэтому мерить можно и в скрытом состоянии.
+  function measure() {
+    var a = artboard(), b = burger();
+    headerH = a ? a.offsetHeight : 0;
+    var shift = headerH;
+    if (b && b.offsetHeight) shift = Math.max(shift, (parseFloat(getComputedStyle(b).top) || 0) + b.offsetHeight);
+    root.style.setProperty('--t2y-hdr-shift', (shift + 2) + 'px');
+  }
+
+  function locked() {
+    var c = document.body.classList;
+    for (var i = 0; i < LOCKS.length; i++) if (c.contains(LOCKS[i])) return true;
+    return false;
+  }
+  function show() { root.classList.remove(HIDDEN); }
+  function hide() { root.classList.add(HIDDEN); }
+
+  function currentY() {
+    var y = window.pageYOffset || 0;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return Math.max(0, Math.min(y, max));   // «резиновая» прокрутка iOS за края страницы не считается движением
+  }
+
+  function update() {
+    ticking = false;
+    var y = currentY();
+    if (locked() || y <= headerH) {        // открыто меню/попап или мы в самом верху — шапка видна
+      show(); lastY = anchorY = y; dir = 0; return;
+    }
+    var d = y - lastY;
+    if (!d) return;
+    var nd = d > 0 ? 1 : -1;
+    if (nd !== dir) { dir = nd; anchorY = lastY; }   // сменили направление — отсчёт порога заново
+    if (dir > 0 && y - anchorY > THRESHOLD) hide();
+    else if (dir < 0 && anchorY - y > THRESHOLD) show();
+    lastY = y;
+  }
+
+  function start() {
+    measure();
+    lastY = anchorY = currentY();
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', function () { measure(); update(); });
+    window.addEventListener('load', measure);
+    // Высоту шапки Tilda выставляет сама и позже нас
+    var a = artboard();
+    if (a && window.ResizeObserver) new ResizeObserver(measure).observe(a);
+    // Открыли бургер / выпадающее меню / корзину — шапку сразу показываем
+    new MutationObserver(function () { if (locked()) { show(); lastY = anchorY = currentY(); dir = 0; } })
+      .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // Фокус с клавиатуры попал в шапку — показываем её
+    document.addEventListener('focusin', function (e) {
+      var a2 = artboard(), b2 = burger();
+      if ((a2 && a2.contains(e.target)) || (b2 && b2.contains(e.target))) show();
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
